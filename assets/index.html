@@ -548,6 +548,13 @@
                 object-position: center center !important;
             }
 
+            /* REDUCE SECTION GAPS ON MOBILE */
+            section {
+                padding-top: 4rem !important;
+                padding-bottom: 4rem !important;
+                min-height: auto !important;
+            }
+
 
             /* MODAL "CONHEÇA A OLYMPIA" SIZING AND CENTERING */
             #modal-olympia-content {
@@ -819,13 +826,33 @@
                 padding: 1.5rem !important;
             }
 
+            /* DIAGNOSTICO MOBILE BACKGROUND */
+            #diagnostico {
+                background-color: #050505 !important;
+                background-image: linear-gradient(to bottom, #050505 0vw, #050505 105vw, transparent 115vw, transparent 185vw, #050505 200vw, #050505 100%), url('images/imagem_clientes.jpg') !important;
+                background-size: 100% 100%, 100% auto !important;
+                background-repeat: no-repeat, no-repeat !important;
+                background-position: top, center 105vw !important;
+            }
+            #diagnostico form {
+                margin-top: 22rem !important;
+            }
+            #diagnostico .text-center h2,
+            #diagnostico .text-center p {
+                color: #ffffff !important;
+                opacity: 1 !important;
+                text-shadow: 0 4px 20px rgba(0,0,0,0.9) !important;
+                position: relative !important;
+                z-index: 10 !important;
+            }
+
             /* AREA DO COLABORADOR MOBILE BACKGROUND */
             #colaborador {
                 background-color: #050505 !important;
-                background-image: linear-gradient(to bottom, #050505 0vw, rgba(5,5,5,0.4) 30vw, rgba(5,5,5,0.4) 70vw, #050505 110vw), url('images/imagem_colaborador.jpg') !important;
-                background-size: 100% 100%, 150% auto !important;
+                background-image: linear-gradient(to bottom, #050505 0vw, #050505 50vw, rgba(5,5,5,0.8) 60vw, transparent 75vw, transparent 150vw, #050505 190vw, #050505 100%), url('images/retrato-do-homem-usa-a-tabuleta-digital_1170-1888.avif') !important;
+                background-size: 100% 100%, 100% auto !important;
                 background-repeat: no-repeat, no-repeat !important;
-                background-position: top, center 15vw !important;
+                background-position: top, center 40vw !important;
                 padding-top: 1rem !important;
             }
             #colaborador > div > div.flex > div:first-child {
@@ -845,14 +872,19 @@
                 font-size: 1.75rem !important;
                 line-height: 1.2 !important;
                 margin-bottom: 0.75rem !important;
+                color: #ffffff !important;
+                text-shadow: 0 4px 20px rgba(0,0,0,0.8) !important;
             }
             #colaborador > div > div.flex > div:last-child > p {
                 font-size: 0.875rem !important;
                 margin-bottom: 1.5rem !important;
+                color: #ffffff !important;
+                font-weight: 500 !important;
+                text-shadow: 0 4px 20px rgba(0,0,0,0.8) !important;
             }
             #colaborador form {
                 padding: 1rem !important;
-                margin-top: 2rem !important;
+                margin-top: 30rem !important;
                 gap: 0.75rem !important;
                 width: 85vw !important;
                 max-width: 300px !important;
@@ -869,7 +901,7 @@
                 border-radius: 0.5rem !important;
             }
             #colaborador form .h-32 {
-                height: 4rem !important;
+                height: 6rem !important;
                 gap: 0.25rem !important;
             }
             #colaborador form .h-32 span.iconify {
@@ -1538,7 +1570,7 @@
                                 <div class="relative w-full h-32 border-2 border-dashed border-white/20 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary-500/50 hover:bg-white/5 transition-all cursor-pointer group overflow-hidden">
                                     <input type="file" name="attachment" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".pdf,.doc,.docx" required onchange="if(this.files[0]) { this.nextElementSibling.nextElementSibling.textContent = this.files[0].name; this.nextElementSibling.nextElementSibling.classList.remove('text-white/50'); this.nextElementSibling.nextElementSibling.classList.add('text-primary-400'); this.nextElementSibling.nextElementSibling.removeAttribute('data-i18n'); } else { this.nextElementSibling.nextElementSibling.setAttribute('data-i18n', 'colab_form_file_text'); this.nextElementSibling.nextElementSibling.textContent = translations[currentLanguage].colab_form_file_text; this.nextElementSibling.nextElementSibling.classList.add('text-white/50'); this.nextElementSibling.nextElementSibling.classList.remove('text-primary-400'); }">
                                     <span class="iconify text-white/40 group-hover:text-primary-400 transition-colors" data-icon="lucide:upload-cloud" data-width="32"></span>
-                                    <span class="text-sm text-white/50 group-hover:text-white/80 transition-colors font-light text-center px-4 max-w-[80%] truncate" data-i18n="colab_form_file_text">Arraste seu arquivo ou clique para selecionar</span>
+                                    <span class="text-sm text-white/50 group-hover:text-white/80 transition-colors font-light text-center px-4 w-full leading-tight" data-i18n="colab_form_file_text">Arraste seu arquivo ou clique para selecionar</span>
                                 </div>
                             </div>
 

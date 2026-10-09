@@ -1,0 +1,2893 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Olympia</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: 'var(--color-primary-50)',
+                            100: 'var(--color-primary-100)',
+                            200: 'var(--color-primary-200)',
+                            300: 'var(--color-primary-300)',
+                            400: 'var(--color-primary-400)',
+                            500: 'var(--color-primary-500)',
+                            600: 'var(--color-primary-600)',
+                            700: 'var(--color-primary-700)',
+                            800: 'var(--color-primary-800)',
+                            900: 'var(--color-primary-900)',
+                            950: 'var(--color-primary-950)',
+                        },
+                        secondary: {
+                            950: 'var(--color-secondary-950)',
+                        },
+                        base: {
+                            900: '#111111',
+                            950: '#050505',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    },
+                    animation: {
+                        'blob': 'blob 15s infinite alternate',
+                        'float': 'float 10s infinite alternate ease-in-out',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 3s ease-in-out infinite alternate',
+                        'spin-slow': 'spin 15s linear infinite',
+                        'scroll-x': 'scroll-x 60s linear infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' }
+                        },
+                        float: {
+                            '0%': { transform: 'translateY(0) scale(1)' },
+                            '100%': { transform: 'translateY(-20px) scale(1.05)' }
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 20px var(--color-glow-base)' },
+                            '100%': { boxShadow: '0 0 40px var(--color-glow-strong), 0 0 60px var(--color-glow-base)' }
+                        },
+                        'scroll-x': {
+                            '0%': { transform: 'translate3d(0, 0, 0) rotate(0.001deg)' },
+                            '100%': { transform: 'translate3d(-50%, 0, 0) rotate(0.001deg)' }
+                        }
+                    }
+                }
+            }
+        }
+
+    </script>
+
+
+    <!-- Custom CSS -->
+    <style>
+        /* Base Variables */
+        :root {
+            --cursor-size: 24px;
+            --cursor-hover-size: 80px;
+
+            /* BORDEAUX THEME (DEFAULT) */
+            --color-primary-50: #fdf3f4;
+            --color-primary-100: #fbe5e7;
+            --color-primary-200: #f6d0d5;
+            --color-primary-300: #efaab2;
+            --color-primary-400: #e37785;
+            --color-primary-500: #d1485a;
+            --color-primary-600: #b82d41;
+            --color-primary-700: #9b2131;
+            --color-primary-800: #821f2d;
+            --color-primary-900: #721e2a;
+            --color-primary-950: #400c14;
+
+            --color-secondary-950: #400c14;
+            /* Bordeaux uses primary for secondary mapping */
+
+            --color-primary-rgb: 155, 33, 49;
+            --color-glow-base: rgba(155, 33, 49, 0.3);
+            --color-glow-strong: rgba(155, 33, 49, 0.6);
+            --color-primary-gradient-1: #9b2131;
+            --color-primary-gradient-2: #821f2d;
+            --color-primary-gradient-3: #b82d41;
+
+            /* Custom Scrollbar theme var */
+            --color-scrollbar-hover: #9b2131;
+        }
+
+        html,
+        body {
+            background-color: #050505;
+            /* Deep black */
+            color: #ffffff;
+            overflow-x: clip;
+            /* Fix for position: sticky while preventing horizontal scroll */
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-scrollbar-hover);
+        }
+
+        /* Noise Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+
+        }
+
+        /* Glass Panel */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .glass-panel:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(155, 33, 49, 0.15);
+        }
+
+        /* Border Gradient shared style */
+        .border-gradient {
+            position: relative;
+            background: rgba(17, 17, 17, 0.6);
+            background-clip: padding-box;
+            border: 1px solid transparent;
+            border-radius: inherit;
+        }
+
+        .border-gradient::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            margin: -1px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 50%, rgba(155, 33, 49, 0.3) 100%);
+        }
+
+        /* Ambient Blob */
+        .ambient-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.4;
+            z-index: -1;
+            mix-blend-mode: screen;
+            pointer-events: none;
+        }
+
+        /* Transparent Lettering */
+        .lettering-transparent {
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .lettering-transparent::before {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #fff;
+            -webkit-text-stroke: 0px transparent;
+            width: 0%;
+            overflow: hidden;
+            transition: width 1s cubic-bezier(0.19, 1, 0.22, 1);
+            white-space: nowrap;
+        }
+
+        .lettering-transparent:hover::before {
+            width: 100%;
+        }
+
+        /* Animations & Performance Optimizations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px) translateZ(0);
+            filter: blur(12px);
+            transition-property: opacity, transform, filter;
+            transition-duration: 1.2s;
+            transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+            will-change: transform, opacity, filter;
+            backface-visibility: hidden;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0) translateZ(0);
+            filter: blur(0px);
+        }
+
+        .reveal-fade {
+            opacity: 0;
+            transform: translateZ(0);
+            transition-property: opacity;
+            transition-duration: 2s;
+            transition-timing-function: ease-in-out;
+            will-change: opacity;
+        }
+
+        .reveal-fade.active {
+            opacity: 1;
+        }
+
+        /* 3D Premium Title Animation (Apple/Fluxora style) */
+        @keyframes premiumTextReveal {
+            0% {
+                opacity: 0;
+                transform: translateY(80px) scale(0.85) rotateX(-50deg);
+                filter: blur(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotateX(0deg);
+                filter: blur(0);
+            }
+        }
+
+        .reveal-premium {
+            opacity: 0;
+            transform-origin: bottom center;
+            will-change: transform, opacity, filter;
+            backface-visibility: hidden;
+            display: inline-block;
+        }
+
+        .reveal-premium.active {
+            animation-name: premiumTextReveal;
+            animation-duration: 1.6s;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+            animation-fill-mode: forwards;
+        }
+
+        /* Text Shimmer & Aura Glow Effects */
+        @keyframes shimmerGlow {
+            0% {
+                background-position: 200% center;
+            }
+
+            100% {
+                background-position: -200% center;
+            }
+        }
+
+        .text-shimmer {
+            animation: shimmerGlow 10s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlowWhite {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.0));
+            }
+
+            50% {
+                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.25));
+            }
+        }
+
+        @keyframes pulseGlowBordeaux {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 15px rgba(155, 33, 49, 0.2));
+            }
+
+            50% {
+                filter: drop-shadow(0 0 45px rgba(255, 77, 109, 0.5));
+            }
+        }
+
+        .glow-white {
+            animation: pulseGlowWhite 4s ease-in-out infinite;
+        }
+
+        .glow-bordeaux {
+            animation: pulseGlowBordeaux 4s ease-in-out infinite;
+        }
+
+        .ambient-blob {
+            will-change: transform;
+            transform: translateZ(0);
+        }
+
+        .ds-section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: white;
+            margin-bottom: 3rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .ds-section-title .number {
+            color: #9b2131;
+            /* Bordeaux */
+            font-weight: 500;
+            font-size: 1.5rem;
+        }
+
+        /* Custom Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #9b2131 0%, #721e2a 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(155, 33, 49, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 25px rgba(155, 33, 49, 0.5);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(155, 33, 49, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: rgba(155, 33, 49, 0.1);
+            border-color: #9b2131;
+        }
+
+        /* Section Container */
+        .ds-section {
+            padding: 8rem 0;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Table */
+        .ds-spec-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .ds-spec-row {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .ds-spec-row td {
+            padding: 2rem 0;
+            vertical-align: top;
+        }
+
+        .ds-spec-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255, 255, 255, 0.4);
+            width: 150px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Preloader Animation */
+        @keyframes loadProgress {
+            0% {
+                transform: scaleX(0);
+                transform-origin: left;
+            }
+
+            50% {
+                transform: scaleX(1);
+                transform-origin: left;
+            }
+
+            50.1% {
+                transform: scaleX(1);
+                transform-origin: right;
+            }
+
+            100% {
+                transform: scaleX(0);
+                transform-origin: right;
+            }
+        }
+
+        .animate-loader {
+            animation: loadProgress 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        }
+
+
+        /* =========================================================================
+   MOBILE EXCLUSIVE OVERRIDES (Safe to protect PC version)
+   ========================================================================= */
+        @media (max-width: 768px) {
+
+            /* HERO TEXT SIZING & CENTERING */
+            #hero-content > div {
+                align-items: center !important;
+                text-align: center !important;
+            }
+
+            #parallax-p p {
+                font-size: 0.875rem !important;
+                line-height: 1.25rem !important;
+                text-align: center !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+            }
+
+            #parallax-h1 h1 {
+                line-height: 1 !important;
+                align-items: center !important;
+            }
+
+            #parallax-h1 h1 .text-shimmer {
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+            }
+
+            #parallax-h1 h1 > span.flex {
+                justify-content: center !important;
+            }
+
+            /* BUTTON SIZING & CENTERING */
+            #parallax-btn>div {
+                margin-top: 2.5rem !important;
+                gap: 1rem !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            #btn-whatsapp,
+            #open-modal {
+                height: 42px !important;
+            }
+
+            #btn-whatsapp>div,
+            #open-modal>div.z-10 {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                font-size: 10px !important;
+                letter-spacing: 0.05em !important;
+                gap: 0.35rem !important;
+            }
+
+            #open-modal>div.z-10 {
+                padding-right: 0.75rem !important;
+            }
+
+            #open-modal span.bg-white\/10 {
+                width: 24px !important;
+                height: 24px !important;
+            }
+
+            /* HERO BACKGROUND GRADIENTS & IMAGE EXPOSURE */
+            #hero-video-wrapper>div.bg-gradient-to-r {
+                /* Remove dark filter to brighten the image */
+                background: transparent !important;
+            }
+
+            #hero-video-wrapper>div.bg-gradient-to-b {
+                display: none !important;
+            }
+            
+            #hero-video {
+                /* Center image properly to show people */
+                object-position: center center !important;
+            }
+
+
+            /* MODAL "CONHEÇA A OLYMPIA" SIZING AND CENTERING */
+            #modal-olympia-content {
+                padding: 1.25rem !important;
+                max-height: 70vh !important;
+                overflow-y: auto !important;
+            }
+
+            #modal-olympia-content h2 {
+                font-size: 1.25rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            #modal-olympia-content .space-y-4> :not([hidden])~ :not([hidden]) {
+                margin-top: 0.5rem !important;
+            }
+
+            #modal-olympia-content .space-y-4 {
+                font-size: 11px !important;
+                line-height: 1.4 !important;
+            }
+
+            #modal-olympia-content .mt-8.pt-8 {
+                margin-top: 1rem !important;
+                padding-top: 1rem !important;
+            }
+
+            #modal-olympia-content .mt-8.pt-8 p {
+                font-size: 9px !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            #modal-olympia-content .mt-8.pt-8 a {
+                width: 2.5rem !important;
+                height: 2.5rem !important;
+            }
+
+            #close-modal {
+                top: 0.75rem !important;
+                right: 0.75rem !important;
+                padding: 0.25rem !important;
+            }
+
+            #close-modal .iconify {
+                width: 16px !important;
+                height: 16px !important;
+            }
+
+            /* NAVBAR SIZING AND CLEANUP */
+            nav {
+                padding: 0.5rem 0.75rem !important;
+            }
+
+            nav > div > a.flex {
+                gap: 0.5rem !important;
+            }
+
+            nav a .w-14.h-14 {
+                width: 1.5rem !important;
+                height: 1.5rem !important;
+            }
+
+            nav a .text-lg {
+                font-size: 0.75rem !important;
+                letter-spacing: 0.05em !important;
+            }
+
+            nav > div > div.flex.items-center.gap-4 {
+                display: flex !important;
+                flex: 1 !important;
+                justify-content: center !important;
+            }
+
+            nav .flex.lg\:hidden {
+                display: flex !important;
+                gap: 0.75rem !important;
+                justify-content: center !important;
+            }
+
+            /* PRODUCT CARDS (GRADE DE PRODUTOS) SIZING */
+            #services .grid .glass-panel>div:first-child {
+                height: 110px !important;
+            }
+
+            #services .grid .glass-panel>div:last-child {
+                padding: 1rem 1rem 0.75rem 1rem !important;
+                margin-top: -1rem !important;
+            }
+
+            #services .grid .glass-panel h3 {
+                font-size: 1rem !important;
+                margin-bottom: 0.25rem !important;
+            }
+
+            #services .grid .glass-panel p.text-sm {
+                font-size: 10px !important;
+                margin-bottom: 0.5rem !important;
+                line-height: 1.3 !important;
+            }
+
+            #services .grid .glass-panel .pt-6 {
+                padding-top: 0.5rem !important;
+            }
+
+            /* EXPLANATION MODAL (SAIBA MAIS) SIZING */
+            #modal-product-content {
+                max-height: 85vh !important;
+                overflow: hidden !important;
+            }
+
+            #modal-product-content>div:nth-of-type(1) {
+                height: 30vh !important;
+                min-height: 180px !important;
+                flex-shrink: 0 !important;
+            }
+
+            #modal-product-content>div:nth-of-type(2) {
+                padding: 1rem !important;
+                display: flex !important;
+                flex-direction: column !important;
+                flex: 1 !important;
+                overflow: hidden !important;
+            }
+
+            #modal-product-title {
+                font-size: 1rem !important;
+                line-height: 1.3 !important;
+                margin-bottom: 0.75rem !important;
+                flex-shrink: 0 !important;
+                margin-top: 0 !important;
+            }
+
+            #modal-product-content .space-y-8 {
+                overflow-y: auto !important;
+                flex: 1 !important;
+                padding-right: 0.5rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            #modal-product-content .space-y-8> :not([hidden])~ :not([hidden]) {
+                margin-top: 0.75rem !important;
+            }
+
+            #modal-product-content .mb-2 {
+                margin-bottom: 0.15rem !important;
+            }
+
+            #modal-product-what,
+            #modal-product-importance {
+                font-size: 13px !important;
+                line-height: 1.4 !important;
+            }
+
+            #modal-product-content .mt-10.pt-8 {
+                margin-top: auto !important;
+                padding-top: 0.75rem !important;
+                flex-shrink: 0 !important;
+            }
+
+            #modal-product-whatsapp {
+                padding: 0.4rem 1rem !important;
+                font-size: 9px !important;
+                width: 100% !important;
+                justify-content: center !important;
+                gap: 0.5rem !important;
+                height: 2.5rem !important;
+            }
+
+            #modal-product-whatsapp .iconify {
+                width: 12px !important;
+                height: 12px !important;
+            }
+
+            #close-modal-product {
+                top: 0.5rem !important;
+                right: 0.5rem !important;
+                padding: 0.25rem !important;
+            }
+
+            #close-modal-product .iconify {
+                width: 14px !important;
+                height: 14px !important;
+            }
+
+            /* COMPACT FOOTER AND DEVELOPER SIGNATURE */
+            footer {
+                padding-bottom: 0 !important;
+            }
+
+            footer+div {
+                padding-top: 0.5rem !important;
+                padding-bottom: 1.5rem !important;
+            }
+
+            /* HERO SCROLL INDICATOR CENTERING */
+            #hero>div.absolute.bottom-8 {
+                left: 0 !important;
+                transform: none !important;
+                width: 100% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            #hero>div.absolute.bottom-8 span[data-i18n="scroll_text"] {
+                margin-right: -0.3em !important;
+            }
+
+            /* ESPECIALIZAÇÕES MOBILE FIX & SIZING */
+            #especializacoes .glass-panel {
+                padding: 1.5rem !important;
+            }
+            #especializacoes .grid > div {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+                padding-top: 0.75rem !important;
+                padding-bottom: 0.75rem !important;
+                gap: 0.75rem !important;
+            }
+            #especializacoes .grid > div:last-child {
+                border-bottom: none !important;
+                padding-bottom: 0 !important;
+            }
+            #especializacoes .grid > div:first-child {
+                padding-top: 0 !important;
+            }
+            #especializacoes .grid > div > div.w-10 {
+                width: 32px !important;
+                height: 32px !important;
+            }
+            #especializacoes .grid > div > div.w-10 .iconify {
+                font-size: 14px !important;
+            }
+            #especializacoes .grid > div > span {
+                font-size: 12px !important;
+            }
+
+            /* EXPERIÊNCIAS MOBILE CAROUSEL E RESUMO */
+            #experiencias .glass-panel {
+                width: 75vw !important;
+                max-width: 280px !important;
+                padding: 1.25rem !important;
+                border-radius: 1.5rem !important;
+                gap: 0.5rem !important;
+            }
+            #experiencias .glass-panel > div.flex.items-center {
+                margin-bottom: 0.5rem !important;
+            }
+            #experiencias .glass-panel .w-14.h-14 {
+                width: 2.5rem !important;
+                height: 2.5rem !important;
+            }
+            #experiencias .glass-panel h4 {
+                font-size: 0.85rem !important;
+            }
+            #experiencias .glass-panel p.italic {
+                font-size: 0.75rem !important;
+                line-height: 1.4 !important;
+                /* Limit to 4 lines with ellipsis */
+                display: -webkit-box !important;
+                -webkit-line-clamp: 4 !important;
+                -webkit-box-orient: vertical !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+
+            /* FORMS MOBILE SIZING */
+            form.glass-panel {
+                padding: 1.5rem !important;
+            }
+
+            /* AREA DO COLABORADOR MOBILE BACKGROUND */
+            #colaborador {
+                background-color: #050505 !important;
+                background-image: linear-gradient(to bottom, #050505 0vw, rgba(5,5,5,0.4) 30vw, rgba(5,5,5,0.4) 70vw, #050505 110vw), url('images/imagem_colaborador.jpg') !important;
+                background-size: 100% 100%, 150% auto !important;
+                background-repeat: no-repeat, no-repeat !important;
+                background-position: top, center 15vw !important;
+                padding-top: 1rem !important;
+            }
+            #colaborador > div > div.flex > div:first-child {
+                display: none !important;
+            }
+            #colaborador > div > div.flex > div:last-child {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                text-align: center !important;
+            }
+            #colaborador > div > div.flex > div:last-child > .flex.items-center.space-x-3 {
+                justify-content: center !important;
+                width: 100% !important;
+            }
+            #colaborador > div > div.flex > div:last-child > h2 {
+                font-size: 1.75rem !important;
+                line-height: 1.2 !important;
+                margin-bottom: 0.75rem !important;
+            }
+            #colaborador > div > div.flex > div:last-child > p {
+                font-size: 0.875rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+            #colaborador form {
+                padding: 1rem !important;
+                margin-top: 2rem !important;
+                gap: 0.75rem !important;
+                width: 85vw !important;
+                max-width: 300px !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                border-radius: 1.5rem !important;
+            }
+            #colaborador form label {
+                font-size: 0.65rem !important;
+            }
+            #colaborador form input {
+                padding: 0.5rem 0.875rem !important;
+                font-size: 0.8rem !important;
+                border-radius: 0.5rem !important;
+            }
+            #colaborador form .h-32 {
+                height: 4rem !important;
+                gap: 0.25rem !important;
+            }
+            #colaborador form .h-32 span.iconify {
+                width: 24px !important;
+                height: 24px !important;
+            }
+            #colaborador form button {
+                height: 2.75rem !important;
+                font-size: 0.75rem !important;
+                margin-top: 0 !important;
+            }
+
+            /* PREVENT STICKY HOVER EFFECTS ON MOBILE */
+            .hover\:-translate-y-2:hover {
+                transform: translateY(0) !important;
+            }
+            .group:hover .group-hover\:scale-105 {
+                transform: scale(1) !important;
+            }
+            .hover\:border-primary-500\/50:hover {
+                border-color: rgba(255, 255, 255, 0.2) !important;
+            }
+            .hover\:bg-white\/5:hover {
+                background-color: transparent !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="antialiased selection:bg-primary-700 selection:text-white relative overflow-hidden" id="body-container">
+
+    <!-- Preloader Splash Screen -->
+    <div id="preloader"
+        class="fixed inset-0 z-[99999] bg-[#020202] flex flex-col items-center justify-center transition-opacity duration-1000">
+        <div class="flex flex-col items-center gap-6">
+            <div class="flex flex-col items-center gap-3">
+                <div
+                    class="w-16 h-16 rounded-full border-gradient flex items-center justify-center bg-white/5 overflow-hidden">
+                    <img src="images/logos/logo.webp" alt="Olympia Logo" class="w-full h-full object-cover">
+                </div>
+                <span class="text-[10px] uppercase tracking-[0.4em] text-white/60 font-medium font-inter">Olympia</span>
+            </div>
+            <div class="w-48 h-[1px] bg-white/5 overflow-hidden rounded-full relative">
+                <div
+                    class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-primary-700 via-primary-400 to-primary-700 animate-loader rounded-full drop-shadow-[0_0_5px_rgba(var(--color-primary-rgb),0.8)]">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="noise-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-[95%] max-w-6xl z-[100] top-6 left-1/2 transition-all duration-300 py-3 px-6 md:px-8 border border-white/10 rounded-[2rem] shadow-2xl group"
+        style="background-color: rgba(5, 5, 5, 0.4); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); transform: translate3d(-50%, 0, 0);">
+
+        <div class="relative z-10 max-w-screen-2xl mx-auto flex items-center justify-between">
+            <a href="#hero" class="flex items-center gap-4 group">
+                <div
+                    class="w-14 h-14 rounded-full border-gradient flex items-center justify-center bg-white/5 group-hover:bg-white/10 transition-colors overflow-hidden">
+                    <img src="images/logos/logo.webp" alt="Olympia Logo" class="w-full h-full object-cover">
+                </div>
+                <span class="font-heading font-semibold text-lg tracking-wide text-white">OLYMPIA</span>
+            </a>
+            <div class="flex items-center gap-4">
+                <!-- DESKTOP NAVBAR (UNTOUCHED) -->
+                <div class="hidden lg:flex items-center gap-8 nav-links">
+                    <a href="#hero" data-i18n="nav_sobre"
+                        class="nav-item text-xs font-medium uppercase tracking-widest text-primary-400 hover:text-primary-300 transition-colors">Sobre/Contato</a>
+                    <a href="#services" data-i18n="nav_servicos"
+                        class="nav-item text-xs font-medium uppercase tracking-widest text-white/50 hover:text-white transition-colors">Serviços</a>
+                    <a href="#diagnostico" class="nav-item text-xs font-medium uppercase tracking-widest text-white/50 hover:text-white transition-colors" data-i18n="nav_diagnostico">Diagnóstico</a>
+                    <a href="#colaborador" class="nav-item text-xs font-medium uppercase tracking-widest text-white/50 hover:text-white transition-colors" data-i18n="nav_colaborador">Área do Colaborador</a>
+                    <a href="#experiencias" data-i18n="nav_experiencias"
+                        class="nav-item text-xs font-medium uppercase tracking-widest text-white/50 hover:text-white transition-colors">Experiências</a>
+                </div>
+
+                <!-- Language Selector (Desktop Only) -->
+                <div class="hidden lg:flex items-center gap-3 border-l border-white/10 pl-4 ml-2">
+                    <button id="lang-pt"
+                        class="w-5 h-[15px] rounded-[3px] overflow-hidden border border-white/30 opacity-100 transition-opacity hover:opacity-100 shadow-[0_0_10px_rgba(255,255,255,0.2)] flex items-center justify-center">
+                        <span class="iconify w-full h-full object-cover" data-icon="flag:br-4x3"></span>
+                    </button>
+                    <div class="w-[1px] h-3 bg-white/20"></div>
+                    <button id="lang-en"
+                        class="w-5 h-[15px] rounded-[3px] overflow-hidden border border-white/10 opacity-60 hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span class="iconify w-full h-full object-cover" data-icon="flag:us-4x3"></span>
+                    </button>
+                </div>
+
+                <!-- Hamburger (Unused but kept for structure) -->
+                <button class="hidden text-white ml-2">
+                    <span class="iconify" data-icon="lucide:menu" data-width="24"></span>
+                </button>
+
+                <!-- MOBILE ONLY NAVBAR BUTTONS -->
+                <div class="flex lg:hidden items-center gap-3">
+                    <a href="#diagnostico" class="nav-item text-[9px] font-medium uppercase tracking-widest text-white/50 hover:text-white transition-colors">Diagnóstico</a>
+                    <a href="#colaborador" class="nav-item text-[9px] font-medium uppercase tracking-widest text-white/50 hover:text-white transition-colors">Colaborador</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SECTION 1: HERO -->
+    <header id="hero"
+        class="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden bg-[#020202] z-0">
+        <!-- Core Background Glows & Mesh -->
+        <div class="absolute inset-0 z-0 overflow-hidden">
+            <div
+                class="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,_rgba(var(--color-primary-rgb),0.15),_transparent_50%)]">
+            </div>
+            <div
+                class="ambient-blob bg-primary-700/20 w-[800px] h-[800px] -top-[300px] -left-[200px] animate-blob blur-[120px]">
+            </div>
+            <div class="ambient-blob bg-primary-950/40 w-[1000px] h-[1000px] bottom-[-400px] right-[-300px] animate-blob blur-[150px]"
+                style="animation-delay: -5s; animation-duration: 20s;"></div>
+            <div
+                class="ambient-blob bg-white/5 w-[600px] h-[600px] top-[20%] left-[50%] animate-pulse-slow blur-[100px]">
+            </div>
+
+            <div class="absolute inset-0 opacity-[0.03]"
+                style="background-image: linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);">
+            </div>
+        </div>
+
+        <!-- Right Side: Cinematic Background Video -->
+        <div class="absolute inset-0 z-0 flex justify-end pointer-events-none" id="hero-video-wrapper">
+            <div
+                class="w-full md:w-3/4 h-full relative reveal-fade opacity-0 delay-[800ms] overflow-hidden bg-[#020202]">
+                <img id="hero-video" src="images/hero_expanded.jpg" alt="Olympia Consultoria Hero Image"
+                    class="absolute inset-0 w-full h-full object-cover transform-gpu"
+                    style="object-position: -20% 30%;">
+            </div>
+
+            <div
+                class="absolute inset-0 bg-gradient-to-r from-[#020202] via-[#020202]/95 to-transparent z-10 w-full md:w-[60%] pointer-events-none">
+            </div>
+            <div
+                class="absolute inset-0 bg-gradient-to-b from-[#020202] via-transparent to-[#020202] opacity-80 z-10 pointer-events-none">
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="relative z-20 px-6 w-full max-w-7xl mx-auto flex items-center" id="hero-content">
+            <div class="flex flex-col items-start text-left max-w-2xl w-full pt-10">
+                <div id="parallax-h1">
+                    <h1 class="font-heading text-3xl md:text-4xl lg:text-[3.5rem] font-light leading-tight tracking-tight drop-shadow-2xl flex flex-col items-start"
+                        style="perspective: 1000px;">
+                        <!-- OLYMPIA -->
+                        <span class="reveal-premium w-full" style="animation-delay: 0.1s">
+                            <span class="block glow-white">
+                                <span
+                                    class="block bg-clip-text text-transparent bg-[linear-gradient(110deg,#fff,45%,#fff,50%,#9ca3af,55%,#fff)] bg-[length:250%_100%] text-shimmer py-2">
+                                    OLYMPIA
+                                </span>
+                            </span>
+                        </span>
+                        <span class="flex flex-wrap gap-x-3 md:gap-x-5 font-medium relative w-full"
+                            style="perspective: 1000px;">
+                            <!-- DESIGN -->
+                            <span class="reveal-premium" style="animation-delay: 0.3s">
+                                <span class="block glow-primary">
+                                    <span
+                                        class="block bg-clip-text text-transparent bg-[linear-gradient(110deg,var(--color-primary-gradient-1),45%,var(--color-primary-gradient-1),50%,#ff8fa3,55%,var(--color-primary-gradient-1))] bg-[length:250%_100%] text-shimmer pr-2 py-2"
+                                        data-i18n="hero_h1_1">CONSULTORIA&nbsp;</span>
+                                </span>
+                            </span>
+                            <!-- SYSTEM -->
+                            <span class="reveal-premium" style="animation-delay: 0.5s">
+                                <span class="block glow-white" style="animation-delay: 1s">
+                                    <span
+                                        class="block bg-clip-text text-transparent bg-[linear-gradient(110deg,#d1d5db,45%,#d1d5db,50%,#ffffff,55%,#d1d5db)] bg-[length:250%_100%] text-shimmer pr-2 py-2"
+                                        data-i18n="hero_h1_2">EMPRESARIAL&nbsp;</span>
+                                </span>
+                            </span>
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="parallax-p">
+                    <p class="mt-8 text-base md:text-xl text-white/50 font-light max-w-xl leading-relaxed reveal opacity-0 delay-[800ms]"
+                        data-i18n="hero_p1">
+                        Impulsionamos negócios através de <span class="text-white font-medium">consultoria
+                            estratégica</span>, <span class="text-white font-medium">desenvolvimento de equipes</span> e
+                        soluções de <span
+                            class="text-primary-700 font-medium drop-shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.8)]">alto
+                            padrão</span> para transformar resultados.
+                    </p>
+                </div>
+
+                <div id="parallax-btn">
+                    <div class="mt-14 flex flex-col sm:flex-row gap-5 sm:items-center reveal opacity-0 delay-[1000ms]">
+                        <a id="btn-whatsapp"
+                            href="https://wa.me/5537998414859?text=Ol%C3%A1!%20Conheci%20o%20site%20da%20empresa%20e%20gostaria%20de%20saber%20um%20pouco%20mais%20sobre%20as%20consultorias%20e%20assessorias%20fornecidas."
+                            target="_blank"
+                            class="inline-flex relative group overflow-hidden rounded-full shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.4)] hover:shadow-[0_0_40px_rgba(var(--color-primary-rgb),0.7)] hover:-translate-y-1 transition-all duration-500 bg-gradient-to-r from-primary-800 via-primary-700 to-primary-900 h-[50px] items-center">
+                            <div
+                                class="relative px-8 rounded-full text-[13px] font-bold uppercase tracking-widest flex items-center justify-center gap-3 text-white transition-all duration-500 w-full h-full">
+                                <span data-i18n="btn_primary">Entre em Contato</span>
+                                <span class="iconify transform group-hover:translate-x-1 transition-transform"
+                                    data-icon="lucide:arrow-right" data-width="16"></span>
+                            </div>
+                        </a>
+                        <button id="open-modal"
+                            class="group isolate inline-flex items-center cursor-pointer overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(var(--color-primary-rgb),0.4)] bg-gradient-to-b from-white/20 via-white/0 to-white/5 rounded-full relative shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.2)] h-[50px]">
+                            <!-- Rotating Border Beam -->
+                            <div class="absolute inset-0 overflow-hidden rounded-full">
+                                <div class="absolute inset-[-100%] w-[300%] h-[300%] left-[-100%] top-[-100%] animate-[spin_3s_linear_infinite]"
+                                    style="background: conic-gradient(from 0deg, transparent 0deg, transparent 80deg, rgba(var(--color-primary-rgb),0.8) 180deg, transparent 280deg, transparent 360deg);">
+                                </div>
+                            </div>
+                            <!-- Background Mask -->
+                            <div class="absolute inset-[1px] rounded-full backdrop-blur-xl z-0 bg-[#020202]/95"></div>
+                            <!-- Content Container -->
+                            <div
+                                class="z-10 flex gap-3 sm:w-auto overflow-hidden text-[13px] font-semibold uppercase tracking-widest text-white w-full h-full rounded-full pl-8 pr-6 relative items-center justify-center">
+                                <!-- Text -->
+                                <span
+                                    class="whitespace-nowrap relative z-10 text-white/90 group-hover:text-white transition-colors"
+                                    data-i18n="btn_secondary">
+                                    Conheça a Olympia
+                                </span>
+                                <!-- Arrow Icon -->
+                                <span class="iconify transform group-hover:translate-x-1 transition-transform"
+                                    data-icon="lucide:arrow-right" data-width="16"></span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator (Premium) -->
+        <div
+            class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20 reveal opacity-0 delay-[1200ms]">
+            <span class="text-[9px] uppercase tracking-[0.3em] text-white/30 font-medium"
+                data-i18n="scroll_text">Descubra</span>
+            <div class="animate-bounce text-white/40 mt-1">
+                <span class="iconify" data-icon="lucide:chevron-down" data-width="24"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- INTEGRATED CONTENT WRAPPER -->
+    <div
+        class="relative w-full bg-[#020202] z-10 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] md:rounded-t-[4rem] rounded-t-[2rem] border-t border-white/5 mt-[-10px] overflow-hidden">
+
+        <!-- Premium Unified Background Effects -->
+        <div class="absolute inset-0 z-0 pointer-events-none">
+            <!-- Vercel-style Grid (Covers both sections) -->
+            <div
+                class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_20%,transparent_100%)] -webkit-mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_20%,transparent_100%);">
+            </div>
+
+            <!-- Animated Blobs Services (Top Area) -->
+            <div
+                class="absolute top-[10%] right-[-10%] w-[600px] h-[600px] bg-primary-900/15 rounded-full blur-[150px] animate-blob">
+            </div>
+            <div class="absolute top-[30%] left-[-10%] w-[500px] h-[500px] bg-primary-700/10 rounded-full blur-[120px] animate-blob"
+                style="animation-delay: 2s; animation-duration: 15s;"></div>
+
+            <!-- Animated Blobs Experiencias (Bottom Area) -->
+            <div
+                class="absolute bottom-[20%] left-[10%] w-[800px] h-[800px] bg-primary-950/20 rounded-full blur-[150px] animate-pulse-slow">
+            </div>
+            <div class="absolute bottom-[5%] right-[10%] w-[600px] h-[600px] bg-primary-900/15 rounded-full blur-[120px] animate-pulse-slow"
+                style="animation-delay: 3s"></div>
+        </div>
+
+        <!-- SECTION 2: Grade de Produtos (Assessorias) -->
+        <section id="services" class="relative min-h-screen w-full py-32 px-6 bg-transparent z-10">
+            <div class="max-w-[1400px] mx-auto w-full relative z-10 pt-10">
+
+                <!-- Section Header -->
+                <div class="text-center mb-20 reveal">
+                    <div class="flex items-center justify-center space-x-3 mb-6">
+                        <div
+                            class="w-1.5 h-1.5 bg-primary-500 rounded-full animate-pulse shadow-[0_0_12px_var(--color-primary-gradient-1)]">
+                        </div>
+                        <p class="text-[11px] uppercase tracking-[0.25em] text-white/60 font-semibold font-outfit"
+                            data-i18n="services_subtitle">Nossos Produtos</p>
+                        <div
+                            class="w-1.5 h-1.5 bg-primary-500 rounded-full animate-pulse shadow-[0_0_12px_var(--color-primary-gradient-1)]">
+                        </div>
+                    </div>
+                    <h2
+                        class="font-heading text-4xl md:text-5xl lg:text-[4rem] font-light mb-6 text-white tracking-tight">
+                        <span data-i18n="services_title_1">Soluções de</span> <span
+                            class="bg-clip-text text-transparent bg-[linear-gradient(110deg,var(--color-primary-gradient-1),45%,var(--color-primary-gradient-1),50%,#ff8fa3,55%,var(--color-primary-gradient-1))] bg-[length:250%_100%] text-shimmer"
+                            data-i18n="services_title_2">Alto Padrão</span>
+                    </h2>
+                </div>
+
+                <!-- Dynamic Services Container -->
+                <div id="services-grid"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-6xl mx-auto w-full relative z-10 pb-20">
+                    <!-- Services will be injected here by JS -->
+                </div>
+        </section>
+
+        <!-- SECTION ESPECIALIZAÇÕES -->
+        <section id="especializacoes" class="relative min-h-screen w-full py-32 px-6 bg-transparent z-10 border-t border-white/5">
+            <div class="max-w-[1400px] mx-auto w-full relative z-10 pt-10">
+                
+                <!-- Section Header -->
+                <div class="text-center mb-20 reveal">
+                    <div class="flex items-center justify-center space-x-3 mb-6">
+                        <div class="w-1.5 h-1.5 bg-primary-500 rounded-full animate-pulse shadow-[0_0_12px_var(--color-primary-gradient-1)]"></div>
+                        <p class="text-[11px] uppercase tracking-[0.25em] text-white/60 font-semibold font-outfit" data-i18n="spec_subtitle">Nosso Time</p>
+                        <div class="w-1.5 h-1.5 bg-primary-500 rounded-full animate-pulse shadow-[0_0_12px_var(--color-primary-gradient-1)]"></div>
+                    </div>
+                    <h2 class="font-heading text-4xl md:text-5xl lg:text-[4rem] font-light mb-6 text-white tracking-tight">
+                        <span data-i18n="spec_title_1">Especializações da</span> <span class="bg-clip-text text-transparent bg-[linear-gradient(110deg,var(--color-primary-gradient-1),45%,var(--color-primary-gradient-1),50%,#ff8fa3,55%,var(--color-primary-gradient-1))] bg-[length:250%_100%] text-shimmer font-semibold" data-i18n="spec_title_2">Equipe</span>
+                    </h2>
+                    <p class="text-white/60 font-light leading-relaxed max-w-2xl mx-auto text-lg" data-i18n="spec_desc">
+                        Profissionais altamente qualificados para entregar as melhores soluções para o seu negócio.
+                    </p>
+                </div>
+
+                <!-- Specialties Single Card -->
+                <div class="glass-panel border border-white/10 bg-[#101010]/60 backdrop-blur-xl rounded-3xl p-8 lg:p-12 reveal shadow-[0_0_30px_rgba(0,0,0,0.5)] max-w-7xl mx-auto w-full relative z-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 lg:gap-x-12">
+                        
+                        <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
+                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:settings-2"></span>
+                            </div>
+                            <span class="text-[15px] leading-tight">Engenharia de Produção</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
+                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:briefcase"></span>
+                            </div>
+                            <span class="text-[15px] leading-tight">MBA em Gestão de Processos e Pessoas</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
+                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:target"></span>
+                            </div>
+                            <span class="text-[15px] leading-tight">Gestão de Liderança de Alta Performance</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
+                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:shield-check"></span>
+                            </div>
+                            <span class="text-[15px] leading-tight">Engenharia Ambiental e Seg. do Trabalho</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
+                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:hard-hat"></span>
+                            </div>
+                            <span class="text-[15px] leading-tight">Técnico de Segurança do Trabalho</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
+                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:users-2"></span>
+                            </div>
+                            <span class="text-[15px] leading-tight">Psicologia Organizacional</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
+                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:scale"></span>
+                            </div>
+                            <span class="text-[15px] leading-tight">Conciliação Extrajudicial</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
+                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:smartphone"></span>
+                            </div>
+                            <span class="text-[15px] leading-tight">Comunicação Visual e Social Media</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
+                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:camera"></span>
+                            </div>
+                            <span class="text-[15px] leading-tight">Produção de Vídeos e Fotografia Profissional</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
+                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:plane"></span>
+                            </div>
+                            <span class="text-[15px] leading-tight">Captação de Imagens Aéreas (Drone)</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
+                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:apple"></span>
+                            </div>
+                            <span class="text-[15px] leading-tight">Engenharia e Tecnologia de Alimentos</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
+                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:microscope"></span>
+                            </div>
+                            <span class="text-[15px] leading-tight">Pós em Controle de Qualidade</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 py-5 border-b border-white/5 md:border-b-0 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
+                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:check-square"></span>
+                            </div>
+                            <span class="text-[15px] leading-tight">Qualidade (5S, BPF e APPCC)</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 py-5 lg:border-b-0 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
+                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:globe"></span>
+                            </div>
+                            <span class="text-[15px] leading-tight">Padrões ISO e Conformidade (ANVISA)</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 py-5 lg:border-b-0 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
+                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:laptop"></span>
+                            </div>
+                            <span class="text-[15px] leading-tight">Tecnologia, Websites e Tráfego Pago</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION CLIENTES / DIAGNÓSTICO -->
+        <section id="diagnostico" class="relative min-h-screen w-full py-32 px-6 bg-transparent z-10 border-t border-white/5 overflow-hidden">
+            <div class="max-w-[1400px] mx-auto w-full relative z-10 pt-10">
+                
+                <!-- Centralized Title -->
+                <div class="text-center mb-16 reveal delay-[100ms]">
+                    <div class="flex items-center justify-center space-x-3 mb-6">
+                        <div class="w-1.5 h-1.5 bg-primary-500 rounded-full animate-pulse shadow-[0_0_12px_var(--color-primary-gradient-1)]"></div>
+                        <p class="text-[11px] uppercase tracking-[0.25em] text-white/60 font-semibold font-outfit" data-i18n="diag_subtitle">Para Empresas</p>
+                        <div class="w-1.5 h-1.5 bg-primary-500 rounded-full animate-pulse shadow-[0_0_12px_var(--color-primary-gradient-1)]"></div>
+                    </div>
+                    
+                    <h2 class="font-heading text-4xl md:text-5xl lg:text-[4rem] font-light mb-6 text-white tracking-tight leading-tight">
+                        <span data-i18n="diag_title_1">Solicite um </span>
+                        <span class="bg-clip-text text-transparent bg-[linear-gradient(110deg,var(--color-primary-gradient-1),45%,var(--color-primary-gradient-1),50%,#ff8fa3,55%,var(--color-primary-gradient-1))] bg-[length:250%_100%] text-shimmer font-semibold" data-i18n="diag_title_2">Diagnóstico</span>
+                    </h2>
+                    
+                    <p class="text-white/60 font-light leading-relaxed text-lg max-w-2xl mx-auto" data-i18n="diag_desc">
+                        Transforme os resultados do seu negócio. Preencha o formulário abaixo para que nossos especialistas entendam o cenário da sua empresa e proponham a melhor solução.
+                    </p>
+                </div>
+                
+                <!-- Layout Grid: Form (larger) + Image (smaller side piece) -->
+                <div class="flex flex-col lg:flex-row items-stretch gap-10 max-w-6xl mx-auto">
+                    
+                    <!-- Left Side: Form Content -->
+                    <div class="w-full lg:w-3/5 reveal delay-[200ms] relative z-20 flex">
+                        <!-- Multi-step Form -->
+                        <form id="diagnostico-form" class="w-full glass-panel border border-white/10 bg-[#0a0a0a]/90 backdrop-blur-2xl rounded-3xl p-8 sm:p-10 relative z-10 shadow-[0_0_40px_rgba(0,0,0,0.8)] flex flex-col justify-center">
+                            
+                            <!-- Progress Bar -->
+                            <div class="w-full h-1.5 bg-white/5 rounded-full mb-10 overflow-hidden relative shadow-inner">
+                                <div id="form-progress" class="absolute top-0 left-0 h-full w-1/2 bg-gradient-to-r from-primary-800 via-primary-500 to-primary-400 transition-all duration-700 ease-out shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.8)]"></div>
+                            </div>
+
+                            <!-- Step 1 -->
+                            <div id="form-step-1" class="flex flex-col gap-8 transition-all duration-300 transform translate-x-0 opacity-100">
+                                <div class="grid grid-cols-1 gap-6">
+                                    <div class="flex flex-col gap-3 group">
+                                        <label class="text-xs uppercase tracking-widest text-white/50 font-medium group-focus-within:text-primary-400 transition-colors" data-i18n="diag_form_name_label">Nome Completo</label>
+                                        <div class="relative">
+                                            <input type="text" id="diag_nome" name="Nome Completo" class="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-primary-500 focus:bg-white/5 transition-all duration-300 placeholder:text-white/20 shadow-inner" placeholder="Como devemos chamá-lo?" data-i18n="diag_form_name_ph" required>
+                                            <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-white/20 group-focus-within:text-primary-500 transition-colors">
+                                                <span class="iconify" data-icon="lucide:user" data-width="18"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-3 group">
+                                        <label class="text-xs uppercase tracking-widest text-white/50 font-medium group-focus-within:text-primary-400 transition-colors" data-i18n="diag_form_phone_label">Número (WhatsApp/Telefone)</label>
+                                        <div class="relative">
+                                            <input type="tel" id="diag_numero" name="Número de Contato" class="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-primary-500 focus:bg-white/5 transition-all duration-300 placeholder:text-white/20 shadow-inner" placeholder="(00) 00000-0000" data-i18n="diag_form_phone_ph" required>
+                                            <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-white/20 group-focus-within:text-primary-500 transition-colors">
+                                                <span class="iconify" data-icon="lucide:phone" data-width="18"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <button type="button" id="btn-next-step" class="w-full relative group/btn overflow-hidden rounded-2xl shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.1)] hover:shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.3)] transition-all duration-500 bg-white/5 border border-white/10 hover:border-primary-500/50 hover:bg-primary-900/20 h-14 flex items-center justify-center">
+                                        <span class="absolute inset-0 w-0 bg-primary-500/10 transition-all duration-500 ease-out group-hover/btn:w-full"></span>
+                                        <span class="relative z-10 text-xs font-bold uppercase tracking-widest text-white flex items-center gap-3">
+                                            <span data-i18n="diag_form_next_btn">Avançar para Etapa Final</span>
+                                            <span class="iconify group-hover/btn:translate-x-2 transition-transform duration-300 text-primary-400" data-icon="lucide:arrow-right" data-width="16"></span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Step 2 -->
+                            <div id="form-step-2" class="flex flex-col gap-6 transition-all duration-300 transform translate-x-10 opacity-0 hidden">
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div class="flex flex-col gap-2 group">
+                                        <label class="text-[10px] uppercase tracking-widest text-white/40 font-medium group-focus-within:text-primary-400 transition-colors" data-i18n="diag_form_email_label">E-mail Corporativo</label>
+                                        <input type="email" id="diag_email" name="E-mail Corporativo" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500 focus:bg-white/5 transition-all duration-300 placeholder:text-white/20 shadow-inner" placeholder="seu@email.com" data-i18n="diag_form_email_ph" required>
+                                    </div>
+                                    <div class="flex flex-col gap-2 group">
+                                        <label class="text-[10px] uppercase tracking-widest text-white/40 font-medium group-focus-within:text-primary-400 transition-colors" data-i18n="diag_form_company_label">Nome da Empresa</label>
+                                        <input type="text" name="Nome da Empresa" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500 focus:bg-white/5 transition-all duration-300 placeholder:text-white/20 shadow-inner" placeholder="Sua Empresa" data-i18n="diag_form_company_ph" required>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div class="flex flex-col gap-2 group">
+                                        <label class="text-[10px] uppercase tracking-widest text-white/40 font-medium group-focus-within:text-primary-400 transition-colors" data-i18n="diag_form_role_label">Cargo na Empresa</label>
+                                        <input type="text" name="Cargo na Empresa" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500 focus:bg-white/5 transition-all duration-300 placeholder:text-white/20 shadow-inner" placeholder="Ex: Sócio, Diretor..." data-i18n="diag_form_role_ph" required>
+                                    </div>
+                                    <div class="flex flex-col gap-2 group">
+                                        <label class="text-[10px] uppercase tracking-widest text-white/40 font-medium group-focus-within:text-primary-400 transition-colors" data-i18n="diag_form_city_label">Cidade/Estado</label>
+                                        <input type="text" name="Cidade e Estado" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500 focus:bg-white/5 transition-all duration-300 placeholder:text-white/20 shadow-inner" placeholder="Sua localização" data-i18n="diag_form_city_ph" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div class="flex flex-col gap-2 group">
+                                        <label class="text-[10px] uppercase tracking-widest text-white/40 font-medium group-focus-within:text-primary-400 transition-colors" data-i18n="diag_form_emp_label">Nº de Colaboradores</label>
+                                        <div class="relative">
+                                            <select name="Número de Colaboradores" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white/80 text-sm focus:outline-none focus:border-primary-500 focus:bg-white/5 transition-all duration-300 shadow-inner appearance-none" style="-webkit-appearance: none; -moz-appearance: none;" required>
+                                                <option value="" class="bg-[#101010] text-white" data-i18n="diag_form_emp_opt1">Selecione...</option>
+                                                <option value="1 a 10" class="bg-[#101010] text-white">1 a 10</option>
+                                                <option value="11 a 50" class="bg-[#101010] text-white">11 a 50</option>
+                                                <option value="51 a 100" class="bg-[#101010] text-white">51 a 100</option>
+                                                <option value="Acima de 100" class="bg-[#101010] text-white" data-i18n="diag_form_emp_opt5">Acima de 100</option>
+                                            </select>
+                                            <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-white/20 group-focus-within:text-primary-500 transition-colors">
+                                                <span class="iconify" data-icon="lucide:chevron-down" data-width="14"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-2 group">
+                                        <label class="text-[10px] uppercase tracking-widest text-white/40 font-medium group-focus-within:text-primary-400 transition-colors" data-i18n="diag_form_inv_label">Investimento Viável/Mês</label>
+                                        <div class="relative">
+                                            <select name="Investimento Viável por Mês" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white/80 text-sm focus:outline-none focus:border-primary-500 focus:bg-white/5 transition-all duration-300 shadow-inner appearance-none" style="-webkit-appearance: none; -moz-appearance: none;" required>
+                                                <option value="" class="bg-[#101010] text-white" data-i18n="diag_form_inv_opt1">Selecione uma faixa</option>
+                                                <option value="R$ 2.000 a R$ 4.000" class="bg-[#101010] text-white">R$ 2.000 a R$ 4.000</option>
+                                                <option value="R$ 5.000 a R$ 8.000" class="bg-[#101010] text-white">R$ 5.000 a R$ 8.000</option>
+                                                <option value="Acima de R$ 8.000" class="bg-[#101010] text-white" data-i18n="diag_form_inv_opt4">Acima de R$ 8.000</option>
+                                            </select>
+                                            <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-white/20 group-focus-within:text-primary-500 transition-colors">
+                                                <span class="iconify" data-icon="lucide:chevron-down" data-width="14"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col gap-2 group">
+                                    <label class="text-[10px] uppercase tracking-widest text-white/40 font-medium group-focus-within:text-primary-400 transition-colors" data-i18n="diag_form_chal_label">Qual a maior dificuldade da sua empresa?</label>
+                                    <textarea name="Maior Dificuldade da Empresa" rows="3" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500 focus:bg-white/5 transition-all duration-300 placeholder:text-white/20 shadow-inner resize-none" placeholder="Descreva brevemente o principal desafio que você enfrenta hoje..." data-i18n="diag_form_chal_ph" required></textarea>
+                                </div>
+                                
+                                <div class="flex gap-3 mt-2">
+                                    <button type="button" id="btn-prev-step" class="w-[60px] relative group overflow-hidden rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 h-12 flex items-center justify-center shrink-0">
+                                        <span class="iconify text-white/50 group-hover:text-white group-hover:-translate-x-1 transition-all" data-icon="lucide:arrow-left" data-width="18"></span>
+                                    </button>
+                                    <button type="submit" class="flex-1 relative group overflow-hidden rounded-xl shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.3)] hover:shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.5)] transition-all duration-300 bg-gradient-to-r from-primary-800 via-primary-700 to-primary-900 h-12 flex items-center justify-center">
+                                        <span class="relative z-10 text-xs font-bold uppercase tracking-widest text-white flex items-center gap-2">
+                                            <span data-i18n="diag_form_submit_btn">Solicitar Contato</span>
+                                            <span class="iconify group-hover:translate-x-1 transition-transform" data-icon="lucide:send" data-width="14"></span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Right Side: Image -->
+                    <div class="hidden lg:flex w-full lg:w-2/5 reveal delay-[300ms] flex-col justify-center relative z-10">
+                        <div class="relative w-full h-[90%] min-h-[400px] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(var(--color-primary-rgb),0.15)] group">
+                            <img src="images/imagem_clientes.jpg" alt="Diagnóstico Empresarial" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 filter brightness-75 contrast-125" onerror="this.src='images/services/financeiro.webp'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-90"></div>
+                            <div class="absolute inset-0 bg-primary-900/10 mix-blend-overlay"></div>
+                            
+                            <!-- Overlay Content on Image -->
+                            <div class="absolute bottom-8 left-8 right-8 z-20 transition-transform duration-500 group-hover:-translate-y-2">
+                                <div class="glass-panel bg-black/40 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-2xl">
+                                    <div class="flex items-center gap-4 mb-3">
+                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-600 to-primary-900 flex items-center justify-center border border-white/20 shadow-inner">
+                                            <span class="iconify text-white" data-icon="lucide:trending-up" data-width="20"></span>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-white font-medium text-sm tracking-wide" data-i18n="diag_card_title">Escalabilidade Real</h4>
+                                            <p class="text-white/40 text-[10px] uppercase tracking-widest" data-i18n="diag_card_subtitle">Foco em Dados</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-white/60 text-xs font-light leading-relaxed italic border-l-2 border-primary-500/50 pl-3" data-i18n="diag_card_text">
+                                        "Não vendemos conselhos. Construímos estruturas robustas que fazem sua empresa crescer independente de você."
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Decorative element -->
+                        <div class="absolute -top-10 -right-10 w-40 h-40 bg-primary-700/20 blur-[60px] rounded-full z-0 pointer-events-none"></div>
+                        <div class="absolute bottom-10 -left-10 w-40 h-40 bg-white/5 blur-[60px] rounded-full z-0 pointer-events-none"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION AREA DO COLABORADOR -->
+        <section id="colaborador" class="relative min-h-screen w-full py-32 px-6 bg-transparent z-10 border-t border-white/5">
+            <div class="max-w-[1400px] mx-auto w-full relative z-10 pt-10">
+                
+                <div class="flex flex-col lg:flex-row items-center gap-16">
+                    <!-- Left Side: Image -->
+                    <div class="w-full lg:w-1/2 reveal delay-[100ms] flex justify-center relative">
+                        <div class="relative w-full max-w-lg aspect-[4/5] rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(var(--color-primary-rgb),0.2)] group">
+                            <img src="images/imagem_colaborador.jpg" alt="Área do Colaborador" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#020202] via-[#020202]/20 to-transparent opacity-80 mix-blend-multiply"></div>
+                        </div>
+                        <!-- Decorative element -->
+                        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-primary-700/20 blur-[50px] rounded-full z-0 pointer-events-none"></div>
+                        <div class="absolute top-10 -left-10 w-32 h-32 bg-white/5 blur-[50px] rounded-full z-0 pointer-events-none"></div>
+                    </div>
+
+                    <!-- Right Side: Content and Form -->
+                    <div class="w-full lg:w-1/2 reveal delay-[200ms]">
+                        <div class="flex items-center space-x-3 mb-6">
+                            <div class="w-1.5 h-1.5 bg-primary-500 rounded-full animate-pulse shadow-[0_0_12px_var(--color-primary-gradient-1)]"></div>
+                            <p class="text-[11px] uppercase tracking-[0.25em] text-white/60 font-semibold font-outfit" data-i18n="colab_subtitle">Área do Colaborador</p>
+                            <div class="w-1.5 h-1.5 bg-primary-500 rounded-full animate-pulse shadow-[0_0_12px_var(--color-primary-gradient-1)]"></div>
+                        </div>
+                        
+                        <h2 class="font-heading text-4xl md:text-5xl font-light mb-6 text-white tracking-tight leading-tight">
+                            <span data-i18n="colab_title_1">Faça parte do nosso<br></span>
+                            <span class="bg-clip-text text-transparent bg-[linear-gradient(110deg,var(--color-primary-gradient-1),45%,var(--color-primary-gradient-1),50%,#ff8fa3,55%,var(--color-primary-gradient-1))] bg-[length:250%_100%] text-shimmer font-semibold" data-i18n="colab_title_2">Banco de Talentos</span>
+                        </h2>
+                        
+                        <p class="text-white/60 font-light leading-relaxed mb-10 text-lg" data-i18n="colab_desc">
+                            As empresas parceiras da Olympia estão sempre em busca de profissionais excepcionais. Envie seu currículo e conecte-se com as melhores oportunidades do mercado.
+                        </p>
+
+                        <!-- Form -->
+                        <form action="https://formsubmit.co/olympiaempresarial@gmail.com" method="POST" enctype="multipart/form-data" class="glass-panel border border-white/10 bg-[#101010]/80 backdrop-blur-2xl rounded-3xl p-8 relative z-10 shadow-xl flex flex-col gap-6">
+                            <input type="hidden" name="_subject" value="NOVO CURRÍCULO">
+                            <input type="hidden" name="_template" value="box">
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="flex flex-col gap-2">
+                                    <label class="text-xs uppercase tracking-widest text-white/40 font-medium" data-i18n="colab_form_name">Nome Completo</label>
+                                    <input type="text" name="nome" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary-500 transition-colors placeholder:text-white/20" placeholder="Seu nome" data-i18n="colab_form_name_ph" required>
+                                </div>
+                                <div class="flex flex-col gap-2">
+                                    <label class="text-xs uppercase tracking-widest text-white/40 font-medium" data-i18n="colab_form_phone">Telefone</label>
+                                    <input type="tel" name="telefone" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary-500 transition-colors placeholder:text-white/20" placeholder="(00) 00000-0000" data-i18n="colab_form_phone_ph" required>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-2">
+                                <label class="text-xs uppercase tracking-widest text-white/40 font-medium" data-i18n="colab_form_file">Anexar Currículo (PDF, DOCX)</label>
+                                <div class="relative w-full h-32 border-2 border-dashed border-white/20 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary-500/50 hover:bg-white/5 transition-all cursor-pointer group overflow-hidden">
+                                    <input type="file" name="attachment" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".pdf,.doc,.docx" required onchange="if(this.files[0]) { this.nextElementSibling.nextElementSibling.textContent = this.files[0].name; this.nextElementSibling.nextElementSibling.classList.remove('text-white/50'); this.nextElementSibling.nextElementSibling.classList.add('text-primary-400'); this.nextElementSibling.nextElementSibling.removeAttribute('data-i18n'); } else { this.nextElementSibling.nextElementSibling.setAttribute('data-i18n', 'colab_form_file_text'); this.nextElementSibling.nextElementSibling.textContent = translations[currentLanguage].colab_form_file_text; this.nextElementSibling.nextElementSibling.classList.add('text-white/50'); this.nextElementSibling.nextElementSibling.classList.remove('text-primary-400'); }">
+                                    <span class="iconify text-white/40 group-hover:text-primary-400 transition-colors" data-icon="lucide:upload-cloud" data-width="32"></span>
+                                    <span class="text-sm text-white/50 group-hover:text-white/80 transition-colors font-light text-center px-4 max-w-[80%] truncate" data-i18n="colab_form_file_text">Arraste seu arquivo ou clique para selecionar</span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="mt-4 w-full relative group overflow-hidden rounded-xl shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.3)] hover:shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.5)] transition-all duration-300 bg-gradient-to-r from-primary-800 via-primary-700 to-primary-900 h-12 flex items-center justify-center">
+                                <span class="relative z-10 text-xs font-bold uppercase tracking-widest text-white flex items-center gap-2">
+                                    <span data-i18n="colab_form_btn">Enviar Candidatura</span>
+                                    <span class="iconify group-hover:translate-x-1 transition-transform" data-icon="lucide:send" data-width="14"></span>
+                                </span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: Experiências -->
+        <section id="experiencias" class="relative min-h-screen w-full py-32 px-6 bg-transparent z-10">
+            <div class="max-w-[1400px] mx-auto w-full relative z-10 pt-10">
+
+                <!-- Section Header -->
+                <div class="text-center mb-16 reveal">
+                    <div class="flex items-center justify-center space-x-3 mb-6">
+                        <div
+                            class="w-1.5 h-1.5 bg-primary-500 rounded-full animate-pulse shadow-[0_0_12px_var(--color-primary-gradient-1)]">
+                        </div>
+                        <p class="text-[11px] uppercase tracking-[0.25em] text-white/60 font-semibold font-outfit"
+                            data-i18n="exp_subtitle">A Transformação na Prática</p>
+                        <div
+                            class="w-1.5 h-1.5 bg-primary-500 rounded-full animate-pulse shadow-[0_0_12px_var(--color-primary-gradient-1)]">
+                        </div>
+                    </div>
+                    <h2
+                        class="font-heading text-4xl md:text-5xl lg:text-[4rem] font-light mb-6 text-white tracking-tight">
+                        <span data-i18n="exp_title_1">Experiência dos Nossos</span> <span
+                            class="bg-clip-text text-transparent bg-[linear-gradient(110deg,var(--color-primary-gradient-1),45%,var(--color-primary-gradient-1),50%,#ff8fa3,55%,var(--color-primary-gradient-1))] bg-[length:250%_100%] text-shimmer"
+                            data-i18n="exp_title_2">Clientes</span>
+                    </h2>
+                </div>
+
+                <!-- Testimonials Grid -->
+                <div class="relative w-full overflow-hidden flex items-center group/carousel py-4 -my-4 mask-edges-x" style="mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);">
+                    <div class="flex gap-6 w-max animate-scroll-x hover:[animation-play-state:paused] pr-6 will-change-transform">
+                        <!-- Card 1 -->
+                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 hover:-translate-y-2 transition-transform duration-500 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_1">Cliente Olympia</h4>
+                                    <div class="flex items-center gap-1 mt-1 text-primary-500">
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-white/70 italic font-light leading-relaxed text-[15px]" data-i18n="testi_text_1">
+                                "A assessoria da Olympia transformou nossa visão estratégica. O nível de profissionalismo é incomparável no mercado atual."
+                            </p>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 hover:-translate-y-2 transition-transform duration-500 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_2">Cliente Olympia</h4>
+                                    <div class="flex items-center gap-1 mt-1 text-primary-500">
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-white/70 italic font-light leading-relaxed text-[15px]" data-i18n="testi_text_2">
+                                "A reestruturação de processos proposta pela Olympia nos economizou meses de problemas operacionais. Um trabalho de maestria e execução impecável."
+                            </p>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 hover:-translate-y-2 transition-transform duration-500 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_3">Cliente Olympia</h4>
+                                    <div class="flex items-center gap-1 mt-1 text-primary-500">
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-white/70 italic font-light leading-relaxed text-[15px]" data-i18n="testi_text_3">
+                                "A Eduarda juntamente com os engenheiros que trabalham na equipe nos ajudou a organizar melhor nossos processos operacionais e a gestão do estoque, trazendo mais controle, padronização e clareza para a rotina da equipe. Conseguimos identificar falhas, melhorar a organização e ter uma visão mais eficiente da operação. Hoje, entendemos como processos bem estruturados são essenciais para reduzir desperdícios e fortalecer os resultados da empresa."
+                            </p>
+                        </div>
+                        <!-- Card 4 -->
+                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 hover:-translate-y-2 transition-transform duration-500 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_4">Cliente Olympia</h4>
+                                    <div class="flex items-center gap-1 mt-1 text-primary-500">
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-white/70 italic font-light leading-relaxed text-[15px]" data-i18n="testi_text_4">
+                                "Minha empresa precisava ser mais valorizada pela nossa marca e apresentar nossos produtos de maneira profissional. O trabalho desenvolvido pela Olympia trouxe mais identidade para nossa comunicação e melhorou a forma como mostramos nosso negócio ao público. Hoje, entendemos que a imagem da empresa também faz parte da estratégia de vendas."
+                            </p>
+                        </div>
+                        <!-- Card 5 -->
+                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 hover:-translate-y-2 transition-transform duration-500 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_5">Cliente Olympia</h4>
+                                    <div class="flex items-center gap-1 mt-1 text-primary-500">
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-white/70 italic font-light leading-relaxed text-[15px]" data-i18n="testi_text_5">
+                                "A Olympia foi fundamental para o desenvolvimento das nossas lideranças e o fortalecimento da equipe operacional. Com o acompanhamento, conseguimos melhorar a comunicação, fortalecer o senso de responsabilidade e desenvolver uma liderança mais preparada para tomar decisões e conduzir pessoas."
+                            </p>
+                        </div>
+                        <!-- Card 6 -->
+                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 hover:-translate-y-2 transition-transform duration-500 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_6">Cliente Olympia</h4>
+                                    <div class="flex items-center gap-1 mt-1 text-primary-500">
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-white/70 italic font-light leading-relaxed text-[15px]" data-i18n="testi_text_6">
+                                "Procuramos a empresa para compreender melhor a realidade financeira da nossa empresa, trazendo mais organização, controle e clareza sobre receitas, despesas e resultados. Com processos financeiros mais estruturados, passamos a tomar decisões com mais segurança e a enxergar oportunidades de melhoria que antes passavam despercebidas. Hoje, temos uma visão mais estratégica das nossas finanças e mais preparo para crescer de forma sustentável."
+                            </p>
+                        </div>
+                        
+                        <!-- Duplicate Cards for infinite effect -->
+                        <!-- Card 1 -->
+                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 hover:-translate-y-2 transition-transform duration-500 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_1">Cliente Olympia</h4>
+                                    <div class="flex items-center gap-1 mt-1 text-primary-500">
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-white/70 italic font-light leading-relaxed text-[15px]" data-i18n="testi_text_1">
+                                "A assessoria da Olympia transformou nossa visão estratégica. O nível de profissionalismo é incomparável no mercado atual."
+                            </p>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 hover:-translate-y-2 transition-transform duration-500 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_2">Cliente Olympia</h4>
+                                    <div class="flex items-center gap-1 mt-1 text-primary-500">
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-white/70 italic font-light leading-relaxed text-[15px]" data-i18n="testi_text_2">
+                                "A reestruturação de processos proposta pela Olympia nos economizou meses de problemas operacionais. Um trabalho de maestria e execução impecável."
+                            </p>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 hover:-translate-y-2 transition-transform duration-500 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_3">Cliente Olympia</h4>
+                                    <div class="flex items-center gap-1 mt-1 text-primary-500">
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-white/70 italic font-light leading-relaxed text-[15px]" data-i18n="testi_text_3">
+                                "A Eduarda juntamente com os engenheiros que trabalham na equipe nos ajudou a organizar melhor nossos processos operacionais e a gestão do estoque, trazendo mais controle, padronização e clareza para a rotina da equipe. Conseguimos identificar falhas, melhorar a organização e ter uma visão mais eficiente da operação. Hoje, entendemos como processos bem estruturados são essenciais para reduzir desperdícios e fortalecer os resultados da empresa."
+                            </p>
+                        </div>
+                        <!-- Card 4 -->
+                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 hover:-translate-y-2 transition-transform duration-500 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_4">Cliente Olympia</h4>
+                                    <div class="flex items-center gap-1 mt-1 text-primary-500">
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-white/70 italic font-light leading-relaxed text-[15px]" data-i18n="testi_text_4">
+                                "Minha empresa precisava ser mais valorizada pela nossa marca e apresentar nossos produtos de maneira profissional. O trabalho desenvolvido pela Olympia trouxe mais identidade para nossa comunicação e melhorou a forma como mostramos nosso negócio ao público. Hoje, entendemos que a imagem da empresa também faz parte da estratégia de vendas."
+                            </p>
+                        </div>
+                        <!-- Card 5 -->
+                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 hover:-translate-y-2 transition-transform duration-500 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_5">Cliente Olympia</h4>
+                                    <div class="flex items-center gap-1 mt-1 text-primary-500">
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-white/70 italic font-light leading-relaxed text-[15px]" data-i18n="testi_text_5">
+                                "A Olympia foi fundamental para o desenvolvimento das nossas lideranças e o fortalecimento da equipe operacional. Com o acompanhamento, conseguimos melhorar a comunicação, fortalecer o senso de responsabilidade e desenvolver uma liderança mais preparada para tomar decisões e conduzir pessoas."
+                            </p>
+                        </div>
+                        <!-- Card 6 -->
+                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 hover:-translate-y-2 transition-transform duration-500 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_6">Cliente Olympia</h4>
+                                    <div class="flex items-center gap-1 mt-1 text-primary-500">
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-white/70 italic font-light leading-relaxed text-[15px]" data-i18n="testi_text_6">
+                                "Procuramos a empresa para compreender melhor a realidade financeira da nossa empresa, trazendo mais organização, controle e clareza sobre receitas, despesas e resultados. Com processos financeiros mais estruturados, passamos a tomar decisões com mais segurança e a enxergar oportunidades de melhoria que antes passavam despercebidas. Hoje, temos uma visão mais estratégica das nossas finanças e mais preparo para crescer de forma sustentável."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+    </div> <!-- End Integrated Wrapper -->
+
+    <footer class="relative w-full py-8 px-6 bg-[#000000] z-20 border-t border-white/5">
+        <div class="max-w-[1400px] mx-auto w-full grid grid-cols-1 md:grid-cols-3 items-center gap-6 md:gap-0">
+
+            <!-- Logo & Instagram -->
+            <div class="flex items-center justify-center md:justify-start gap-6">
+                <a href="#hero" class="flex items-center gap-4 group">
+                    <div
+                        class="w-12 h-12 rounded-full border-gradient flex items-center justify-center bg-white/5 group-hover:bg-white/10 transition-colors overflow-hidden">
+                        <img src="images/logos/logo.webp" alt="Olympia Logo" class="w-full h-full object-cover">
+                    </div>
+                    <span class="font-heading font-semibold text-lg tracking-wide text-white">OLYMPIA</span>
+                </a>
+
+                <a href="https://instagram.com/olympiaempresarial" target="_blank"
+                    class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-primary-400 hover:border-primary-400 hover:bg-primary-950/30 transition-all duration-300 group relative">
+                    <span class="iconify" data-icon="lucide:instagram" data-width="18"></span>
+                </a>
+            </div>
+
+            <!-- Copyright -->
+            <div class="flex justify-center text-center mt-4 md:mt-0">
+                <p class="text-white/30 text-xs font-light tracking-wide md:whitespace-nowrap" data-i18n="footer_rights">
+                    &copy; 2026 Olympia Consultoria Empresarial.<br class="md:hidden"> Todos os direitos reservados.
+                </p>
+            </div>
+
+            <!-- Spacer for exact centering -->
+            <div class="hidden md:block"></div>
+        </div>
+    </footer>
+
+    <!-- DEVELOPER SIGNATURE -->
+    <div class="w-full bg-[#000000] py-4 flex justify-center items-center z-20 relative">
+        <p class="text-white/30 text-[10px] uppercase tracking-[0.2em] font-light flex items-center gap-2">
+            Website by
+            <a href="https://wa.me/5537988280713?text=Ol%C3%A1!%20Gostei%20muito%20do%20design%20do%20site%20da%20Olympia%20e%20gostaria%20de%20adquirir%20um%20para%20o%20meu%20pr%C3%B3prio%20neg%C3%B3cio."
+                target="_blank"
+                class="font-medium text-white/50 hover:text-white transition-colors py-1.5 px-4 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 flex items-center gap-2">
+                KAIQUEGAZONI
+                <span class="iconify text-[10px]" data-icon="lucide:arrow-up-right"></span>
+            </a>
+        </p>
+    </div>
+
+    <!-- Modal Conheça a Olympia -->
+    <div id="modal-olympia"
+        class="fixed inset-0 z-[99999] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 backdrop-blur-lg bg-black/80 p-4">
+        <div class="glass-panel border-gradient !bg-[#020202]/90 relative p-8 md:p-12 max-w-2xl w-full rounded-3xl transform scale-95 transition-transform duration-500"
+            id="modal-olympia-content">
+            <!-- Close Button -->
+            <button id="close-modal"
+                class="absolute top-6 right-6 text-white/50 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full p-2 backdrop-blur-sm border border-white/10">
+                <span class="iconify" data-icon="lucide:x" data-width="20"></span>
+            </button>
+
+            <h2 class="font-heading text-3xl font-semibold tracking-tight text-white mb-6" data-i18n="modal_title">Nossa
+                Essência</h2>
+
+            <div class="space-y-4 text-white/70 font-light leading-relaxed">
+                <p data-i18n="modal_p1">A Olympia é uma consultoria estratégica avançada, especializada em elevar o
+                    potencial humano e operacional das organizações. Mais do que prestar consultoria, nós nos
+                    infiltramos na cultura da sua empresa para diagnosticar, reestruturar e transformar resultados a
+                    partir de dentro.</p>
+                <p data-i18n="modal_p2">Atuamos de forma integrada nos setores vitais da organização. Com um profundo
+                    entendimento sobre gestão empresarial, recrutamento, desenvolvimento de líderes e posicionamento de
+                    marca, entregamos soluções sob medida e de altíssimo padrão para marcas que não aceitam o mediano.
+                </p>
+            </div>
+
+            <div class="mt-10 pt-6 border-t border-white/10 text-center">
+                <p class="text-xs uppercase tracking-widest text-white/40 mb-4 font-medium" data-i18n="modal_ig_text">
+                    Conheça nosso Instagram</p>
+                <a href="https://instagram.com/olympiaempresarial" target="_blank"
+                    class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary-500/50 transition-all duration-300 text-white font-medium group">
+                    <span class="iconify text-primary-400 group-hover:text-primary-300 transition-colors"
+                        data-icon="lucide:instagram" data-width="20"></span>
+                    @olympiaempresarial
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Details Modal -->
+    <div id="modal-product"
+        class="fixed inset-0 z-[99999] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 backdrop-blur-xl bg-[#020202]/90 p-4">
+        <div class="glass-panel border-gradient !bg-[#050505]/95 relative max-w-4xl w-full rounded-[2rem] transform scale-95 transition-transform duration-500 overflow-hidden flex flex-col md:flex-row shadow-[0_0_100px_rgba(var(--color-primary-rgb),0.15)]"
+            id="modal-product-content">
+
+            <!-- Close Button -->
+            <button id="close-modal-product"
+                class="absolute top-6 right-6 z-50 text-white/50 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full p-2 backdrop-blur-md border border-white/10">
+                <span class="iconify" data-icon="lucide:x" data-width="20"></span>
+            </button>
+
+            <!-- Image Side -->
+            <div class="w-full md:w-2/5 h-64 md:h-auto relative overflow-hidden bg-black flex items-center justify-center">
+                <img id="modal-product-img" src="" alt="Produto"
+                    class="w-full h-full object-cover object-center opacity-60 mix-blend-screen">
+                <div
+                    class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#050505] via-transparent to-transparent">
+                </div>
+                <!-- Small tag overlay -->
+                <div class="absolute top-6 left-6 glass-panel bg-black/40 backdrop-blur-md px-4 py-2 rounded border border-white/10 text-[10px] font-bold text-white tracking-widest uppercase"
+                    id="modal-product-tag">Categoria</div>
+            </div>
+
+            <!-- Content Side -->
+            <div class="w-full md:w-3/5 p-8 md:p-12 lg:p-16 flex flex-col justify-center relative">
+                <h2 id="modal-product-title"
+                    class="font-heading text-3xl md:text-4xl font-semibold tracking-tight text-white mb-8 relative">
+                    <span class="relative z-10">Título</span>
+                    <!-- Decorative subtle glow behind title -->
+                    <div
+                        class="absolute -left-10 top-1/2 -translate-y-1/2 w-32 h-32 bg-primary-700/20 blur-[50px] rounded-full z-0 pointer-events-none">
+                    </div>
+                </h2>
+
+                <div class="space-y-8 text-white/70 font-light leading-relaxed relative z-10">
+                    <div>
+                        <h4
+                            class="text-xs uppercase tracking-widest text-primary-400 font-semibold mb-3 flex items-center gap-2">
+                            <span class="iconify" data-icon="lucide:target" data-width="14"></span>
+                            <span data-i18n="modal_prod_what">O que é</span>
+                        </h4>
+                        <p id="modal-product-what" class="text-sm md:text-base"></p>
+                    </div>
+                    <div>
+                        <h4
+                            class="text-xs uppercase tracking-widest text-primary-400 font-semibold mb-3 flex items-center gap-2">
+                            <span class="iconify" data-icon="lucide:zap" data-width="14"></span>
+                            <span data-i18n="modal_prod_importance">A Importância</span>
+                        </h4>
+                        <p id="modal-product-importance" class="text-sm md:text-base"></p>
+                    </div>
+                </div>
+
+                <div class="mt-12 pt-8 border-t border-white/5 relative z-10">
+                    <a id="modal-product-whatsapp" href="javascript:void(0)" onclick="closeProductModal(); document.getElementById('diagnostico').scrollIntoView({behavior: 'smooth'})"
+                        class="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary-500/50 transition-all duration-300 text-white text-sm font-semibold uppercase tracking-widest group">
+                        <span data-i18n="modal_prod_btn">Solicitar Consultoria</span>
+                        <span class="iconify transform group-hover:translate-x-1 transition-transform"
+                            data-icon="lucide:arrow-right" data-width="16"></span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Força a página a sempre carregar no topo (Hero) independente do cache do navegador
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        
+        window.addEventListener('load', function() {
+            if (window.location.hash) {
+                window.history.replaceState(null, null, window.location.pathname);
+            }
+            setTimeout(function() {
+                window.scrollTo(0, 0);
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }, 10);
+        });
+
+        const reveals = document.querySelectorAll(".reveal, .reveal-fade, .reveal-premium");
+
+        const revealOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const revealOnScroll = new IntersectionObserver(function (entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return;
+                } else {
+                    entry.target.classList.add("active");
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, revealOptions);
+
+        reveals.forEach(reveal => {
+            revealOnScroll.observe(reveal);
+        });
+
+        // Preloader and Hero Trigger (Strict Loading)
+        const preloader = document.getElementById('preloader');
+        const heroVideo = document.getElementById('hero-video');
+        const bodyContainer = document.getElementById('body-container');
+        let preloaderHidden = false;
+
+        function hidePreloader() {
+            if (preloaderHidden) return;
+            preloaderHidden = true;
+
+            if (heroVideo && heroVideo.paused) {
+                heroVideo.play().catch(e => console.log("Autoplay prevented:", e));
+            }
+
+            setTimeout(() => {
+                if (preloader) {
+                    preloader.style.transitionDuration = '500ms';
+                    preloader.style.opacity = '0';
+                }
+                setTimeout(() => {
+                    if (preloader) preloader.style.display = 'none';
+                    if (bodyContainer) bodyContainer.classList.remove('overflow-hidden');
+                    document.querySelectorAll('#hero .reveal, #hero .reveal-fade, #hero .reveal-premium').forEach(el => el.classList.add('active'));
+                }, 500);
+            }, 50);
+        }
+        document.addEventListener('DOMContentLoaded', hidePreloader);
+        window.addEventListener('load', hidePreloader);
+        setTimeout(hidePreloader, 2000);
+
+        // Hero Scroll Parallax & Fade out Effect (Apple/Vercel style transition)
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const heroHeight = window.innerHeight;
+
+            // Only animate while the hero is visible to save GPU performance
+            if (scrollY <= heroHeight) {
+                const progress = scrollY / heroHeight; // Ranges from 0 to 1
+
+                const content = document.getElementById('hero-content');
+                if (content) {
+                    // Fade out the container without blurring
+                    content.style.opacity = Math.max(1 - (progress * 1.5), 0);
+
+                    // Staggered upward parallax: top elements fly up faster so they don't crash into each other
+                    const h1 = document.getElementById('parallax-h1');
+                    const p = document.getElementById('parallax-p');
+                    const buttons = document.getElementById('parallax-btn');
+
+                    // We apply to wrappers to avoid conflicting with the CSS transition property on the inner elements
+                    if (h1) h1.style.transform = `translate3d(0, -${scrollY * 0.8}px, 0)`;
+                    if (p) p.style.transform = `translate3d(0, -${scrollY * 0.5}px, 0)`;
+                    if (buttons) buttons.style.transform = `translate3d(0, -${scrollY * 0.2}px, 0)`;
+                }
+
+                // We only animate text (which is cheap) and avoid touching the video element during scroll to preserve 60fps and avoid stuttering.
+            }
+        }, { passive: true }); // passive true for ultra smooth 60fps scrolling
+
+        // --- SCROLLSPY E NAVEGAÇÃO SUAVE ---
+        const sections = document.querySelectorAll('section[id], header[id]');
+        const navItems = document.querySelectorAll('nav .nav-item');
+
+        // Navegação suave ao clicar
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                const href = item.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        // Se for hero, forçamos o scrollY 0 para evitar bugs com sticky
+                        if (href === '#hero') {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        } else {
+                            target.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                }
+            });
+        });
+
+        // ScrollSpy Manual (Mais confiável para seções sticky)
+        window.addEventListener('scroll', () => {
+            const offset = window.innerHeight / 2;
+
+            let currentId = 'hero';
+
+            const services = document.getElementById('services');
+            const diagnostico = document.getElementById('diagnostico');
+            const colaborador = document.getElementById('colaborador');
+            const experiencias = document.getElementById('experiencias');
+
+            if (services && services.getBoundingClientRect().top <= offset) {
+                currentId = 'services';
+            }
+            if (diagnostico && diagnostico.getBoundingClientRect().top <= offset) {
+                currentId = 'diagnostico';
+            }
+            if (colaborador && colaborador.getBoundingClientRect().top <= offset) {
+                currentId = 'colaborador';
+            }
+            if (experiencias && experiencias.getBoundingClientRect().top <= offset) {
+                currentId = 'experiencias';
+            }
+
+            navItems.forEach(item => {
+                if (item.getAttribute('href') === `#${currentId}`) {
+                    item.classList.remove('text-white/50', 'hover:text-white', 'text-bordeaux-400', 'hover:text-bordeaux-300', 'text-primary-400', 'hover:text-primary-300');
+                    item.classList.add('text-primary-500', 'hover:text-primary-400');
+                } else {
+                    item.classList.remove('text-primary-500', 'hover:text-primary-400', 'text-bordeaux-400', 'hover:text-bordeaux-300', 'text-primary-400', 'hover:text-primary-300');
+                    item.classList.add('text-white/50', 'hover:text-white');
+                }
+            });
+        }, { passive: true });
+
+        // --- MODALS (OLYMPIA & PRODUCTS) ---
+        const modalOlympia = document.getElementById('modal-olympia');
+        const modalOlympiaContent = document.getElementById('modal-olympia-content');
+        const openModalBtn = document.getElementById('open-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+
+        // Product Modal elements
+        const modalProduct = document.getElementById('modal-product');
+        const modalProductContent = document.getElementById('modal-product-content');
+        const closeModalProductBtn = document.getElementById('close-modal-product');
+
+        // Product Modal content targets
+        const modProdTitle = document.getElementById('modal-product-title').querySelector('span');
+        const modProdTag = document.getElementById('modal-product-tag');
+        const modProdWhat = document.getElementById('modal-product-what');
+        const modProdImportance = document.getElementById('modal-product-importance');
+        const modProdImg = document.getElementById('modal-product-img');
+        const modProdWhatsapp = document.getElementById('modal-product-whatsapp');
+
+        let currentLanguage = 'pt';
+
+        function openOlympiaModal() {
+            modalOlympia.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                modalOlympiaContent.classList.remove('scale-95');
+                modalOlympiaContent.classList.add('scale-100');
+            }, 50);
+        }
+
+        function closeOlympiaModal() {
+            modalOlympiaContent.classList.remove('scale-100');
+            modalOlympiaContent.classList.add('scale-95');
+            setTimeout(() => {
+                modalOlympia.classList.add('opacity-0', 'pointer-events-none');
+            }, 300);
+        }
+
+        function populateProductModal(serviceId) {
+            const data = productDetails[currentLanguage][serviceId];
+            if (!data) return;
+
+            modProdTitle.innerHTML = data.title;
+            modProdTag.innerText = data.tag;
+            modProdWhat.innerText = data.what;
+            modProdImportance.innerText = data.importance;
+            modProdImg.src = data.image;
+            
+            const btnSpan = modProdWhatsapp.querySelector('span[data-i18n]');
+            if (data.title.toLowerCase().includes('consultoria')) {
+                btnSpan.setAttribute('data-i18n', 'modal_prod_btn');
+                btnSpan.innerText = translations[currentLanguage].modal_prod_btn;
+            } else {
+                btnSpan.setAttribute('data-i18n', 'modal_prod_btn_alt');
+                btnSpan.innerText = translations[currentLanguage].modal_prod_btn_alt;
+            }
+            
+            // Adjust image framing for specific photos
+            if (serviceId === 'seguranca') {
+                modProdImg.style.objectPosition = '30% 20%'; // Shift left to center the woman in the vertical frame
+            } else if (serviceId === 'alimentar') {
+                modProdImg.style.objectPosition = 'center top'; // Evita cortar o rosto na imagem da bromatológica
+            } else {
+                modProdImg.style.objectPosition = 'center center'; // Default center
+            }
+
+            // Link is now static to #diagnostico
+            // modProdWhatsapp.href = translations[currentLanguage].whatsapp_link;
+
+            // Store current service in case language is switched while open
+            modalProduct.setAttribute('data-current-service', serviceId);
+        }
+
+        function openProductModal(serviceId) {
+            populateProductModal(serviceId);
+            modalProduct.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                modalProductContent.classList.remove('scale-95');
+                modalProductContent.classList.add('scale-100');
+            }, 50);
+        }
+
+        function closeProductModal() {
+            modalProductContent.classList.remove('scale-100');
+            modalProductContent.classList.add('scale-95');
+            setTimeout(() => {
+                modalProduct.classList.add('opacity-0', 'pointer-events-none');
+            }, 300);
+        }
+
+        // Event Listeners for Olympia Modal
+        if (openModalBtn) {
+            openModalBtn.addEventListener('click', openOlympiaModal);
+        }
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', closeOlympiaModal);
+        }
+        modalOlympia.addEventListener('click', (e) => {
+            if (e.target === modalOlympia) closeOlympiaModal();
+        });
+
+        // Event Listeners for Product Modal
+        const btnSaberMais = document.querySelectorAll('.btn-saber-mais');
+        btnSaberMais.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const serviceId = btn.getAttribute('data-service');
+                if (serviceId) openProductModal(serviceId);
+            });
+        });
+
+        if (closeModalProductBtn) {
+            closeModalProductBtn.addEventListener('click', closeProductModal);
+        }
+        modalProduct.addEventListener('click', (e) => {
+            if (e.target === modalProduct) closeProductModal();
+        });
+        if (closeModalProductBtn) {
+            closeModalProductBtn.addEventListener('click', closeProductModal);
+        }
+        modalProduct.addEventListener('click', (e) => {
+            if (e.target === modalProduct) closeProductModal();
+        });
+
+        // Close on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modalOlympia.classList.contains('pointer-events-none')) {
+                closeOlympiaModal();
+            }
+            if (e.key === 'Escape' && !modalProduct.classList.contains('pointer-events-none')) {
+                closeProductModal();
+            }
+        });
+
+        // i18n Translation Logic
+        const translations = {
+            pt: {
+                nav_sobre: "Sobre/Contato",
+                nav_servicos: "Serviços",
+                nav_experiencias: "Experiências",
+                nav_diagnostico: "Diagnóstico",
+                diag_subtitle: "Para Empresas",
+                diag_title_1: "Solicite um ",
+                diag_title_2: "Diagnóstico",
+                diag_desc: "Transforme os resultados do seu negócio. Preencha o formulário abaixo para que nossos especialistas entendam o cenário da sua empresa e proponham a melhor solução.",
+                diag_form_name_label: "Nome Completo",
+                diag_form_name_ph: "Como devemos chamá-lo?",
+                diag_form_phone_label: "Número (WhatsApp/Telefone)",
+                diag_form_phone_ph: "(00) 00000-0000",
+                diag_form_next_btn: "Avançar para Etapa Final",
+                diag_form_email_label: "E-mail Corporativo",
+                diag_form_email_ph: "seu@email.com",
+                diag_form_company_label: "Nome da Empresa",
+                diag_form_company_ph: "Sua Empresa",
+                diag_form_role_label: "Cargo na Empresa",
+                diag_form_role_ph: "Ex: Sócio, Diretor...",
+                diag_form_city_label: "Cidade/Estado",
+                diag_form_city_ph: "Sua localização",
+                diag_form_emp_label: "Nº de Colaboradores",
+                diag_form_emp_opt1: "Selecione...",
+                diag_form_emp_opt5: "Acima de 100",
+                diag_form_inv_label: "Investimento Viável/Mês",
+                diag_form_inv_opt1: "Selecione uma faixa",
+                diag_form_inv_opt4: "Acima de R$ 8.000",
+                diag_form_chal_label: "Qual a maior dificuldade da sua empresa?",
+                diag_form_chal_ph: "Descreva brevemente o principal desafio que você enfrenta hoje...",
+                diag_form_submit_btn: "Solicitar Contato",
+                diag_card_title: "Escalabilidade Real",
+                diag_card_subtitle: "Foco em Dados",
+                diag_card_text: "\"Não vendemos conselhos. Construímos estruturas robustas que fazem sua empresa crescer independente de você.\"",
+                hero_h1_1: "CONSULTORIA&nbsp;",
+                hero_h1_2: "EMPRESARIAL&nbsp;",
+                hero_p1: "Impulsionamos negócios através de <span class=\"text-white font-medium\">consultoria estratégica</span>, <span class=\"text-white font-medium\">desenvolvimento de equipes</span> e soluções de <span class=\"text-bordeaux-700 font-medium drop-shadow-[0_0_10px_rgba(155,33,49,0.8)]\">alto padrão</span> para transformar resultados.",
+                btn_primary: "Entre em Contato",
+                btn_secondary: "Conheça a Olympia",
+                scroll_text: "Descubra",
+                modal_title: "Nossa Essência",
+                modal_p1: "A Olympia é uma consultoria estratégica avançada, especializada em elevar o potencial humano e operacional das organizações. Mais do que prestar consultoria, nós nos infiltramos na cultura da sua empresa para diagnosticar, reestruturar e transformar resultados a partir de dentro.",
+                modal_p2: "Atuamos de forma integrada nos setores vitais da organização. Com um profundo entendimento sobre gestão empresarial, recrutamento, desenvolvimento de líderes e posicionamento de marca, entregamos soluções sob medida e de altíssimo padrão para marcas que não aceitam o mediano.",
+                modal_ig_text: "Conheça nosso Instagram",
+                whatsapp_link: "https://wa.me/5537998414859?text=Ol%C3%A1!%20Conheci%20o%20site%20da%20empresa%20e%20gostaria%20de%20saber%20um%20pouco%20mais%20sobre%20as%20consultorias%20e%20assessorias%20fornecidas.",
+                services_subtitle: "Nossos Produtos",
+                services_title_1: "Soluções de",
+                services_title_2: "Alto Padrão",
+                rh_tag: "Recursos Humanos",
+                rh_title: "Assessoria e Consultoria de RH",
+                rh_desc: "Estruturação e reestruturação completa de todos os subsistemas de gestão de pessoas.",
+                btn_saber_mais: "Saber mais",
+                fin_tag: "Estratégia",
+                fin_title: "Assessoria e Consultoria Financeira",
+                fin_desc: "Modelagem financeira, reestruturação de capital e inteligência de dados para alavancar a rentabilidade e valuation do seu negócio.",
+                bli_tag: "Corporativo",
+                bli_title: "Blindagem Trabalhista",
+                bli_desc: "Blindagem jurídica empresarial, estruturação de contratos e adequação normativa focada em segurança e mitigação de riscos.",
+                foto_tag: "Branding Visual",
+                foto_title: "Produção Fotográfica e Marketing",
+                foto_desc: "Captação profissional de imagens e vídeos institucionais, corporativas e de produtos, com direção de arte focada na personalidade de cada empresa.",
+                tre_tag: "Capacitação",
+                tre_title: "Consultoria de Processos Operacionais",
+                tre_desc: "Análise e organização das atividades da empresa para eliminar falhas, reduzir desperdícios e aumentar a produtividade.",
+                ali_tag: "Bromatológica",
+                ali_title: "Assessoria e Consultoria Alimentar e Bromatologica",
+                ali_desc: "Acompanhamento técnico para garantir qualidade, segurança e conformidade dos alimentos.",
+                sit_tag: "Web",
+                sit_title: "Criação de Websites e <br> Tráfego Pago",
+                sit_desc: "Criação de websites e investimento em anúncios na internet através do tráfego pago para atrair pessoas até a empresa.",
+                seg_tag: "Compliance",
+                seg_title: "Segurança do Trabalho",
+                seg_desc: "Suporte especializado para prevenir acidentes, proteger os colaboradores e manter a empresa em conformidade com as normas.",
+                ven_tag: "Comercial",
+                ven_title: "Consultoria de Atendimento ao Publico e Vendas",
+                ven_desc: "Capacitação do time de vendas e atendimento ao público aperfeiçoando abordagem e comunicação.",
+                modal_prod_what: "O que é",
+                modal_prod_importance: "A Importância",
+                modal_prod_btn: "Solicitar Consultoria",
+                modal_prod_btn_alt: "Solicitar Serviço",
+                exp_subtitle: "A Transformação na Prática",
+                exp_title_1: "Experiência dos Nossos",
+                exp_title_2: "Clientes",
+                testi_name_1: "Vônofre Food's",
+                testi_role_1: "Cliente Olympia",
+                testi_text_1: "\"A assessoria da Olympia transformou nossa visão estratégica. O nível de profissionalismo é incomparável no mercado atual.\"",
+                testi_name_2: "Tennessee Burger",
+                testi_role_2: "Cliente Olympia",
+                testi_text_2: "\"A reestruturação de processos proposta pela Olympia nos economizou meses de problemas operacionais. Um trabalho de maestria e execução impecável.\"",
+                testi_name_3: "Roberto Almeida",
+                testi_role_3: "Sócio-Fundador, Almeida Associados",
+                testi_text_3: "\"Nosso posicionamento e segurança jurídica foram elevados a outro patamar. A Olympia entrega uma inteligência de mercado muito além da consultoria tradicional.\"",
+                testi_name_4: "TechSolutions",
+                testi_role_4: "Cliente Olympia",
+                testi_text_4: "\"Com o suporte estratégico da Olympia, otimizamos toda a nossa infraestrutura. Os resultados superaram nossas expectativas.\"",
+                testi_name_5: "Clínica Bem-Estar",
+                testi_role_5: "Cliente Olympia",
+                testi_text_5: "\"Nossa gestão de pessoas evoluiu significativamente. Hoje, temos um time muito mais engajado e alinhado aos propósitos da empresa.\"",
+                testi_name_6: "Construtora Horizonte",
+                testi_role_6: "Cliente Olympia",
+                testi_text_6: "\"A estruturação de novos processos internos nos deu clareza para crescer de forma escalável e segura. Foi um verdadeiro divisor de águas.\"",
+                footer_rights: "© 2026 Olympia Consultoria Empresarial.<br class=\"md:hidden\"> Todos os direitos reservados.",
+                nav_colaborador: "Área do Colaborador",
+                colab_subtitle: "Área do Colaborador",
+                colab_title_1: "Faça parte do nosso<br>",
+                colab_title_2: "Banco de Talentos",
+                colab_desc: "As empresas parceiras da Olympia estão sempre em busca de profissionais excepcionais. Envie seu currículo e conecte-se com as melhores oportunidades do mercado.",
+                colab_form_name: "Nome Completo",
+                colab_form_name_ph: "Seu nome",
+                colab_form_email: "E-mail",
+                colab_form_email_ph: "seu@email.com",
+                colab_form_area: "Área de Interesse",
+                colab_form_area_opt1: "Selecione uma área",
+                colab_form_area_opt2: "Recursos Humanos",
+                colab_form_area_opt3: "Vendas / Comercial",
+                colab_form_area_opt4: "Financeiro",
+                colab_form_area_opt5: "Operacional",
+                colab_form_area_opt6: "Outro",
+                colab_form_file: "Anexar Currículo (PDF, DOCX)",
+                colab_form_file_text: "Arraste seu arquivo ou clique para selecionar",
+                colab_form_btn: "Enviar Candidatura"
+            },
+            en: {
+                nav_sobre: "About/Contact",
+                nav_servicos: "Services",
+                nav_experiencias: "Experiences",
+                nav_diagnostico: "Diagnostics",
+                diag_subtitle: "For Businesses",
+                diag_title_1: "Request a ",
+                diag_title_2: "Diagnostic",
+                diag_desc: "Transform your business results. Fill out the form below so our experts can understand your company's scenario and propose the best solution.",
+                diag_form_name_label: "Full Name",
+                diag_form_name_ph: "How should we call you?",
+                diag_form_phone_label: "Number (WhatsApp/Phone)",
+                diag_form_phone_ph: "(00) 00000-0000",
+                diag_form_next_btn: "Proceed to Final Step",
+                diag_form_email_label: "Corporate E-mail",
+                diag_form_email_ph: "your@email.com",
+                diag_form_company_label: "Company Name",
+                diag_form_company_ph: "Your Company",
+                diag_form_role_label: "Company Role",
+                diag_form_role_ph: "Ex: Partner, Director...",
+                diag_form_city_label: "City/State",
+                diag_form_city_ph: "Your location",
+                diag_form_emp_label: "No. of Employees",
+                diag_form_emp_opt1: "Select...",
+                diag_form_emp_opt5: "Over 100",
+                diag_form_inv_label: "Viable Investment/Month",
+                diag_form_inv_opt1: "Select a range",
+                diag_form_inv_opt4: "Over R$ 8,000",
+                diag_form_chal_label: "What is your company's main difficulty?",
+                diag_form_chal_ph: "Briefly describe the main challenge you face today...",
+                diag_form_submit_btn: "Request Contact",
+                diag_card_title: "Real Scalability",
+                diag_card_subtitle: "Data-Driven Focus",
+                diag_card_text: "\"We don't sell advice. We build robust structures that make your company grow independently of you.\"",
+                hero_h1_1: "CORPORATE&nbsp;",
+                hero_h1_2: "CONSULTING&nbsp;",
+                hero_p1: "We boost businesses through <span class=\"text-white font-medium\">strategic consulting</span>, <span class=\"text-white font-medium\">team development</span>, and <span class=\"text-bordeaux-700 font-medium drop-shadow-[0_0_10px_rgba(155,33,49,0.8)]\">high-standard</span> solutions to transform results.",
+                btn_primary: "Get in Touch",
+                btn_secondary: "About Olympia",
+                scroll_text: "Discover",
+                modal_title: "Our Essence",
+                modal_p1: "Olympia is an advanced strategic consultancy, specialized in elevating the human and operational potential of organizations. More than providing consulting, we infiltrate your company's culture to diagnose, restructure, and transform results from within.",
+                modal_p2: "We operate comprehensively across the vital sectors of the organization. With a profound understanding of business management, recruitment, leadership development, and brand positioning, we deliver tailored, high-standard solutions for brands that do not accept mediocrity.",
+                modal_ig_text: "Visit our Instagram",
+                whatsapp_link: "https://wa.me/5537998414859?text=Hello!%20I%20saw%20the%20company's%20website%20and%20would%20like%20to%20know%20a%20bit%20more%20about%20the%20consultancies%20and%20advisory%20services%20provided.",
+                services_subtitle: "Our Products",
+                services_title_1: "High Standard",
+                services_title_2: "Solutions",
+                rh_tag: "Human Resources",
+                rh_title: "HR Advisory and Consulting",
+                rh_desc: "Complete structuring and restructuring of all human resources management subsystems.",
+                btn_saber_mais: "Learn more",
+                fin_tag: "Strategy",
+                fin_title: "Financial Advisory and Consulting",
+                fin_desc: "Financial modeling, capital restructuring, and data intelligence to leverage your business's profitability and valuation.",
+                bli_tag: "Corporate",
+                bli_title: "Labor Shielding",
+                bli_desc: "Corporate legal shielding, contract structuring, and regulatory compliance focused on security and risk mitigation.",
+                foto_tag: "Visual Branding",
+                foto_title: "Photographic Production and Marketing",
+                foto_desc: "Professional capture of institutional images and videos, with art direction focused on each company's personality.",
+                tre_tag: "Training",
+                tre_title: "Operational Processes Consulting",
+                tre_desc: "Analysis and organization of company activities to eliminate flaws, reduce waste, and increase productivity.",
+                ali_tag: "Food Safety",
+                ali_title: "Food and Bromatological Consulting",
+                ali_desc: "Technical monitoring to ensure the quality, safety, and compliance of food products.",
+                sit_tag: "Web",
+                sit_title: "Website Creation and <br> Paid Traffic",
+                sit_desc: "Creation of websites and investment in internet ads through paid traffic to attract people to the company.",
+                seg_tag: "Compliance",
+                seg_title: "Occupational Safety",
+                seg_desc: "Specialized support to prevent accidents, protect employees, and keep the company compliant with safety regulations.",
+                ven_tag: "Commercial",
+                ven_title: "Customer Service and Sales Consulting",
+                ven_desc: "Training the sales and customer service team, perfecting approach and communication.",
+                modal_prod_what: "What it is",
+                modal_prod_importance: "Importance",
+                modal_prod_btn: "Request Consultancy",
+                modal_prod_btn_alt: "Request Service",
+                exp_subtitle: "Transformation in Practice",
+                exp_title_1: "Experience of Our",
+                exp_title_2: "Clients",
+                testi_name_1: "Vônofre Food's",
+                testi_role_1: "Olympia Client",
+                testi_text_1: "\"Olympia's advisory transformed our strategic vision. The level of professionalism is incomparable in the current market.\"",
+                testi_name_2: "Tennessee Burger",
+                testi_role_2: "Olympia Client",
+                testi_text_2: "\"Olympia's process restructuring saved us months of operational issues. A masterpiece of work and execution.\"",
+                testi_name_3: "Roberto Almeida",
+                testi_role_3: "Founding Partner, Almeida Associates",
+                testi_text_3: "\"Our positioning and legal security were raised to another level. Olympia delivers market intelligence far beyond traditional consulting.\"",
+                testi_name_4: "TechSolutions",
+                testi_role_4: "Olympia Client",
+                testi_text_4: "\"With Olympia's strategic support, we optimized our entire infrastructure. The results exceeded our expectations.\"",
+                testi_name_5: "Bem-Estar Clinic",
+                testi_role_5: "Olympia Client",
+                testi_text_5: "\"Our people management has evolved significantly. Today, we have a much more engaged team aligned with our goals.\"",
+                testi_name_6: "Horizonte Construction",
+                testi_role_6: "Olympia Client",
+                testi_text_6: "\"Structuring new internal processes gave us the clarity to grow in a scalable and secure way. It was a game changer.\"",
+                footer_rights: "© 2026 Olympia Business Consulting.<br class=\"md:hidden\"> All rights reserved.",
+                nav_colaborador: "Collaborator Area",
+                colab_subtitle: "Collaborator Area",
+                colab_title_1: "Join our<br>",
+                colab_title_2: "Talent Pool",
+                colab_desc: "Olympia's partner companies are always looking for exceptional professionals. Send your resume and connect with the best opportunities in the market.",
+                colab_form_name: "Full Name",
+                colab_form_name_ph: "Your name",
+                colab_form_email: "E-mail",
+                colab_form_email_ph: "your@email.com",
+                colab_form_area: "Area of Interest",
+                colab_form_area_opt1: "Select an area",
+                colab_form_area_opt2: "Human Resources",
+                colab_form_area_opt3: "Sales / Commercial",
+                colab_form_area_opt4: "Financial",
+                colab_form_area_opt5: "Operational",
+                colab_form_area_opt6: "Other",
+                colab_form_file: "Attach Resume (PDF, DOCX)",
+                colab_form_file_text: "Drag your file or click to select",
+                colab_form_btn: "Submit Application"
+            }
+        };
+
+        const productDetails = {
+            pt: {
+                rh: {
+                    title: "Assessoria e Consultoria de RH",
+                    tag: "Recursos Humanos",
+                    image: "images/services/rh.webp",
+                    what: "Estruturação e reestruturação completa de todos os subsistemas de gestão de pessoas.",
+                    importance: "Sem pessoas não ha empresa, nos treinamos e capacitamos seus funcionarios, desenvolvemos liderança, gerencia e gestão. Diminuindo a rotatividade, engajando a equipe, retendo bons colaboradores,e assim, mapeamos seus gargalos financeiros advindos de funcionarios mal preparados."
+                },
+                financeiro: {
+                    title: "Assessoria e Consultoria Financeira",
+                    tag: "Estratégia",
+                    image: "images/services/financeiro.webp",
+                    what: "Modelagem financeira avançada, análise de fluxo de caixa, precificação e reestruturação de capital, transformando números confusos em painéis de decisão claros.",
+                    importance: "Crescer sem caixa é impossível. A inteligência financeira permite que os diretores tomem decisões baseadas em dados concretos, otimizando a rentabilidade, cortando custos invisíveis e preparando a empresa para atrair grandes investimentos (valuation)."
+                },
+                blindagem: {
+                    title: "Blindagem Trabalhista",
+                    tag: "Corporativo",
+                    image: "images/services/juridico.webp",
+                    what: "Análise minuciosa e estruturação de toda a base contratual, societária e trabalhista da empresa, garantindo conformidade com a legislação vigente.",
+                    importance: "A blindagem trabalista proteje os proprietarios de possiveis processos fazendo com que a legislação trabalhe a favor da empresa, seguindo protocolos corretos."
+                },
+                foto: {
+                    title: "Produção Fotográfica e Marketing",
+                    tag: "Branding Visual",
+                    image: "images/services/foto.webp",
+                    what: "Captação profissional de imagens e vídeos institucionais, corporativas e de produtos, com direção de arte focada na personalidade de cada empresa, com identidade visual que gera desejo de compra e valor agregado.",
+                    importance: "Uma fotografia corporativa impecável transmite autoridade instantânea, eleva o valor percebido pelo cliente e diferencia drasticamente a sua marca de concorrentes medianos.O marketing auxilia no seu processo de venda mostrando o seu produto/serviço da forma como merece ser visto."
+                },
+                treinamentos: {
+                    title: "Consultoria de Processos Operacionais",
+                    tag: "Capacitação",
+                    image: "images/services/operacional_imagem.jpeg",
+                    what: "Consultoria de processos operacionais é a análise e organização das atividades da empresa para eliminar falhas, reduzir desperdícios, aumentar a produtividade e tornar a operação mais eficiente e padronizada.",
+                    importance: "A importância está em organizar a operação, reduzir erros e desperdícios, aumentar a produtividade e garantir que a empresa funcione de forma mais eficiente e padronizada."
+                },
+                alimentar: {
+                    title: "Assessoria e Consultoria Alimentar e Bromatologica",
+                    tag: "Bromatológica",
+                    image: "images/services/Consultoria-de-alimentos-estabelecimentos-de-alimentos.webp",
+                    what: "É o acompanhamento técnico para garantir qualidade, segurança e conformidade dos alimentos, desde a produção até o armazenamento e a comercialização.",
+                    importance: "É importante para garantir a segurança dos alimentos, evitar contaminações, reduzir riscos e manter a empresa em conformidade com as normas sanitárias."
+                },
+                sites: {
+                    title: "Criação de Websites e <br> Tráfego Pago",
+                    tag: "Web",
+                    image: "images/services/sites.jpg",
+                    what: "Criação de websites e investimento em anúncios na internet através do tráfego pago para atrair pessoas até a empresa, aumentar a visibilidade, gerar leads e conquistar vendas de forma estratégica e mensurável.",
+                    importance: "A importância está em alcançar o público certo e oferecer um website profissional, usando as ferramentas adequadas para que seu possível cliente tenha acesso aos seus conteúdos e serviços."
+                },
+                seguranca: {
+                    title: "Segurança do Trabalho",
+                    tag: "Compliance",
+                    image: "images/services/seguranca.png",
+                    what: "Assessoria em Segurança do Trabalho é o suporte especializado para prevenir acidentes, proteger os colaboradores e manter a empresa em conformidade com as normas de segurança.",
+                    importance: "É importante para prevenir acidentes, reduzir riscos, proteger os colaboradores e evitar prejuízos e multas e problemas legais para a empresa"
+                },
+                vendas: {
+                    title: "Consultoria de Atendimento ao Público e Vendas",
+                    tag: "Comercial",
+                    image: "images/services/vendas.png",
+                    what: "Capacitação do time de vendas e atendimento ao público aperfeiçoando abordagem,comunicação e experiência do cliente, aumentando a conversão e os resultados da empresa.",
+                    importance: "ajuda a fidelizar clientes, aumentar as vendas e transformar um bom atendimento em vantagem competitiva."
+                }
+            },
+            en: {
+                rh: {
+                    title: "HR Advisory and Consulting",
+                    tag: "Human Resources",
+                    image: "images/services/rh.webp",
+                    what: "Complete structuring and restructuring of all human resources management subsystems.",
+                    importance: "Without people, there is no company. We train and qualify your employees, develop leadership and management. By reducing turnover, engaging the team, and retaining good collaborators, we map out financial bottlenecks arising from poorly prepared employees."
+                },
+                financeiro: {
+                    title: "Financial Advisory and Consulting",
+                    tag: "Strategy",
+                    image: "images/services/financeiro.webp",
+                    what: "Advanced financial modeling, cash flow analysis, pricing, and capital restructuring, transforming confusing numbers into clear decision panels.",
+                    importance: "Growing without cash is impossible. Financial intelligence allows directors to make data-driven decisions, optimizing profitability, cutting invisible costs, and preparing the company to attract major investments (valuation)."
+                },
+                blindagem: {
+                    title: "Labor Shielding",
+                    tag: "Corporate",
+                    image: "images/services/juridico.webp",
+                    what: "Meticulous analysis and structuring of the entire contractual, corporate, and labor base of the company, ensuring compliance with current legislation.",
+                    importance: "Labor shielding protects owners from potential lawsuits by making legislation work in the company's favor, following correct protocols."
+                },
+                foto: {
+                    title: "Photographic Production and Marketing",
+                    tag: "Visual Branding",
+                    image: "images/services/foto.webp",
+                    what: "Professional capture of institutional and corporate images and videos, with art direction focused on each company's personality, creating a visual identity that generates purchasing desire and added value.",
+                    importance: "Flawless corporate photography conveys instant authority, elevates perceived value, and drastically differentiates your brand from average competitors. Marketing assists your sales process by showcasing your product/service the way it deserves to be seen."
+                },
+                treinamentos: {
+                    title: "Operational Processes Consulting",
+                    tag: "Training",
+                    image: "images/services/operacional_imagem.jpeg",
+                    what: "Operational process consulting is the analysis and organization of company activities to eliminate flaws, reduce waste, increase productivity, and make the operation more efficient and standardized.",
+                    importance: "The importance lies in organizing operations, reducing errors and waste, increasing productivity, and ensuring the company operates efficiently and in a standardized manner."
+                },
+                alimentar: {
+                    title: "Food and Bromatological Consulting",
+                    tag: "Food Safety",
+                    image: "images/services/Consultoria-de-alimentos-estabelecimentos-de-alimentos.webp",
+                    what: "Technical monitoring to ensure the quality, safety, and compliance of food, from production to storage and commercialization.",
+                    importance: "It is essential to ensure food safety, prevent contamination, reduce risks, and keep the company in compliance with health regulations."
+                },
+                sites: {
+                    title: "Website Creation and <br> Paid Traffic",
+                    tag: "Web",
+                    image: "images/services/sites.jpg",
+                    what: "Creation of websites and investment in internet ads through paid traffic to attract people to the company, increase visibility, generate leads, and conquer sales in a strategic and measurable way.",
+                    importance: "The importance lies in reaching the right audience and offering a professional website, using the appropriate tools so that your potential client has access to your content and services."
+                },
+                seguranca: {
+                    title: "Occupational Safety",
+                    tag: "Compliance",
+                    image: "images/services/seguranca.png",
+                    what: "Occupational Safety Advisory provides specialized support to prevent accidents, protect employees, and keep the company compliant with safety regulations.",
+                    importance: "It is crucial to prevent accidents, reduce risks, protect employees, and avoid financial losses, fines, and legal issues for the company."
+                },
+                vendas: {
+                    title: "Customer Service and Sales Consulting",
+                    tag: "Commercial",
+                    image: "images/services/vendas.png",
+                    what: "Training the sales and customer service team, perfecting approach, communication, and customer experience, increasing the company's conversion rates and results.",
+                    importance: "It helps to build customer loyalty, increase sales, and transform good service into a competitive advantage."
+                }
+            }
+        };
+
+        const btnPt = document.getElementById("lang-pt");
+        const btnEn = document.getElementById("lang-en");
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        el.placeholder = translations[lang][key];
+                    } else {
+                        el.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+
+            // Update active state on buttons
+            if (document.getElementById('lang-pt')) document.getElementById('lang-pt').classList.toggle('opacity-60', lang !== 'pt');
+            if (document.getElementById('lang-en')) document.getElementById('lang-en').classList.toggle('opacity-60', lang !== 'en');
+
+            // Also update any open product modal to reflect the new language
+            const modalProd = document.getElementById('modal-product');
+            if (modalProd && !modalProd.classList.contains('pointer-events-none')) {
+                const currentServiceId = modalProd.getAttribute('data-current-service');
+                if (currentServiceId) {
+                    populateProductModal(currentServiceId);
+                }
+            }
+
+            // Update active flag styles
+            if (btnPt && btnEn) {
+                if (lang === "pt") {
+                    btnPt.classList.remove("opacity-60");
+                    btnPt.classList.add("opacity-100", "shadow-[0_0_10px_rgba(255,255,255,0.2)]");
+                    btnEn.classList.add("opacity-60");
+                    btnEn.classList.remove("opacity-100", "shadow-[0_0_10px_rgba(255,255,255,0.2)]");
+                } else {
+                    btnEn.classList.remove("opacity-60");
+                    btnEn.classList.add("opacity-100", "shadow-[0_0_10px_rgba(255,255,255,0.2)]");
+                    btnPt.classList.add("opacity-60");
+                    btnPt.classList.remove("opacity-100", "shadow-[0_0_10px_rgba(255,255,255,0.2)]");
+                }
+            }
+        }
+
+        if (btnPt && btnEn) {
+            btnPt.addEventListener("click", () => setLanguage("pt"));
+            btnEn.addEventListener("click", () => setLanguage("en"));
+        }
+        // --- Dynamic Services Injection ---
+        const servicesGrid = document.getElementById('services-grid');
+        if (servicesGrid) {
+            const serviceKeys = ['rh', 'financeiro', 'blindagem', 'treinamentos', 'seguranca', 'alimentar', 'sites', 'foto', 'vendas'];
+
+            serviceKeys.forEach((key, index) => {
+                const delay = (index + 1) * 100;
+                const shortKey = {
+                    'rh': 'rh', 'financeiro': 'fin', 'blindagem': 'bli',
+                    'treinamentos': 'tre', 'seguranca': 'seg', 'alimentar': 'ali',
+                    'sites': 'sit', 'foto': 'foto', 'vendas': 'ven'
+                }[key];
+
+                let objectPosition = 'center center';
+                if (key === 'alimentar') {
+                    objectPosition = 'center top';
+                } else if (key === 'seguranca') {
+                    objectPosition = '30% 20%';
+                }
+
+                const cardHtml = `
+                <div class="service-card cursor-pointer glass-panel border border-white/20 bg-[#0a0a0a]/80 backdrop-blur-xl rounded-[1.5rem] overflow-hidden group hover:-translate-y-2 transition-transform duration-500 reveal delay-[${delay}ms] flex flex-col h-full shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_30px_rgba(255,255,255,0.05)]" data-service="${key}">
+                    <div class="relative h-[220px] w-full overflow-hidden bg-black/50 shrink-0">
+                        <img src="${productDetails.pt[key].image}" alt="" class="w-full h-full object-cover opacity-100 transition-all duration-700 group-hover:scale-105" style="object-position: ${objectPosition};">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/90 via-black/20 to-transparent"></div>
+                            <div class="absolute top-4 left-4 glass-panel bg-black/40 backdrop-blur-md px-3 py-1.5 rounded border border-white/10 text-[9px] font-bold text-white tracking-widest uppercase" data-i18n="${shortKey}_tag">${translations.pt[shortKey + '_tag']}</div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-1 relative z-10 -mt-6 bg-gradient-to-b from-transparent to-[#0a0a0a]">
+                        <h3 class="text-xl font-medium text-white mb-3 font-heading tracking-wide leading-tight drop-shadow-md min-h-[50px]" data-i18n="${shortKey}_title">${translations.pt[shortKey + '_title']}</h3>
+                        <p class="text-xs text-white/50 leading-relaxed mb-6 flex-1 line-clamp-4" data-i18n="${shortKey}_desc">${translations.pt[shortKey + '_desc']}</p>
+                        <div class="flex items-center justify-between pt-5 border-t border-white/5 mt-auto">
+                            <button class="flex items-center gap-2 text-[10px] font-semibold text-white/50 group-hover:text-primary-500 transition-colors uppercase tracking-[0.2em]">
+                                <span data-i18n="btn_saber_mais">Saber mais</span>
+                                <span class="iconify group-hover:translate-x-1 transition-transform" data-icon="lucide:arrow-right" data-width="14"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+                servicesGrid.insertAdjacentHTML('beforeend', cardHtml);
+            });
+
+            // Observer for dynamically added cards to make them visible
+            servicesGrid.querySelectorAll('.reveal').forEach(el => revealOnScroll.observe(el));
+
+            // Re-attach event listeners to whole cards
+            document.querySelectorAll('.service-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const serviceId = card.getAttribute('data-service');
+                    if (serviceId) openProductModal(serviceId);
+                });
+            });
+        }
+        // ---------------------------------
+        // Diagnóstico Form Logic
+        // ---------------------------------
+        const btnNextStep = document.getElementById('btn-next-step');
+        const btnPrevStep = document.getElementById('btn-prev-step');
+        const formStep1 = document.getElementById('form-step-1');
+        const formStep2 = document.getElementById('form-step-2');
+        const formProgress = document.getElementById('form-progress');
+
+        if (btnNextStep && btnPrevStep && formStep1 && formStep2) {
+            btnNextStep.addEventListener('click', () => {
+                const inputNome = document.getElementById('diag_nome');
+                const inputNumero = document.getElementById('diag_numero');
+                if(!inputNome.reportValidity() || !inputNumero.reportValidity()) return;
+
+                // Send PRÉ CADASTRO async in background
+                const preData = new FormData();
+                preData.append('access_key', '910262a5-b046-4780-aa70-10dcb5ff38d4');
+                preData.append('subject', 'PRÉ CADASTRO - Diagnóstico Olympia');
+                preData.append('from_name', 'Olympia Consultoria (Pré Cadastro)');
+
+                preData.append('Nome Completo', inputNome.value);
+                preData.append('Número de Contato', inputNumero.value);
+
+                const preJson = JSON.stringify(Object.fromEntries(preData));
+
+                fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: preJson
+                }).catch(e => console.log('Pré-cadastro background send error:', e));
+
+                formStep1.classList.remove('opacity-100', 'translate-x-0');
+                formStep1.classList.add('opacity-0', '-translate-x-10');
+                
+                setTimeout(() => {
+                    formStep1.classList.add('hidden');
+                    formStep2.classList.remove('hidden');
+                    
+                    // Small delay to allow display block to apply
+                    setTimeout(() => {
+                        formStep2.classList.remove('opacity-0', 'translate-x-10');
+                        formStep2.classList.add('opacity-100', 'translate-x-0');
+                        formProgress.style.width = '100%';
+                    }, 50);
+                }, 300);
+            });
+
+            btnPrevStep.addEventListener('click', () => {
+                formStep2.classList.remove('opacity-100', 'translate-x-0');
+                formStep2.classList.add('opacity-0', 'translate-x-10');
+                
+                setTimeout(() => {
+                    formStep2.classList.add('hidden');
+                    formStep1.classList.remove('hidden');
+                    
+                    // Small delay to allow display block to apply
+                    setTimeout(() => {
+                        formStep1.classList.remove('opacity-0', '-translate-x-10');
+                        formStep1.classList.add('opacity-100', 'translate-x-0');
+                        formProgress.style.width = '50%';
+                    }, 50);
+                }, 300);
+            });
+        }
+
+        const diagForm = document.getElementById('diagnostico-form');
+        if (diagForm) {
+            diagForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                
+                const submitBtn = diagForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                
+                // Show loading state
+                submitBtn.innerHTML = '<span class="iconify animate-spin text-white" data-icon="lucide:loader-2" data-width="18"></span> <span class="relative z-10 text-xs font-bold uppercase tracking-widest text-white ml-2">Enviando...</span>';
+                submitBtn.disabled = true;
+
+                const formData = new FormData(diagForm);
+                formData.append('access_key', '910262a5-b046-4780-aa70-10dcb5ff38d4');
+                formData.append('subject', 'CADASTRO CONCLUÍDO - Diagnóstico Olympia');
+                formData.append('from_name', 'Olympia Consultoria (Cadastro Final)');
+
+
+                const formJson = JSON.stringify(Object.fromEntries(formData));
+
+                fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: formJson
+                })
+                .then(async (response) => {
+                    if (response.status == 200) {
+                        diagForm.innerHTML = `
+                            <div class="flex flex-col items-center justify-center text-center h-[300px] gap-4 reveal active">
+                                <div class="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center mb-4 shadow-[0_0_40px_rgba(34,197,94,0.15)]">
+                                    <span class="iconify text-green-400" data-icon="lucide:check" data-width="40"></span>
+                                </div>
+                                <h3 class="font-heading text-3xl text-white font-medium">Diagnóstico Solicitado!</h3>
+                                <p class="text-white/60 font-light max-w-sm mt-2 leading-relaxed">Recebemos as informações da sua empresa com sucesso. Um de nossos consultores entrará em contato em breve.</p>
+                            </div>
+                        `;
+                    } else {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                        alert('Houve um erro ao enviar o formulário. Tente novamente mais tarde.');
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    alert('Houve um erro ao enviar o formulário. Tente novamente mais tarde.');
+                });
+            });
+        }
+        // ---------------------------------
+    </script>
+</body>
+
+</html>

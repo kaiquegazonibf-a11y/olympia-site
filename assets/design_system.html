@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt-BR" style="scroll-behavior:smooth">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sérgio Advogados — Design System Unificado</title>
+
+<!-- Fontes: Cormorant Garamond (Títulos) e Inter (Textos) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+<!-- Tailwind e Scripts Base (Echelon) -->
+<link rel="stylesheet" href="assets/css/tailwind.css"/>
+<script src="assets/176e894661aa9cdc_3.4.17"></script>
+<script src="assets/851bed7af266f96a_iconify-icon.min.js"></script>
+<script src="assets/28033e449a31ebcc_gsap.min.js"></script>
+<script src="assets/ad33c2df9ada8a66_ScrollTrigger.min.js"></script>
+
+<style>
+    /* IDENTIDADE VISUAL UNIFICADA */
+    :root {
+        --color-branco: #FFFFFF;
+        --color-chumbo: #1C1C1C;
+        --color-grafite: #292929;
+        --color-cinza: #666666;
+        --color-cinza-claro: #E5E5E5;
+        --color-dourado: #D4B785;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--color-branco);
+        color: var(--color-chumbo);
+        overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, .font-serif {
+        font-family: 'Cormorant Garamond', serif;
+    }
+
+    /* Utilitários Echelon (GSAP e Marquee) */
+    .reveal-line { 
+        display: inline-flex; 
+        overflow: hidden; 
+        vertical-align: top; 
+        margin-right: 0.15em; 
+        padding-top: 0.15em; 
+        margin-top: -0.15em; 
+        padding-bottom: 0.25em; 
+        margin-bottom: -0.25em; 
+    }
+    .reveal-word { display: inline-block; transform: translateY(112%); }
+    .fade-in-up { opacity: 0; transform: translateY(22px); }
+    
+    .marquee { animation: marquee 60s linear infinite; }
+    @keyframes marquee { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+    /* Shimmer Effect (Olympia Style) */
+    @keyframes shimmerGlow {
+        0% { background-position: 200% center; }
+        100% { background-position: -200% center; }
+    }
+    .text-shimmer {
+        animation: shimmerGlow 15s ease-in-out infinite;
+    }
+    .text-gradient-white {
+        background-image: linear-gradient(110deg, #E5E5E5 40%, #ffffff 50%, #E5E5E5 60%);
+        background-size: 300% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    .text-gradient-gold {
+        background-image: linear-gradient(110deg, #D4B785 40%, #FDF3DB 50%, #D4B785 60%);
+        background-size: 300% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    .text-glow-subtle {
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.15));
+    }
+
+    /* Card Beam Animation (Pulse & Brake) */
+    @keyframes beamCycle {
+        0%, 10% { transform: rotate(0deg); }
+        90%, 100% { transform: rotate(360deg); }
+    }
+    .animate-beam-cycle {
+        /* cubic-bezier dramático: começa parado, acelera brutalmente, e freia suavemente até parar */
+        animation: beamCycle 4s cubic-bezier(0.8, 0, 0.2, 1) infinite;
+    }
+    .border-mask {
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        padding: 3px;
+    }
+
+    /* Ondas Animadas em Camadas (Reference Style) */
+    .wave-container {
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        overflow: hidden;
+        line-height: 0;
+        z-index: 20;
+    }
+    
+    .separator-waves {
+        width: 100%;
+        height: 100%;
+        min-height: 50px;
+        max-height: 80px;
+    }
+    
+    .separator-waves-parallax > use {
+        animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite;
+    }
+    .separator-waves-parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; fill: var(--color-chumbo); opacity: 0.8; }
+    .separator-waves-parallax > use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; fill: var(--color-dourado); opacity: 0.9; }
+    .separator-waves-parallax > use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; fill: var(--color-branco); opacity: 0.5; }
+    .separator-waves-parallax > use:nth-child(4) { animation-delay: -5s; animation-duration: 20s; fill: var(--color-branco); opacity: 1; }
+
+    @keyframes move-forever {
+        0% { transform: translate3d(-90px, 0, 0); }
+        100% { transform: translate3d(85px, 0, 0); }
+    }
+
+    /* Formulário Limpo (Lourenço) */
+    .clean-input {
+        width: 100%;
+        border: 1px solid var(--color-cinza-claro);
+        background: transparent;
+        padding: 0.875rem 1rem;
+        font-size: 0.875rem;
+        color: var(--color-chumbo);
+        transition: border-color 0.3s;
+        border-radius: 0.5rem;
+    }
+    .clean-input:focus {
+        outline: none;
+        border-color: var(--color-dourado);
+    }
+    
+    /* Botão Dourado Padrão */
+    .btn-gold {
+        background-color: #C5A570 !important;
+        color: var(--color-branco) !important;
+        border: none !important;
+        transition: background-color 0.3s;
+        border-radius: 0.5rem;
+    }
+    .btn-gold:hover {
+        background-color: #B8965B !important;
+    }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- 1. HEADER (Vidro Translúcido adaptado pro Claro) -->
+<header class="fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[1480px] z-50 bg-white/90 backdrop-blur-md border border-[#E5E5E5] rounded-xl transition-all duration-300 shadow-sm">
+    <div class="px-6 lg:px-12 h-16 lg:h-20 flex items-center justify-between gap-8">
+        <!-- Logo -->
+        <a class="flex items-center gap-3 group" href="#">
+            <div class="w-8 h-8 flex items-center justify-center border border-[#1C1C1C] text-[#1C1C1C] group-hover:border-[#D4B785] group-hover:text-[#D4B785] transition-colors">
+                <iconify-icon icon="solar:scales-linear" width="1.2em"></iconify-icon>
+            </div>
+            <span class="text-sm font-semibold tracking-widest uppercase text-[#1C1C1C]">Sérgio Advogados</span>
+        </a>
+        
+        <!-- Navigation -->
+        <nav class="hidden lg:flex items-center gap-6">
+            <a class="text-[11px] font-medium tracking-widest uppercase text-[#666666] hover:text-[#D4B785] transition-colors" href="#">O Escritório</a>
+            <a class="text-[11px] font-medium tracking-widest uppercase text-[#666666] hover:text-[#D4B785] transition-colors" href="#">Áreas de Atuação</a>
+            <a class="text-[11px] font-medium tracking-widest uppercase text-[#666666] hover:text-[#D4B785] transition-colors" href="#">Equipe</a>
+        </nav>
+        
+        <!-- CTA -->
+        <a class="btn-gold px-6 py-2.5 flex items-center gap-3 text-xs font-medium tracking-widest uppercase group" href="#contact">
+            Fale Conosco
+            <iconify-icon icon="solar:arrow-right-linear" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+        </a>
+    </div>
+</header>
+
+<!-- 2. HERO SECTION (Bernardes Overlay + Echelon GSAP + Lehmann Wave) -->
+<section class="relative w-full h-screen min-h-[700px] flex items-center overflow-hidden bg-[#1C1C1C] hero-section">
+    <div class="absolute inset-0 z-0 flex items-center justify-center">
+        <!-- Imagem panorâmica gerada com inteligência artificial para prolongar a estante lateralmente -->
+        <img src="assets/balanca_hero_wide.png" alt="Balança da Justiça Dourada (Panorâmica)" class="hero-bg-img h-[95%] w-auto max-w-none shrink-0 object-cover object-center opacity-60 mix-blend-lighten" style="-webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 60%, transparent 100%); mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 60%, transparent 100%);">
+        
+        <!-- Degradê suave para o texto (Esquerda) ocupando a tela toda para não gerar linha de corte -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#1C1C1C_0%,#1C1C1C_15%,transparent_50%)] pointer-events-none"></div>
+        
+        <!-- Degradê suave para o card (Direita) ocupando a tela toda para não gerar linha de corte -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_left,#1C1C1C_0%,#1C1C1C_10%,transparent_35%)] pointer-events-none"></div>
+    </div>
+
+    <div class="max-w-[1480px] mx-auto px-6 lg:px-12 relative z-10 w-full flex justify-between items-center mt-12">
+        <!-- Text Animation (Echelon Style) -->
+        <div class="max-w-2xl text-white hero-text-content">
+            <div class="mb-4 flex items-center gap-4 text-[10px] uppercase tracking-widest text-[#E5E5E5]">
+                <span class="w-6 h-[1px] bg-[#D4B785]"></span>Consultoria de Alto Padrão
+            </div>
+            <h1 class="font-serif text-4xl md:text-5xl tracking-tight mb-5 text-glow-subtle flex flex-col space-y-2 parallax-text-group">
+                <span class="block whitespace-nowrap parallax-layer-1">
+                    <span class="reveal-line text-gradient-white text-shimmer" style="animation-delay: 0s;">
+                        <span class="reveal-word">Assessoria</span>&nbsp;<span class="reveal-word">jurídica</span>
+                    </span>
+                </span>
+                <span class="block whitespace-nowrap parallax-layer-2">
+                    <span class="reveal-line text-gradient-gold text-shimmer" style="animation-delay: 2s;">
+                        <span class="reveal-word">de</span>&nbsp;<span class="reveal-word">excelência</span>&nbsp;<span class="reveal-word">para</span>
+                    </span>
+                </span>
+                <span class="block whitespace-nowrap parallax-layer-3">
+                    <span class="reveal-line text-gradient-white text-shimmer" style="animation-delay: 4s;">
+                        <span class="reveal-word">grandes</span>&nbsp;<span class="reveal-word">decisões.</span>
+                    </span>
+                </span>
+            </h1>
+            <div class="fade-in-up mb-8">
+                <p class="text-[#E5E5E5] text-sm md:text-base font-light max-w-md leading-relaxed parallax-layer-4">
+                    Assessoramos grandes corporações e conselhos diretivos <br class="hidden md:block">
+                    com precisão, ética e a exclusividade de uma banca privada.
+                </p>
+            </div>
+            <div class="fade-in-up mt-2">
+                <div class="parallax-btn-wrapper">
+                    <a href="https://www.instagram.com/bernardeseazevedoadvogados/" target="_blank" class="btn-gold inline-flex items-center gap-2 px-6 py-2.5 text-xs font-medium tracking-widest uppercase">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd" />
+                    </svg>
+                    Conheça nosso Instagram
+                </a>
+            </div>
+        </div>
+        </div>
+
+        <!-- Floating Card (Premium Animated Border Style) -->
+        <div class="hidden lg:block fade-in-up w-64 relative translate-y-10">
+            <div class="hero-floating-wrapper" style="perspective: 1000px;">
+                <div class="w-full relative shadow-2xl rounded-[20px] group !bg-white backdrop-blur-md border border-[#E5E5E5] hero-floating-card">
+            
+            <!-- Animated Border (Masked to show only the 3px padding) -->
+            <div class="absolute inset-0 rounded-[20px] border-mask z-20 pointer-events-none overflow-hidden">
+                 <div class="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-[conic-gradient(from_0deg,transparent_0%,transparent_30%,#D4B785_70%,#C5A570_95%,#ffffff_100%)] animate-beam-cycle"></div>
+            </div>
+            
+            <!-- Conteúdo -->
+            <div class="relative z-20 p-5">
+                <h3 class="font-serif text-lg text-[#1C1C1C] mb-1">Fale com um Especialista</h3>
+                <p class="text-[10px] text-[#666666] mb-3 leading-tight">Nossa equipe está à disposição para análise do seu caso.</p>
+                <form class="space-y-2">
+                    <input type="text" placeholder="Nome" class="clean-input bg-white border-[#CCCCCC] !py-2 !text-[11px]">
+                    <input type="email" placeholder="E-mail" class="clean-input bg-white border-[#CCCCCC] !py-2 !text-[11px]">
+                    <input type="tel" placeholder="Telefone / Celular" class="clean-input bg-white border-[#CCCCCC] !py-2 !text-[11px]">
+                    <textarea placeholder="Como podemos ajudar?" rows="2" class="clean-input bg-white border-[#CCCCCC] !py-2 !text-[11px] resize-none"></textarea>
+                    <button type="button" class="btn-gold w-full py-2.5 text-[10px] font-semibold tracking-widest uppercase mt-2">Enviar Solicitação</button>
+                </form>
+            </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Animated SVG Wave (Reference Style) -->
+    <div class="wave-container">
+        <svg class="separator-waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="separator-waves-parallax">
+                <use xlink:href="#gentle-wave" x="48" y="0" />
+                <use xlink:href="#gentle-wave" x="48" y="3" />
+                <use xlink:href="#gentle-wave" x="48" y="5" />
+                <use xlink:href="#gentle-wave" x="48" y="7" />
+            </g>
+        </svg>
+    </div>
+</section>
+
+<!-- 3. MARQUEE (Echelon Style on White BG) -->
+<section class="py-12 bg-white border-b border-[#E5E5E5] overflow-hidden marquee-section">
+    <div class="marquee-parallax-wrapper">
+        <div class="marquee flex w-max py-2 text-xs uppercase tracking-widest text-[#1C1C1C]">
+        <span class="px-6 flex items-center gap-6">Direito Societário <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Contencioso Cível <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Tributário <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">M&A <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Direito Societário <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Contencioso Cível <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Tributário <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">M&A <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Direito Societário <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Contencioso Cível <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Tributário <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">M&A <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Direito Societário <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Contencioso Cível <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Tributário <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">M&A <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Direito Societário <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Contencioso Cível <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Tributário <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">M&A <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Direito Societário <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Contencioso Cível <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">Tributário <span class="text-[#D4B785]">◆</span></span>
+        <span class="px-6 flex items-center gap-6">M&A <span class="text-[#D4B785]">◆</span></span>
+        </div>
+    </div>
+</section>
+
+<!-- 4. 6 ICON GRIDS (Lehmann Style, but White/Gray theme) -->
+<section class="py-24 bg-white" id="expertise">
+    <div class="max-w-[1480px] mx-auto px-6 lg:px-12">
+        <div class="text-center mb-16 fade-in-up section-title-group">
+            <span class="text-[#D4B785] text-[10px] font-medium mb-4 uppercase tracking-[.3em] inline-block parallax-title-small">Áreas de Atuação</span>
+            <h2 class="font-serif text-4xl md:text-5xl text-[#1C1C1C] mt-2 parallax-title-large">Nossa Expertise</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border border-[#E5E5E5] bg-[#F9F9F9]">
+            <!-- Box 1 -->
+            <div class="fade-in-up bg-white p-10 border-b lg:border-r border-[#E5E5E5] group hover:bg-[#FDFDFD] transition-colors relative overflow-hidden">
+                <div class="absolute inset-x-0 bottom-0 h-[2px] bg-[#D4B785] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+                <div class="w-12 h-12 mb-6 text-[#D4B785] expertise-icon">
+                    <iconify-icon icon="solar:briefcase-linear" width="3rem"></iconify-icon>
+                </div>
+                <h3 class="font-serif text-2xl text-[#1C1C1C] mb-3">Direito Societário</h3>
+                <p class="text-sm text-[#666666] leading-normal">Constituição, reorganização e estruturação de sociedades, com foco em governança corporativa.</p>
+            </div>
+            <!-- Box 2 -->
+            <div class="fade-in-up bg-white p-10 border-b lg:border-r border-[#E5E5E5] group hover:bg-[#FDFDFD] transition-colors relative overflow-hidden">
+                <div class="absolute inset-x-0 bottom-0 h-[2px] bg-[#D4B785] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+                <div class="w-12 h-12 mb-6 text-[#D4B785]">
+                    <iconify-icon icon="solar:bank-linear" width="3rem"></iconify-icon>
+                </div>
+                <h3 class="font-serif text-2xl text-[#1C1C1C] mb-3">Direito Tributário</h3>
+                <p class="text-sm text-[#666666] leading-normal">Planejamento tributário estratégico e representação em contencioso administrativo e judicial.</p>
+            </div>
+            <!-- Box 3 -->
+            <div class="fade-in-up bg-white p-10 border-b border-[#E5E5E5] group hover:bg-[#FDFDFD] transition-colors relative overflow-hidden">
+                <div class="absolute inset-x-0 bottom-0 h-[2px] bg-[#D4B785] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+                <div class="w-12 h-12 mb-6 text-[#D4B785]">
+                    <iconify-icon icon="solar:hand-shake-linear" width="3rem"></iconify-icon>
+                </div>
+                <h3 class="font-serif text-2xl text-[#1C1C1C] mb-3">M&A Estruturado</h3>
+                <p class="text-sm text-[#666666] leading-normal">Assessoria integral em fusões, aquisições, due diligence e acordos complexos de acionistas.</p>
+            </div>
+            <!-- Box 4 -->
+            <div class="fade-in-up bg-white p-10 border-b lg:border-b-0 lg:border-r border-[#E5E5E5] group hover:bg-[#FDFDFD] transition-colors relative overflow-hidden">
+                <div class="absolute inset-x-0 bottom-0 h-[2px] bg-[#D4B785] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+                <div class="w-12 h-12 mb-6 text-[#D4B785]">
+                    <iconify-icon icon="solar:judge-linear" width="3rem"></iconify-icon>
+                </div>
+                <h3 class="font-serif text-2xl text-[#1C1C1C] mb-3">Contencioso Estratégico</h3>
+                <p class="text-sm text-[#666666] leading-normal">Atuação focada em litígios de alta complexidade e repercussão em instâncias superiores.</p>
+            </div>
+            <!-- Box 5 -->
+            <div class="fade-in-up bg-white p-10 border-b lg:border-b-0 lg:border-r border-[#E5E5E5] group hover:bg-[#FDFDFD] transition-colors relative overflow-hidden">
+                <div class="absolute inset-x-0 bottom-0 h-[2px] bg-[#D4B785] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+                <div class="w-12 h-12 mb-6 text-[#D4B785]">
+                    <iconify-icon icon="solar:shield-warning-linear" width="3rem"></iconify-icon>
+                </div>
+                <h3 class="font-serif text-2xl text-[#1C1C1C] mb-3">Compliance & Ética</h3>
+                <p class="text-sm text-[#666666] leading-normal">Implementação de políticas de conformidade, investigações internas e gestão de crises.</p>
+            </div>
+            <!-- Box 6 -->
+            <div class="fade-in-up bg-white p-10 group hover:bg-[#FDFDFD] transition-colors relative overflow-hidden">
+                <div class="absolute inset-x-0 bottom-0 h-[2px] bg-[#D4B785] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+                <div class="w-12 h-12 mb-6 text-[#D4B785]">
+                    <iconify-icon icon="solar:home-smile-linear" width="3rem"></iconify-icon>
+                </div>
+                <h3 class="font-serif text-2xl text-[#1C1C1C] mb-3">Wealth Management</h3>
+                <p class="text-sm text-[#666666] leading-normal">Estruturação, blindagem e sucessão de patrimônio para indivíduos e grupos familiares.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 5. CONTATO MINIMALISTA (Lourenço Style) -->
+<section class="py-24 bg-[#1C1C1C]" id="contact">
+    <div class="max-w-4xl mx-auto px-6 lg:px-12 text-center text-white section-title-group">
+        <span class="text-[#D4B785] text-[10px] font-medium mb-4 uppercase tracking-[.3em] inline-block parallax-title-small">Contato</span>
+        <h2 class="font-serif text-4xl md:text-5xl mt-2 mb-8 parallax-title-large">Sólida Experiência em Negócios</h2>
+        <p class="text-sm text-[#E5E5E5] font-light max-w-2xl mx-auto mb-12 parallax-title-desc">
+            Nossa sede fica no principal centro financeiro do país. Entre em contato para agendar uma reunião presencial ou por videoconferência.
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+            <div class="bg-[#292929] p-8 border border-[#666666]/30 contact-info-card">
+                <h4 class="font-serif text-xl mb-4 text-white">São Paulo</h4>
+                <p class="text-xs text-[#E5E5E5] leading-relaxed mb-6">Av. Brigadeiro Faria Lima, 3477<br>14º Andar - Itaim Bibi<br>CEP 04538-133</p>
+                <a href="tel:+551199999999" class="text-sm font-medium text-[#D4B785] flex items-center gap-2">
+                    <iconify-icon icon="solar:phone-calling-linear"></iconify-icon> +55 11 3000-0000
+                </a>
+            </div>
+            
+            <form class="bg-white p-8">
+                <h4 class="font-serif text-xl mb-6 text-[#1C1C1C]">Envie uma Mensagem</h4>
+                <div class="space-y-4">
+                    <input type="text" placeholder="Nome Completo" class="clean-input">
+                    <input type="email" placeholder="E-mail" class="clean-input">
+                    <textarea placeholder="Como podemos ajudar?" rows="3" class="clean-input resize-none"></textarea>
+                    <button type="button" class="btn-gold w-full py-3.5 text-xs font-semibold tracking-widest uppercase">Enviar E-mail</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-[#1C1C1C] border-t border-[#292929] py-8">
+    <div class="max-w-[1480px] mx-auto px-6 lg:px-12 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-widest text-[#666666]">
+        <p>© 2026 Sérgio Advogados.</p>
+        <div class="flex gap-6 mt-4 md:mt-0">
+            <a href="#" class="hover:text-[#D4B785] transition-colors">LinkedIn</a>
+            <a href="#" class="hover:text-[#D4B785] transition-colors">Instagram</a>
+            <a href="#" class="hover:text-[#D4B785] transition-colors">Privacidade</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Echelon GSAP Text Reveal
+    gsap.to(".reveal-word", {
+        y: "0%",
+        duration: 1.2,
+        ease: "power4.out",
+        stagger: 0.08,
+        delay: 0.2
+    });
+
+    // Fade Up Elements
+    const fadeUps = document.querySelectorAll(".fade-in-up");
+    fadeUps.forEach((el, index) => {
+        gsap.to(el, {
+            scrollTrigger: {
+                trigger: el,
+                start: "top 85%",
+            },
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: "power3.out",
+            delay: index < 5 ? index * 0.1 : 0 // slight stagger for initial elements
+        });
+    });
+
+    // --- ELABORATE PARALLAX EFFECTS ON TEXTS ---
+
+    // 1. Hero Text Parallax (Staggered layered parallax on scroll)
+    const heroTl = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".hero-section",
+            start: "top top",
+            end: "bottom top",
+            scrub: 1.2
+        }
+    });
+
+    // Each line in the hero moves up at a different speed when scrolling down
+    heroTl.to(".parallax-layer-1", { y: -50, ease: "none" }, 0)
+          .to(".parallax-layer-2", { y: -90, ease: "none" }, 0)
+          .to(".parallax-layer-3", { y: -140, ease: "none" }, 0)
+          .to(".parallax-layer-4", { y: -200, opacity: 0.5, ease: "none" }, 0);
+
+    // 2. Section Titles Parallax
+    // We target the section title groups and apply parallax so the small title, 
+    // big title and description move at different speeds as they enter the screen.
+    const sectionTitles = document.querySelectorAll(".section-title-group");
+    sectionTitles.forEach(group => {
+        const small = group.querySelector(".parallax-title-small");
+        const large = group.querySelector(".parallax-title-large");
+        const desc = group.querySelector(".parallax-title-desc");
+
+        const groupTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: group,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 1
+            }
+        });
+
+        if (small) groupTl.fromTo(small, { y: 30 }, { y: -30, ease: "none" }, 0);
+        if (large) groupTl.fromTo(large, { y: 60 }, { y: -60, ease: "none" }, 0);
+        if (desc) groupTl.fromTo(desc, { y: 90 }, { y: -90, ease: "none" }, 0);
+    });
+
+    // 3. Hero Button Parallax
+    gsap.to(".parallax-btn-wrapper", {
+        y: -100, // Moves up slightly faster than normal scrolling
+        ease: "none",
+        scrollTrigger: {
+            trigger: ".hero-section",
+            start: "top top",
+            end: "bottom top",
+            scrub: 1.2
+        }
+    });
+
+    // 4. Hero Floating Card Parallax
+    gsap.to(".hero-floating-wrapper", {
+        y: -250, // Moves up much faster for a pronounced parallax effect
+        ease: "none",
+        scrollTrigger: {
+            trigger: ".hero-section",
+            start: "top top",
+            end: "bottom top",
+            scrub: 1.5
+        }
+    });
+
+});
+</script>
+</body>
+</html>

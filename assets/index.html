@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth">
+<html lang="pt-BR">
 
 <head>
     <meta charset="utf-8" />
@@ -8,6 +8,9 @@
 
     <!-- Preloads -->
     <link rel="preload" as="image" href="images/hero_expanded.webp">
+    <link rel="preload" as="image" href="images/logos/logo.webp">
+    <link rel="preload" as="image" href="images/imagem_clientes.webp">
+    <link rel="preload" as="image" href="images/imagem_colaborador.webp">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -132,7 +135,6 @@
             color: #ffffff;
             overflow-x: clip;
             /* Fix for position: sticky while preventing horizontal scroll */
-            scroll-behavior: smooth;
         }
 
         /* Custom Scrollbar */
@@ -244,9 +246,9 @@
         /* Animations & Performance Optimizations - Clean 60/120fps GPU rendering */
         .reveal {
             opacity: 0;
-            transform: translateY(24px);
-            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(16px);
+            transition: opacity 0.35s ease-out,
+                        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             backface-visibility: hidden;
         }
 
@@ -257,7 +259,7 @@
 
         .reveal-fade {
             opacity: 0;
-            transition: opacity 0.7s ease-in-out;
+            transition: opacity 0.4s ease-in-out;
         }
 
         .reveal-fade.active {
@@ -1080,11 +1082,13 @@
                 </div>
                 <span class="text-[10px] uppercase tracking-[0.4em] text-white/60 font-medium font-inter">Olympia</span>
             </div>
-            <div class="w-48 h-[1px] bg-white/5 overflow-hidden rounded-full relative">
-                <div
-                    class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-primary-700 via-primary-400 to-primary-700 animate-loader rounded-full drop-shadow-[0_0_5px_rgba(var(--color-primary-rgb),0.8)]">
+            <div class="w-56 h-[3px] bg-white/10 overflow-hidden rounded-full relative">
+                <div id="preloader-progress"
+                    class="absolute top-0 left-0 h-full bg-gradient-to-r from-primary-700 via-primary-400 to-primary-700 rounded-full drop-shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.8)]"
+                    style="width: 0%; transition: width 0.2s ease-out;">
                 </div>
             </div>
+            <span id="preloader-percent" class="text-[9px] tracking-widest text-white/50 font-mono">0%</span>
         </div>
     </div>
 
@@ -1621,7 +1625,7 @@
                     <!-- Right Side: Image -->
                     <div class="hidden lg:flex w-full lg:w-2/5 reveal flex-col justify-center relative z-10">
                         <div class="relative w-full h-[90%] min-h-[400px] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(var(--color-primary-rgb),0.15)] group">
-                            <img src="images/imagem_clientes.webp" alt="Diagnóstico Empresarial" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 filter brightness-75 contrast-125" onerror="this.src='images/services/financeiro.webp'" loading="lazy">
+                            <img src="images/imagem_clientes.webp" alt="Diagnóstico Empresarial" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 filter brightness-75 contrast-125" onerror="this.src='images/services/financeiro.webp'" decoding="async">
                             <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-90"></div>
                             <div class="absolute inset-0 bg-primary-900/10 mix-blend-overlay"></div>
                             
@@ -1660,7 +1664,7 @@
                     <!-- Left Side: Image -->
                     <div class="w-full lg:w-1/2 reveal flex justify-center relative">
                         <div class="relative w-full max-w-lg aspect-[4/5] rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(var(--color-primary-rgb),0.2)] group">
-                            <img src="images/imagem_colaborador.webp" alt="Área do Colaborador" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+                            <img src="images/imagem_colaborador.webp" alt="Área do Colaborador" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" decoding="async">
                             <div class="absolute inset-0 bg-gradient-to-t from-[#020202] via-[#020202]/20 to-transparent opacity-80 mix-blend-multiply"></div>
                         </div>
                         <!-- Decorative element -->
@@ -1753,7 +1757,7 @@
                         <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
-                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" loading="lazy">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
                                 </div>
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_1">Cliente Olympia</h4>
@@ -1774,7 +1778,7 @@
                         <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
-                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" loading="lazy">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
                                 </div>
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_2">Cliente Olympia</h4>
@@ -1795,7 +1799,7 @@
                         <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
-                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" loading="lazy">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
                                 </div>
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_3">Cliente Olympia</h4>
@@ -1816,7 +1820,7 @@
                         <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
-                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" loading="lazy">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
                                 </div>
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_4">Cliente Olympia</h4>
@@ -1837,7 +1841,7 @@
                         <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
-                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" loading="lazy">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
                                 </div>
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_5">Cliente Olympia</h4>
@@ -1858,7 +1862,7 @@
                         <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
-                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" loading="lazy">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
                                 </div>
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_6">Cliente Olympia</h4>
@@ -1881,7 +1885,7 @@
                         <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
-                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" loading="lazy">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
                                 </div>
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_1">Cliente Olympia</h4>
@@ -1902,7 +1906,7 @@
                         <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
-                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" loading="lazy">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
                                 </div>
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_2">Cliente Olympia</h4>
@@ -1923,7 +1927,7 @@
                         <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
-                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" loading="lazy">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
                                 </div>
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_3">Cliente Olympia</h4>
@@ -1944,7 +1948,7 @@
                         <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
-                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" loading="lazy">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
                                 </div>
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_4">Cliente Olympia</h4>
@@ -1965,7 +1969,7 @@
                         <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
-                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" loading="lazy">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
                                 </div>
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_5">Cliente Olympia</h4>
@@ -1986,7 +1990,7 @@
                         <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
-                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" loading="lazy">
+                                    <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
                                 </div>
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_6">Cliente Olympia</h4>
@@ -2105,7 +2109,7 @@
 
             <!-- Image Side -->
             <div class="w-full md:w-2/5 h-64 md:h-auto relative overflow-hidden bg-black flex items-center justify-center">
-                <img id="modal-product-img" src="" alt="Produto" loading="lazy"
+                <img id="modal-product-img" src="" alt="Produto" decoding="async"
                     class="w-full h-full object-cover object-center opacity-60 mix-blend-screen">
                 <div
                     class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#050505] via-transparent to-transparent">
@@ -2159,6 +2163,7 @@
     </div>
 
     <!-- Scripts -->
+        <!-- Scripts -->
     <script>
         // Força a página a sempre carregar no topo (Hero) independente do cache do navegador
         if ('scrollRestoration' in history) {
@@ -2172,341 +2177,14 @@
             }
             setTimeout(function() {
                 window.scrollTo(0, 0);
-                document.body.scrollTop = 0; // For Safari
-                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
             }, 10);
         });
 
-        const reveals = document.querySelectorAll(".reveal, .reveal-fade, .reveal-premium");
-
-        const revealOptions = {
-            threshold: 0.05,
-            rootMargin: "0px 0px 50px 0px"
-        };
-
-        const revealOnScroll = new IntersectionObserver(function (entries, observer) {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) {
-                    return;
-                } else {
-                    entry.target.classList.add("active");
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, revealOptions);
-
-        reveals.forEach(reveal => {
-            revealOnScroll.observe(reveal);
-        });
-
-
-
-        // Preloader and Hero Trigger (Strict Loading)
-        const preloader = document.getElementById('preloader');
-        const heroVideo = document.getElementById('hero-video');
-        const bodyContainer = document.getElementById('body-container');
-        let preloaderHidden = false;
-
-        function hidePreloader() {
-            if (preloaderHidden) return;
-            preloaderHidden = true;
-
-            // Dispara revelacao de elementos da Hero
-            document.querySelectorAll('#hero .reveal, #hero .reveal-fade, #hero .reveal-premium').forEach(el => el.classList.add('active'));
-
-            if (preloader) {
-                preloader.style.transitionDuration = '600ms';
-                preloader.style.opacity = '0';
-                preloader.style.pointerEvents = 'none';
-            }
-
-            setTimeout(() => {
-                if (preloader) preloader.style.display = 'none';
-                if (bodyContainer) bodyContainer.classList.remove('overflow-hidden');
-            }, 600);
-        }
-
-        // Preloader estrito: aguarda a Hero estar 100% carregada e decodificada
-        function initStrictPreloader() {
-            // Tempo minimo suave de apresentacao da marca (600ms)
-            const minDisplayPromise = new Promise(resolve => setTimeout(resolve, 600));
-
-            // Aguarda download E decodificacao completa da imagem na memoria do navegador
-            const heroImagePromise = new Promise(resolve => {
-                if (!heroVideo) {
-                    resolve();
-                    return;
-                }
-
-                function onImageReady() {
-                    if ('decode' in heroVideo) {
-                        heroVideo.decode().then(resolve).catch(() => resolve());
-                    } else {
-                        resolve();
-                    }
-                }
-
-                if (heroVideo.complete && heroVideo.naturalWidth > 0) {
-                    onImageReady();
-                } else {
-                    heroVideo.addEventListener('load', onImageReady, { once: true });
-                    heroVideo.addEventListener('error', resolve, { once: true });
-                }
-            });
-
-            // Aguarda carregamento global da pagina (scripts, estilos)
-            const windowLoadPromise = new Promise(resolve => {
-                if (document.readyState === 'complete') {
-                    resolve();
-                } else {
-                    window.addEventListener('load', resolve, { once: true });
-                }
-            });
-
-            // Aguarda fontes prontas para evitar layout shift visual
-            const fontsPromise = (document.fonts && document.fonts.ready)
-                ? document.fonts.ready.catch(() => {})
-                : Promise.resolve();
-
-            // Fallback de seguranca de 4.5s para evitar travamento em redes com perda de pacote
-            const safetyTimeout = new Promise(resolve => setTimeout(resolve, 4500));
-
-            Promise.race([
-                Promise.all([heroImagePromise, windowLoadPromise, fontsPromise, minDisplayPromise]),
-                safetyTimeout
-            ]).then(() => {
-                // Garante que o compositor do navegador preparou o frame antes de ocultar a cortina
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(hidePreloader);
-                });
-            });
-        }
-
-        initStrictPreloader();
-
-        // Hero Scroll Parallax & Fade out Effect (Apple/Vercel style transition) - RAF throttled
-        let heroScrollTicking = false;
-        window.addEventListener('scroll', () => {
-            if (heroScrollTicking) return;
-            heroScrollTicking = true;
-            requestAnimationFrame(() => {
-                heroScrollTicking = false;
-                const scrollY = window.scrollY;
-                const heroHeight = window.innerHeight;
-
-                if (scrollY <= heroHeight) {
-                    const progress = scrollY / heroHeight;
-                    const content = document.getElementById('hero-content');
-                    if (content) {
-                        content.style.opacity = Math.max(1 - (progress * 1.5), 0);
-                        const h1 = document.getElementById('parallax-h1');
-                        const p = document.getElementById('parallax-p');
-                        const buttons = document.getElementById('parallax-btn');
-
-                        if (h1) h1.style.transform = `translate3d(0, -${scrollY * 0.8}px, 0)`;
-                        if (p) p.style.transform = `translate3d(0, -${scrollY * 0.5}px, 0)`;
-                        if (buttons) buttons.style.transform = `translate3d(0, -${scrollY * 0.2}px, 0)`;
-                    }
-                }
-            });
-        }, { passive: true });
-
-        // --- SCROLLSPY E NAVEGAÇÃO SUAVE ---
-        const sections = document.querySelectorAll('section[id], header[id]');
-        const navItems = document.querySelectorAll('nav .nav-item');
-
-        // Navegação suave ao clicar
-        navItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                const href = item.getAttribute('href');
-                if (href && href.startsWith('#')) {
-                    e.preventDefault();
-                    const target = document.querySelector(href);
-                    if (target) {
-                        // Se for hero, forçamos o scrollY 0 para evitar bugs com sticky
-                        if (href === '#hero') {
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                        } else {
-                            target.scrollIntoView({ behavior: 'smooth' });
-                        }
-                    }
-                }
-            });
-        });
-
-        // ScrollSpy Manual (Mais confiável para seções sticky)
-        let scrollSpyTicking = false;
-        window.addEventListener('scroll', () => {
-            if (scrollSpyTicking) return;
-            scrollSpyTicking = true;
-            requestAnimationFrame(() => {
-            scrollSpyTicking = false;
-            const offset = window.innerHeight / 2;
-
-            let currentId = 'hero';
-
-            const services = document.getElementById('services');
-            const diagnostico = document.getElementById('diagnostico');
-            const colaborador = document.getElementById('colaborador');
-            const experiencias = document.getElementById('experiencias');
-
-            if (services && services.getBoundingClientRect().top <= offset) {
-                currentId = 'services';
-            }
-            if (diagnostico && diagnostico.getBoundingClientRect().top <= offset) {
-                currentId = 'diagnostico';
-            }
-            if (colaborador && colaborador.getBoundingClientRect().top <= offset) {
-                currentId = 'colaborador';
-            }
-            if (experiencias && experiencias.getBoundingClientRect().top <= offset) {
-                currentId = 'experiencias';
-            }
-
-            navItems.forEach(item => {
-                if (item.getAttribute('href') === `#${currentId}`) {
-                    item.classList.remove('text-white/50', 'hover:text-white', 'text-bordeaux-400', 'hover:text-bordeaux-300', 'text-primary-400', 'hover:text-primary-300');
-                    item.classList.add('text-primary-500', 'hover:text-primary-400');
-                } else {
-                    item.classList.remove('text-primary-500', 'hover:text-primary-400', 'text-bordeaux-400', 'hover:text-bordeaux-300', 'text-primary-400', 'hover:text-primary-300');
-                    item.classList.add('text-white/50', 'hover:text-white');
-                }
-            });
-            });
-        }, { passive: true });
-
-        // --- MODALS (OLYMPIA & PRODUCTS) ---
-        const modalOlympia = document.getElementById('modal-olympia');
-        const modalOlympiaContent = document.getElementById('modal-olympia-content');
-        const openModalBtn = document.getElementById('open-modal');
-        const closeModalBtn = document.getElementById('close-modal');
-
-        // Product Modal elements
-        const modalProduct = document.getElementById('modal-product');
-        const modalProductContent = document.getElementById('modal-product-content');
-        const closeModalProductBtn = document.getElementById('close-modal-product');
-
-        // Product Modal content targets
-        const modProdTitle = document.getElementById('modal-product-title').querySelector('span');
-        const modProdTag = document.getElementById('modal-product-tag');
-        const modProdWhat = document.getElementById('modal-product-what');
-        const modProdImportance = document.getElementById('modal-product-importance');
-        const modProdImg = document.getElementById('modal-product-img');
-        const modProdWhatsapp = document.getElementById('modal-product-whatsapp');
-
         let currentLanguage = 'pt';
 
-        function openOlympiaModal() {
-            modalOlympia.classList.remove('opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                modalOlympiaContent.classList.remove('scale-95');
-                modalOlympiaContent.classList.add('scale-100');
-            }, 50);
-        }
-
-        function closeOlympiaModal() {
-            modalOlympiaContent.classList.remove('scale-100');
-            modalOlympiaContent.classList.add('scale-95');
-            setTimeout(() => {
-                modalOlympia.classList.add('opacity-0', 'pointer-events-none');
-            }, 300);
-        }
-
-        function populateProductModal(serviceId) {
-            const data = productDetails[currentLanguage][serviceId];
-            if (!data) return;
-
-            modProdTitle.innerHTML = data.title;
-            modProdTag.innerText = data.tag;
-            modProdWhat.innerText = data.what;
-            modProdImportance.innerText = data.importance;
-            modProdImg.src = data.image;
-            
-            const btnSpan = modProdWhatsapp.querySelector('span[data-i18n]');
-            if (data.title.toLowerCase().includes('consultoria')) {
-                btnSpan.setAttribute('data-i18n', 'modal_prod_btn');
-                btnSpan.innerText = translations[currentLanguage].modal_prod_btn;
-            } else {
-                btnSpan.setAttribute('data-i18n', 'modal_prod_btn_alt');
-                btnSpan.innerText = translations[currentLanguage].modal_prod_btn_alt;
-            }
-            
-            // Adjust image framing for specific photos
-            if (serviceId === 'seguranca') {
-                modProdImg.style.objectPosition = '30% 20%'; // Shift left to center the woman in the vertical frame
-            } else if (serviceId === 'alimentar') {
-                modProdImg.style.objectPosition = 'center top'; // Evita cortar o rosto na imagem da bromatológica
-            } else {
-                modProdImg.style.objectPosition = 'center center'; // Default center
-            }
-
-            // Link is now static to #diagnostico
-            // modProdWhatsapp.href = translations[currentLanguage].whatsapp_link;
-
-            // Store current service in case language is switched while open
-            modalProduct.setAttribute('data-current-service', serviceId);
-        }
-
-        function openProductModal(serviceId) {
-            populateProductModal(serviceId);
-            modalProduct.classList.remove('opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                modalProductContent.classList.remove('scale-95');
-                modalProductContent.classList.add('scale-100');
-            }, 50);
-        }
-
-        function closeProductModal() {
-            modalProductContent.classList.remove('scale-100');
-            modalProductContent.classList.add('scale-95');
-            setTimeout(() => {
-                modalProduct.classList.add('opacity-0', 'pointer-events-none');
-            }, 300);
-        }
-
-        // Event Listeners for Olympia Modal
-        if (openModalBtn) {
-            openModalBtn.addEventListener('click', openOlympiaModal);
-        }
-        if (closeModalBtn) {
-            closeModalBtn.addEventListener('click', closeOlympiaModal);
-        }
-        modalOlympia.addEventListener('click', (e) => {
-            if (e.target === modalOlympia) closeOlympiaModal();
-        });
-
-        // Event Listeners for Product Modal
-        const btnSaberMais = document.querySelectorAll('.btn-saber-mais');
-        btnSaberMais.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const serviceId = btn.getAttribute('data-service');
-                if (serviceId) openProductModal(serviceId);
-            });
-        });
-
-        if (closeModalProductBtn) {
-            closeModalProductBtn.addEventListener('click', closeProductModal);
-        }
-        modalProduct.addEventListener('click', (e) => {
-            if (e.target === modalProduct) closeProductModal();
-        });
-        if (closeModalProductBtn) {
-            closeModalProductBtn.addEventListener('click', closeProductModal);
-        }
-        modalProduct.addEventListener('click', (e) => {
-            if (e.target === modalProduct) closeProductModal();
-        });
-
-        // Close on escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !modalOlympia.classList.contains('pointer-events-none')) {
-                closeOlympiaModal();
-            }
-            if (e.key === 'Escape' && !modalProduct.classList.contains('pointer-events-none')) {
-                closeProductModal();
-            }
-        });
+        // --- I18N DATA & PRODUCT SPECIFICATIONS ---
 
         // i18n Translation Logic
         const translations = {
@@ -2938,13 +2616,14 @@
             btnPt.addEventListener("click", () => setLanguage("pt"));
             btnEn.addEventListener("click", () => setLanguage("en"));
         }
-        // --- Dynamic Services Injection ---
-        const servicesGrid = document.getElementById('services-grid');
-        if (servicesGrid) {
+
+        // --- 1. RENDER SERVICES GRID IMMEDIATELY ---
+        function renderServicesGrid() {
+            const servicesGrid = document.getElementById('services-grid');
+            if (!servicesGrid || servicesGrid.children.length > 0) return;
             const serviceKeys = ['rh', 'financeiro', 'blindagem', 'treinamentos', 'seguranca', 'alimentar', 'sites', 'foto', 'vendas'];
 
-            serviceKeys.forEach((key, index) => {
-                const delay = (index + 1) * 100;
+            serviceKeys.forEach((key) => {
                 const shortKey = {
                     'rh': 'rh', 'financeiro': 'fin', 'blindagem': 'bli',
                     'treinamentos': 'tre', 'seguranca': 'seg', 'alimentar': 'ali',
@@ -2958,16 +2637,16 @@
                     objectPosition = '30% 20%';
                 }
 
-                const cardHtml = `
-                <div class="service-card cursor-pointer glass-panel border border-white/20 bg-[#0a0a0a]/80 backdrop-blur-xl rounded-[1.5rem] overflow-hidden group reveal flex flex-col h-full shadow-[0_4px_20px_rgba(0,0,0,0.5)]" data-service="${key}">
+                const cardHtml = 
+                <div class="service-card cursor-pointer glass-panel border border-white/20 bg-[#0a0a0a]/80 backdrop-blur-xl rounded-[1.5rem] overflow-hidden group reveal flex flex-col h-full shadow-[0_4px_20px_rgba(0,0,0,0.5)]" data-service="">
                     <div class="relative h-[220px] w-full overflow-hidden bg-black/50 shrink-0">
-                        <img src="${productDetails.pt[key].image}" alt="" class="w-full h-full object-cover opacity-100 transition-transform duration-500 ease-out group-hover:scale-105" loading="lazy" style="object-position: ${objectPosition};">
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/90 via-black/20 to-transparent"></div>
-                            <div class="absolute top-4 left-4 service-card-tag px-3 py-1.5 rounded text-[9px] font-bold text-white tracking-widest uppercase" data-i18n="${shortKey}_tag">${translations.pt[shortKey + '_tag']}</div>
+                        <img src="" alt="" class="w-full h-full object-cover opacity-100 transition-transform duration-500 ease-out group-hover:scale-105" decoding="async" style="object-position: ;">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/90 via-black/20 to-transparent"></div>
+                        <div class="absolute top-4 left-4 service-card-tag px-3 py-1.5 rounded text-[9px] font-bold text-white tracking-widest uppercase" data-i18n="_tag"></div>
                     </div>
                     <div class="p-6 flex flex-col flex-1 relative z-10 -mt-6 bg-gradient-to-b from-transparent to-[#0a0a0a]">
-                        <h3 class="text-xl font-medium text-white mb-3 font-heading tracking-wide leading-tight min-h-[50px]" data-i18n="${shortKey}_title">${translations.pt[shortKey + '_title']}</h3>
-                        <p class="text-xs text-white/50 leading-relaxed mb-6 flex-1 line-clamp-4" data-i18n="${shortKey}_desc">${translations.pt[shortKey + '_desc']}</p>
+                        <h3 class="text-xl font-medium text-white mb-3 font-heading tracking-wide leading-tight min-h-[50px]" data-i18n="_title"></h3>
+                        <p class="text-xs text-white/50 leading-relaxed mb-6 flex-1 line-clamp-4" data-i18n="_desc"></p>
                         <div class="flex items-center justify-between pt-5 border-t border-white/5 mt-auto">
                             <button class="flex items-center gap-2 text-[10px] font-semibold text-white/50 group-hover:text-primary-500 transition-colors uppercase tracking-[0.2em]">
                                 <span data-i18n="btn_saber_mais">Saber mais</span>
@@ -2976,15 +2655,12 @@
                         </div>
                     </div>
                 </div>
-                `;
+                ;
                 servicesGrid.insertAdjacentHTML('beforeend', cardHtml);
             });
 
-            // Observer for dynamically added cards to make them visible
-            servicesGrid.querySelectorAll('.reveal').forEach(el => revealOnScroll.observe(el));
-
-            // Re-attach event listeners to whole cards
-            document.querySelectorAll('.service-card').forEach(card => {
+            // Card click handlers for modal
+            servicesGrid.querySelectorAll('.service-card').forEach(card => {
                 card.addEventListener('click', (e) => {
                     e.preventDefault();
                     const serviceId = card.getAttribute('data-service');
@@ -2992,7 +2668,358 @@
                 });
             });
         }
-        // ---------------------------------
+        renderServicesGrid();
+
+        // --- 2. INTERSECTION OBSERVER (300px Eager Pre-reveal: zero waiting on scroll) ---
+        const revealOptions = {
+            threshold: 0,
+            rootMargin: "300px 0px 300px 0px"
+        };
+
+        const revealOnScroll = new IntersectionObserver(function (entries, observer) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("active");
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, revealOptions);
+
+        document.querySelectorAll(".reveal, .reveal-fade, .reveal-premium").forEach(reveal => {
+            revealOnScroll.observe(reveal);
+        });
+
+        // --- 3. COMPREHENSIVE ASSET PRELOADER (100% Real Preload & GPU Decode) ---
+        const preloader = document.getElementById('preloader');
+        const bodyContainer = document.getElementById('body-container');
+        let preloaderHidden = false;
+
+        function hidePreloader() {
+            if (preloaderHidden) return;
+            preloaderHidden = true;
+
+            // Immediately activate Hero and Services so no waiting/pop-in occurs on scroll
+            document.querySelectorAll('#hero .reveal, #hero .reveal-fade, #hero .reveal-premium').forEach(el => el.classList.add('active'));
+            document.querySelectorAll('#services .reveal').forEach(el => el.classList.add('active'));
+
+            if (preloader) {
+                preloader.style.transitionDuration = '400ms';
+                preloader.style.opacity = '0';
+                preloader.style.pointerEvents = 'none';
+            }
+
+            setTimeout(() => {
+                if (preloader) preloader.style.display = 'none';
+                if (bodyContainer) bodyContainer.classList.remove('overflow-hidden');
+            }, 400);
+        }
+
+        function initStrictPreloader() {
+            const CRITICAL_IMAGES = [
+                'images/hero_expanded.webp',
+                'images/logos/logo.webp',
+                'images/imagem_clientes.webp',
+                'images/imagem_colaborador.webp',
+                'images/services/rh.webp',
+                'images/services/financeiro.webp',
+                'images/services/juridico.webp',
+                'images/services/foto.webp',
+                'images/services/operacional_imagem.webp',
+                'images/services/Consultoria-de-alimentos-estabelecimentos-de-alimentos.webp',
+                'images/services/sites.webp',
+                'images/services/seguranca.webp',
+                'images/services/vendas.webp'
+            ];
+
+            let loadedCount = 0;
+            const totalCount = CRITICAL_IMAGES.length;
+            const progressBar = document.getElementById('preloader-progress');
+            const percentText = document.getElementById('preloader-percent');
+
+            function updateProgress() {
+                loadedCount++;
+                const percent = Math.min(Math.round((loadedCount / totalCount) * 100), 100);
+                if (progressBar) progressBar.style.width = percent + '%';
+                if (percentText) percentText.textContent = percent + '%';
+            }
+
+            // Preload and hardware-decode ALL images into browser GPU memory
+            const imagePromises = CRITICAL_IMAGES.map(src => {
+                return new Promise(resolve => {
+                    const img = new Image();
+                    img.src = src;
+                    const onDone = () => {
+                        updateProgress();
+                        resolve();
+                    };
+                    if (img.complete && img.naturalWidth > 0) {
+                        if ('decode' in img) {
+                            img.decode().then(onDone).catch(onDone);
+                        } else {
+                            onDone();
+                        }
+                    } else {
+                        img.onload = () => {
+                            if ('decode' in img) {
+                                img.decode().then(onDone).catch(onDone);
+                            } else {
+                                onDone();
+                            }
+                        };
+                        img.onerror = onDone;
+                    }
+                });
+            });
+
+            const fontsPromise = (document.fonts && document.fonts.ready)
+                ? document.fonts.ready.catch(() => {})
+                : Promise.resolve();
+
+            const minDisplayPromise = new Promise(resolve => setTimeout(resolve, 400));
+            const safetyTimeout = new Promise(resolve => setTimeout(resolve, 3500));
+
+            Promise.race([
+                Promise.all([...imagePromises, fontsPromise, minDisplayPromise]),
+                safetyTimeout
+            ]).then(() => {
+                if (progressBar) progressBar.style.width = '100%';
+                if (percentText) percentText.textContent = '100%';
+                setTimeout(() => {
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(hidePreloader);
+                    });
+                }, 80);
+            });
+        }
+
+        initStrictPreloader();
+
+        // --- 4. HERO PARALLAX, SCROLLSPY & MODALS ---
+'@ + "
+
+        " + // Hero Scroll Parallax & Fade out Effect (Apple/Vercel style transition) - RAF throttled
+        let heroScrollTicking = false;
+        window.addEventListener('scroll', () => {
+            if (heroScrollTicking) return;
+            heroScrollTicking = true;
+            requestAnimationFrame(() => {
+                heroScrollTicking = false;
+                const scrollY = window.scrollY;
+                const heroHeight = window.innerHeight;
+
+                if (scrollY <= heroHeight) {
+                    const progress = scrollY / heroHeight;
+                    const content = document.getElementById('hero-content');
+                    if (content) {
+                        content.style.opacity = Math.max(1 - (progress * 1.5), 0);
+                        const h1 = document.getElementById('parallax-h1');
+                        const p = document.getElementById('parallax-p');
+                        const buttons = document.getElementById('parallax-btn');
+
+                        if (h1) h1.style.transform = `translate3d(0, -${scrollY * 0.8}px, 0)`;
+                        if (p) p.style.transform = `translate3d(0, -${scrollY * 0.5}px, 0)`;
+                        if (buttons) buttons.style.transform = `translate3d(0, -${scrollY * 0.2}px, 0)`;
+                    }
+                }
+            });
+        }, { passive: true });
+
+        // --- SCROLLSPY E NAVEGAÇÃO SUAVE ---
+        const sections = document.querySelectorAll('section[id], header[id]');
+        const navItems = document.querySelectorAll('nav .nav-item');
+
+        // Navegação suave ao clicar
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                const href = item.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        // Se for hero, forçamos o scrollY 0 para evitar bugs com sticky
+                        if (href === '#hero') {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        } else {
+                            target.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                }
+            });
+        });
+
+        // ScrollSpy Manual (Mais confiável para seções sticky)
+        let scrollSpyTicking = false;
+        window.addEventListener('scroll', () => {
+            if (scrollSpyTicking) return;
+            scrollSpyTicking = true;
+            requestAnimationFrame(() => {
+            scrollSpyTicking = false;
+            const offset = window.innerHeight / 2;
+
+            let currentId = 'hero';
+
+            const services = document.getElementById('services');
+            const diagnostico = document.getElementById('diagnostico');
+            const colaborador = document.getElementById('colaborador');
+            const experiencias = document.getElementById('experiencias');
+
+            if (services && services.getBoundingClientRect().top <= offset) {
+                currentId = 'services';
+            }
+            if (diagnostico && diagnostico.getBoundingClientRect().top <= offset) {
+                currentId = 'diagnostico';
+            }
+            if (colaborador && colaborador.getBoundingClientRect().top <= offset) {
+                currentId = 'colaborador';
+            }
+            if (experiencias && experiencias.getBoundingClientRect().top <= offset) {
+                currentId = 'experiencias';
+            }
+
+            navItems.forEach(item => {
+                if (item.getAttribute('href') === `#${currentId}`) {
+                    item.classList.remove('text-white/50', 'hover:text-white', 'text-bordeaux-400', 'hover:text-bordeaux-300', 'text-primary-400', 'hover:text-primary-300');
+                    item.classList.add('text-primary-500', 'hover:text-primary-400');
+                } else {
+                    item.classList.remove('text-primary-500', 'hover:text-primary-400', 'text-bordeaux-400', 'hover:text-bordeaux-300', 'text-primary-400', 'hover:text-primary-300');
+                    item.classList.add('text-white/50', 'hover:text-white');
+                }
+            });
+            });
+        }, { passive: true });
+
+        // --- MODALS (OLYMPIA & PRODUCTS) ---
+        const modalOlympia = document.getElementById('modal-olympia');
+        const modalOlympiaContent = document.getElementById('modal-olympia-content');
+        const openModalBtn = document.getElementById('open-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+
+        // Product Modal elements
+        const modalProduct = document.getElementById('modal-product');
+        const modalProductContent = document.getElementById('modal-product-content');
+        const closeModalProductBtn = document.getElementById('close-modal-product');
+
+        // Product Modal content targets
+        const modProdTitle = document.getElementById('modal-product-title').querySelector('span');
+        const modProdTag = document.getElementById('modal-product-tag');
+        const modProdWhat = document.getElementById('modal-product-what');
+        const modProdImportance = document.getElementById('modal-product-importance');
+        const modProdImg = document.getElementById('modal-product-img');
+        const modProdWhatsapp = document.getElementById('modal-product-whatsapp');
+
+        function openOlympiaModal() {
+            modalOlympia.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                modalOlympiaContent.classList.remove('scale-95');
+                modalOlympiaContent.classList.add('scale-100');
+            }, 50);
+        }
+
+        function closeOlympiaModal() {
+            modalOlympiaContent.classList.remove('scale-100');
+            modalOlympiaContent.classList.add('scale-95');
+            setTimeout(() => {
+                modalOlympia.classList.add('opacity-0', 'pointer-events-none');
+            }, 300);
+        }
+
+        function populateProductModal(serviceId) {
+            const data = productDetails[currentLanguage][serviceId];
+            if (!data) return;
+
+            modProdTitle.innerHTML = data.title;
+            modProdTag.innerText = data.tag;
+            modProdWhat.innerText = data.what;
+            modProdImportance.innerText = data.importance;
+            modProdImg.src = data.image;
+            
+            const btnSpan = modProdWhatsapp.querySelector('span[data-i18n]');
+            if (data.title.toLowerCase().includes('consultoria')) {
+                btnSpan.setAttribute('data-i18n', 'modal_prod_btn');
+                btnSpan.innerText = translations[currentLanguage].modal_prod_btn;
+            } else {
+                btnSpan.setAttribute('data-i18n', 'modal_prod_btn_alt');
+                btnSpan.innerText = translations[currentLanguage].modal_prod_btn_alt;
+            }
+            
+            // Adjust image framing for specific photos
+            if (serviceId === 'seguranca') {
+                modProdImg.style.objectPosition = '30% 20%'; // Shift left to center the woman in the vertical frame
+            } else if (serviceId === 'alimentar') {
+                modProdImg.style.objectPosition = 'center top'; // Evita cortar o rosto na imagem da bromatológica
+            } else {
+                modProdImg.style.objectPosition = 'center center'; // Default center
+            }
+
+            // Link is now static to #diagnostico
+            // modProdWhatsapp.href = translations[currentLanguage].whatsapp_link;
+
+            // Store current service in case language is switched while open
+            modalProduct.setAttribute('data-current-service', serviceId);
+        }
+
+        function openProductModal(serviceId) {
+            populateProductModal(serviceId);
+            modalProduct.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                modalProductContent.classList.remove('scale-95');
+                modalProductContent.classList.add('scale-100');
+            }, 50);
+        }
+
+        function closeProductModal() {
+            modalProductContent.classList.remove('scale-100');
+            modalProductContent.classList.add('scale-95');
+            setTimeout(() => {
+                modalProduct.classList.add('opacity-0', 'pointer-events-none');
+            }, 300);
+        }
+
+        // Event Listeners for Olympia Modal
+        if (openModalBtn) {
+            openModalBtn.addEventListener('click', openOlympiaModal);
+        }
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', closeOlympiaModal);
+        }
+        modalOlympia.addEventListener('click', (e) => {
+            if (e.target === modalOlympia) closeOlympiaModal();
+        });
+
+        // Event Listeners for Product Modal
+        const btnSaberMais = document.querySelectorAll('.btn-saber-mais');
+        btnSaberMais.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const serviceId = btn.getAttribute('data-service');
+                if (serviceId) openProductModal(serviceId);
+            });
+        });
+
+        if (closeModalProductBtn) {
+            closeModalProductBtn.addEventListener('click', closeProductModal);
+        }
+        modalProduct.addEventListener('click', (e) => {
+            if (e.target === modalProduct) closeProductModal();
+        });
+        if (closeModalProductBtn) {
+            closeModalProductBtn.addEventListener('click', closeProductModal);
+        }
+        modalProduct.addEventListener('click', (e) => {
+            if (e.target === modalProduct) closeProductModal();
+        });
+
+        // Close on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modalOlympia.classList.contains('pointer-events-none')) {
+                closeOlympiaModal();
+            }
+            if (e.key === 'Escape' && !modalProduct.classList.contains('pointer-events-none')) {
+                closeProductModal();
+            }
+        });
+
+        // --- 5. DIAGNÓSTICO FORM LOGIC ---
         // Diagnóstico Form Logic
         // ---------------------------------
         const btnNextStep = document.getElementById('btn-next-step');
@@ -3115,6 +3142,7 @@
             });
         }
         // ---------------------------------
+
     </script>
 </body>
 

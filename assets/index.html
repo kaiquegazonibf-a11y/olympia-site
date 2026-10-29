@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-BR" class="is-loading">
 
 <head>
     <meta charset="utf-8" />
@@ -438,6 +438,29 @@
             color: rgba(255, 255, 255, 0.4);
             width: 150px;
             font-family: 'Inter', sans-serif;
+        }
+
+        /* Preloader failsafe: even if ALL JavaScript fails, the splash hides itself
+           and scroll is unlocked after 4s, so the user is never trapped. */
+        html.is-loading,
+        html.is-loading body {
+            overflow: hidden;
+            animation: olyUnlockScroll 0s linear 4s forwards;
+        }
+        @keyframes olyUnlockScroll {
+            to { overflow: visible; }
+        }
+        #preloader {
+            animation: olyPreloaderFailsafe 0.4s ease 4s forwards;
+        }
+        #preloader.is-hidden {
+            opacity: 0 !important;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+        }
+        @keyframes olyPreloaderFailsafe {
+            to { opacity: 0; visibility: hidden; pointer-events: none; }
         }
 
         /* Preloader Animation */
@@ -1069,7 +1092,7 @@
     </style>
 </head>
 
-<body class="antialiased selection:bg-primary-700 selection:text-white relative overflow-hidden" id="body-container">
+<body class="antialiased selection:bg-primary-700 selection:text-white relative" id="body-container">
 
     <!-- Preloader Splash Screen -->
     <div id="preloader"
@@ -1093,6 +1116,62 @@
     </div>
 
     <div class="noise-overlay"></div>
+    <script>
+        // --- STANDALONE PRELOADER BOOTSTRAP ---
+        // Runs immediately, independent from the main script. Uses only setTimeout
+        // (never requestAnimationFrame, which pauses in background tabs/previews).
+        (function () {
+            var pre = document.getElementById('preloader');
+            var bar = document.getElementById('preloader-progress');
+            var pct = document.getElementById('preloader-percent');
+            var shown = 0, target = 0, done = false, ticker;
+
+            function paint(v) {
+                shown = v;
+                if (bar) bar.style.width = v + '%';
+                if (pct) pct.textContent = Math.round(v) + '%';
+            }
+
+            // Smooth progress: eases towards target, and slowly creeps forward on its own
+            ticker = setInterval(function () {
+                if (!done && target < 90) target += 1.5;
+                var next = shown + Math.max((target - shown) * 0.25, 0.5);
+                paint(Math.min(next, target));
+            }, 50);
+
+            window.__olySetProgress = function (v) { if (v > target) target = Math.min(v, 100); };
+
+            window.__olyHidePreloader = function () {
+                if (done) return;
+                done = true;
+                target = 100;
+                clearInterval(ticker);
+                paint(100);
+                setTimeout(function () {
+                    if (pre) pre.classList.add('is-hidden');
+                    document.documentElement.classList.remove('is-loading');
+                    setTimeout(function () { if (pre) pre.style.display = 'none'; }, 400);
+                }, 120);
+            };
+
+            // Hide as soon as the page is usable (DOM parsed + hero image ready), with hard cap
+            var minTime = new Promise(function (r) { setTimeout(r, 350); });
+            var domReady = new Promise(function (r) {
+                if (document.readyState !== 'loading') r();
+                else document.addEventListener('DOMContentLoaded', r, { once: true });
+            });
+            var hero = new Promise(function (r) {
+                var img = new Image();
+                img.onload = img.onerror = function () { window.__olySetProgress(70); r(); };
+                img.src = 'images/hero_expanded.webp';
+                if (img.complete) r();
+            });
+            domReady.then(function () { window.__olySetProgress(50); });
+            Promise.all([minTime, domReady, hero]).then(window.__olyHidePreloader);
+            window.addEventListener('load', window.__olyHidePreloader, { once: true });
+            setTimeout(window.__olyHidePreloader, 2500); // hard cap: never block more than 2.5s
+        })();
+    </script>
 
     <!-- Navigation -->
     <nav id="main-nav" class="fixed w-[95%] max-w-6xl z-[100] top-6 left-1/2 transition-all duration-300 py-3 px-6 md:px-8 border border-white/10 rounded-[2rem] shadow-2xl group"
@@ -2163,7 +2242,6 @@
     </div>
 
     <!-- Scripts -->
-        <!-- Scripts -->
     <script>
         // Força a página a sempre carregar no topo (Hero) independente do cache do navegador
         if ('scrollRestoration' in history) {
@@ -2637,16 +2715,16 @@
                     objectPosition = '30% 20%';
                 }
 
-                const cardHtml = 
-                <div class="service-card cursor-pointer glass-panel border border-white/20 bg-[#0a0a0a]/80 backdrop-blur-xl rounded-[1.5rem] overflow-hidden group reveal flex flex-col h-full shadow-[0_4px_20px_rgba(0,0,0,0.5)]" data-service="">
+                const cardHtml = `
+                <div class="service-card cursor-pointer glass-panel border border-white/20 bg-[#0a0a0a]/80 backdrop-blur-xl rounded-[1.5rem] overflow-hidden group reveal flex flex-col h-full shadow-[0_4px_20px_rgba(0,0,0,0.5)]" data-service="${key}">
                     <div class="relative h-[220px] w-full overflow-hidden bg-black/50 shrink-0">
-                        <img src="" alt="" class="w-full h-full object-cover opacity-100 transition-transform duration-500 ease-out group-hover:scale-105" decoding="async" style="object-position: ;">
+                        <img src="${productDetails.pt[key].image}" alt="" class="w-full h-full object-cover opacity-100 transition-transform duration-500 ease-out group-hover:scale-105" decoding="async" style="object-position: ${objectPosition};">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/90 via-black/20 to-transparent"></div>
-                        <div class="absolute top-4 left-4 service-card-tag px-3 py-1.5 rounded text-[9px] font-bold text-white tracking-widest uppercase" data-i18n="_tag"></div>
+                        <div class="absolute top-4 left-4 service-card-tag px-3 py-1.5 rounded text-[9px] font-bold text-white tracking-widest uppercase" data-i18n="${shortKey}_tag">${translations.pt[shortKey + '_tag']}</div>
                     </div>
                     <div class="p-6 flex flex-col flex-1 relative z-10 -mt-6 bg-gradient-to-b from-transparent to-[#0a0a0a]">
-                        <h3 class="text-xl font-medium text-white mb-3 font-heading tracking-wide leading-tight min-h-[50px]" data-i18n="_title"></h3>
-                        <p class="text-xs text-white/50 leading-relaxed mb-6 flex-1 line-clamp-4" data-i18n="_desc"></p>
+                        <h3 class="text-xl font-medium text-white mb-3 font-heading tracking-wide leading-tight min-h-[50px]" data-i18n="${shortKey}_title">${translations.pt[shortKey + '_title']}</h3>
+                        <p class="text-xs text-white/50 leading-relaxed mb-6 flex-1 line-clamp-4" data-i18n="${shortKey}_desc">${translations.pt[shortKey + '_desc']}</p>
                         <div class="flex items-center justify-between pt-5 border-t border-white/5 mt-auto">
                             <button class="flex items-center gap-2 text-[10px] font-semibold text-white/50 group-hover:text-primary-500 transition-colors uppercase tracking-[0.2em]">
                                 <span data-i18n="btn_saber_mais">Saber mais</span>
@@ -2655,7 +2733,7 @@
                         </div>
                     </div>
                 </div>
-                ;
+                `;
                 servicesGrid.insertAdjacentHTML('beforeend', cardHtml);
             });
 
@@ -2689,35 +2767,18 @@
             revealOnScroll.observe(reveal);
         });
 
-        // --- 3. COMPREHENSIVE ASSET PRELOADER (100% Real Preload & GPU Decode) ---
-        const preloader = document.getElementById('preloader');
-        const bodyContainer = document.getElementById('body-container');
-        let preloaderHidden = false;
+        // --- 3. NON-BLOCKING PRELOADER HANDOFF & BACKGROUND IMAGE WARM-UP ---
+        // The splash itself is controlled by the standalone bootstrap right after #preloader.
+        // Here we only activate above-the-fold content and warm up the remaining images
+        // in the background, so nothing ever blocks the user on the loading screen.
+        (function () {
+            // Activate Hero and Services reveals immediately so there is no pop-in on scroll
+            document.querySelectorAll('#hero .reveal, #hero .reveal-fade, #hero .reveal-premium, #services .reveal')
+                .forEach(el => el.classList.add('active'));
 
-        function hidePreloader() {
-            if (preloaderHidden) return;
-            preloaderHidden = true;
+            if (window.__olySetProgress) window.__olySetProgress(85);
 
-            // Immediately activate Hero and Services so no waiting/pop-in occurs on scroll
-            document.querySelectorAll('#hero .reveal, #hero .reveal-fade, #hero .reveal-premium').forEach(el => el.classList.add('active'));
-            document.querySelectorAll('#services .reveal').forEach(el => el.classList.add('active'));
-
-            if (preloader) {
-                preloader.style.transitionDuration = '400ms';
-                preloader.style.opacity = '0';
-                preloader.style.pointerEvents = 'none';
-            }
-
-            setTimeout(() => {
-                if (preloader) preloader.style.display = 'none';
-                if (bodyContainer) bodyContainer.classList.remove('overflow-hidden');
-            }, 400);
-        }
-
-        function initStrictPreloader() {
-            const CRITICAL_IMAGES = [
-                'images/hero_expanded.webp',
-                'images/logos/logo.webp',
+            const BACKGROUND_IMAGES = [
                 'images/imagem_clientes.webp',
                 'images/imagem_colaborador.webp',
                 'images/services/rh.webp',
@@ -2731,73 +2792,23 @@
                 'images/services/vendas.webp'
             ];
 
-            let loadedCount = 0;
-            const totalCount = CRITICAL_IMAGES.length;
-            const progressBar = document.getElementById('preloader-progress');
-            const percentText = document.getElementById('preloader-percent');
-
-            function updateProgress() {
-                loadedCount++;
-                const percent = Math.min(Math.round((loadedCount / totalCount) * 100), 100);
-                if (progressBar) progressBar.style.width = percent + '%';
-                if (percentText) percentText.textContent = percent + '%';
-            }
-
-            // Preload and hardware-decode ALL images into browser GPU memory
-            const imagePromises = CRITICAL_IMAGES.map(src => {
-                return new Promise(resolve => {
+            const warmUp = () => {
+                BACKGROUND_IMAGES.forEach(src => {
                     const img = new Image();
+                    img.decoding = 'async';
                     img.src = src;
-                    const onDone = () => {
-                        updateProgress();
-                        resolve();
-                    };
-                    if (img.complete && img.naturalWidth > 0) {
-                        if ('decode' in img) {
-                            img.decode().then(onDone).catch(onDone);
-                        } else {
-                            onDone();
-                        }
-                    } else {
-                        img.onload = () => {
-                            if ('decode' in img) {
-                                img.decode().then(onDone).catch(onDone);
-                            } else {
-                                onDone();
-                            }
-                        };
-                        img.onerror = onDone;
-                    }
                 });
-            });
+            };
 
-            const fontsPromise = (document.fonts && document.fonts.ready)
-                ? document.fonts.ready.catch(() => {})
-                : Promise.resolve();
-
-            const minDisplayPromise = new Promise(resolve => setTimeout(resolve, 400));
-            const safetyTimeout = new Promise(resolve => setTimeout(resolve, 3500));
-
-            Promise.race([
-                Promise.all([...imagePromises, fontsPromise, minDisplayPromise]),
-                safetyTimeout
-            ]).then(() => {
-                if (progressBar) progressBar.style.width = '100%';
-                if (percentText) percentText.textContent = '100%';
-                setTimeout(() => {
-                    requestAnimationFrame(() => {
-                        requestAnimationFrame(hidePreloader);
-                    });
-                }, 80);
-            });
-        }
-
-        initStrictPreloader();
+            // Start right after the splash is gone, without competing with the hero image
+            const schedule = window.requestIdleCallback
+                ? (fn) => requestIdleCallback(fn, { timeout: 1200 })
+                : (fn) => setTimeout(fn, 300);
+            schedule(warmUp);
+        })();
 
         // --- 4. HERO PARALLAX, SCROLLSPY & MODALS ---
-'@ + "
-
-        " + // Hero Scroll Parallax & Fade out Effect (Apple/Vercel style transition) - RAF throttled
+        // Hero Scroll Parallax & Fade out Effect (Apple/Vercel style transition) - RAF throttled
         let heroScrollTicking = false;
         window.addEventListener('scroll', () => {
             if (heroScrollTicking) return;

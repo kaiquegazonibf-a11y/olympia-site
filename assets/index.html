@@ -6,11 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Olympia</title>
 
-    <!-- Preloads -->
-    <link rel="preload" as="image" href="images/hero_expanded.webp">
+    <!-- Critical Above-the-Fold Preloads -->
+    <link rel="preload" as="image" href="images/hero_expanded.webp" fetchpriority="high">
     <link rel="preload" as="image" href="images/logos/logo.webp">
-    <link rel="preload" as="image" href="images/imagem_clientes.webp">
-    <link rel="preload" as="image" href="images/imagem_colaborador.webp">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,79 +17,8 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Iconify -->
-    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js" defer></script>
-
-    <!-- Tailwind Config -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: 'var(--color-primary-50)',
-                            100: 'var(--color-primary-100)',
-                            200: 'var(--color-primary-200)',
-                            300: 'var(--color-primary-300)',
-                            400: 'var(--color-primary-400)',
-                            500: 'var(--color-primary-500)',
-                            600: 'var(--color-primary-600)',
-                            700: 'var(--color-primary-700)',
-                            800: 'var(--color-primary-800)',
-                            900: 'var(--color-primary-900)',
-                            950: 'var(--color-primary-950)',
-                        },
-                        secondary: {
-                            950: 'var(--color-secondary-950)',
-                        },
-                        base: {
-                            900: '#111111',
-                            950: '#050505',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        heading: ['Outfit', 'sans-serif'],
-                    },
-                    backgroundImage: {
-                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-                    },
-                    animation: {
-                        'blob': 'blob 15s infinite alternate',
-                        'float': 'float 10s infinite alternate ease-in-out',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'glow': 'glow 3s ease-in-out infinite alternate',
-                        'spin-slow': 'spin 15s linear infinite',
-                        'scroll-x': 'scroll-x 60s linear infinite',
-                    },
-                    keyframes: {
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' }
-                        },
-                        float: {
-                            '0%': { transform: 'translateY(0) scale(1)' },
-                            '100%': { transform: 'translateY(-20px) scale(1.05)' }
-                        },
-                        glow: {
-                            '0%': { boxShadow: '0 0 20px var(--color-glow-base)' },
-                            '100%': { boxShadow: '0 0 40px var(--color-glow-strong), 0 0 60px var(--color-glow-base)' }
-                        },
-                        'scroll-x': {
-                            '0%': { transform: 'translate3d(0, 0, 0) rotate(0.001deg)' },
-                            '100%': { transform: 'translate3d(-50%, 0, 0) rotate(0.001deg)' }
-                        }
-                    }
-                }
-            }
-        }
-
-    </script>
+    <!-- Precompiled Tailwind CSS (Zero runtime JIT overhead, zero FOUC) -->
+    <link rel="stylesheet" href="css/tailwind.css">
 
 
     <!-- Custom CSS -->
@@ -155,39 +82,44 @@
             background: var(--color-scrollbar-hover);
         }
 
-        /* Noise Overlay - isolated texture pass */
-        .noise-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 50;
-            opacity: 0.035;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            transform: translateZ(0);
-            contain: strict;
+        /* Inline SVG icons behave identically to Iconify SVGs */
+        svg.iconify {
+            display: inline-block;
+            vertical-align: -0.125em;
+            flex-shrink: 0;
         }
 
-        /* Glass Panel */
+        /* Noise Overlay - static 64x64 bitmap tile (zero SVG filter CPU/GPU cost) */
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.028;
+            background-image: url("images/noise.png");
+            background-repeat: repeat;
+            background-size: 96px 96px;
+        }
+
+        /* Glass Panel - crisp dark surface without expensive per-card backdrop-filter readback */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            background: linear-gradient(180deg, rgba(20, 20, 22, 0.92) 0%, rgba(10, 10, 12, 0.96) 100%);
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
             position: relative;
             overflow: hidden;
-            /* Only transition specific props - 'all' caused GPU thrash */
-            transition: background 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
-                        border-color 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
-                        box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: border-color 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+                        box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+                        background-color 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* REMOVED global .glass-panel:hover with translateY - caused
-           cascading flicker on nested glass-panels (tags, overlays, forms).
-           Hover lift is now ONLY on .service-card. */
+        /* Real glass blur reserved exclusively for elements floating directly over photos */
+        .glass-blur-badge {
+            background: rgba(8, 8, 10, 0.62);
+            backdrop-filter: blur(12px) saturate(150%);
+            -webkit-backdrop-filter: blur(12px) saturate(150%);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
 
         /* Border Gradient shared style */
         .border-gradient {
@@ -208,15 +140,31 @@
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 50%, rgba(155, 33, 49, 0.3) 100%);
         }
 
-        /* Ambient Blob */
+        /* Ambient Orbs - pure GPU radial gradients (zero Gaussian blur filter passes) */
         .ambient-blob {
             position: absolute;
             border-radius: 50%;
-            filter: blur(90px);
-            opacity: 0.4;
-            z-index: -1;
-            mix-blend-mode: screen;
             pointer-events: none;
+            z-index: -1;
+        }
+        .ambient-orb-primary {
+            background: radial-gradient(circle, rgba(155, 33, 49, 0.24) 0%, rgba(155, 33, 49, 0.08) 42%, transparent 70%);
+        }
+        .ambient-orb-deep {
+            background: radial-gradient(circle, rgba(88, 16, 26, 0.36) 0%, rgba(64, 12, 20, 0.12) 45%, transparent 72%);
+        }
+        .ambient-orb-light {
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.015) 45%, transparent 70%);
+        }
+
+        /* Pause & cull sticky hero completely once covered by main content */
+        #hero.hero-covered {
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #hero.hero-covered *,
+        .carousel-paused {
+            animation-play-state: paused !important;
         }
 
         /* Transparent Lettering */
@@ -243,108 +191,92 @@
             width: 100%;
         }
 
-        /* Animations & Performance Optimizations - Clean 60/120fps GPU rendering */
+        /* Scroll & Hero Entrance Animations - pure compositor opacity + translate3d */
         .reveal {
             opacity: 0;
-            transform: translateY(16px);
-            transition: opacity 0.35s ease-out,
-                        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            backface-visibility: hidden;
+            transform: translate3d(0, 22px, 0);
+            transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            transition-delay: var(--reveal-delay, 0ms);
         }
 
         .reveal.active {
             opacity: 1;
-            transform: translateY(0);
+            transform: translate3d(0, 0, 0);
         }
 
         .reveal-fade {
             opacity: 0;
-            transition: opacity 0.4s ease-in-out;
+            transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+            transition-delay: var(--reveal-delay, 0ms);
         }
 
         .reveal-fade.active {
             opacity: 1;
         }
 
-        /* 3D Premium Title Animation (Apple/Fluxora style) */
         @keyframes premiumTextReveal {
             0% {
                 opacity: 0;
-                transform: translateY(35px) scale(0.96);
+                transform: translate3d(0, 28px, 0) scale(0.97);
             }
-
             100% {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: translate3d(0, 0, 0) scale(1);
             }
         }
 
         .reveal-premium {
             opacity: 0;
-            transform-origin: bottom center;
-            backface-visibility: hidden;
             display: inline-block;
         }
 
         .reveal-premium.active {
-            animation-name: premiumTextReveal;
-            animation-duration: 0.9s;
-            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-            animation-fill-mode: forwards;
+            animation: premiumTextReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation-delay: var(--reveal-delay, 0ms);
         }
 
-        /* Text Shimmer & Aura Glow Effects - isolated GPU text clipping to prevent flicker */
-        @keyframes shimmerGlow {
-            0% {
-                background-position: 200% center;
+        @media (prefers-reduced-motion: reduce) {
+            .reveal, .reveal-fade, .reveal-premium {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+                animation: none !important;
             }
+        }
 
-            100% {
-                background-position: -200% center;
+        /* Text Shimmer & Aura Glow - seamless alternate sweep, zero Chromium clip-text flicker */
+        @keyframes shimmerGlow {
+            0%, 15% {
+                background-position: 100% 50%;
+            }
+            85%, 100% {
+                background-position: 0% 50%;
             }
         }
 
         .text-shimmer {
-            animation: shimmerGlow 10s ease-in-out infinite;
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-repeat: no-repeat;
             display: inline-block;
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            isolation: isolate;
+            padding-bottom: 0.1em;
+            margin-bottom: -0.1em;
+            animation: shimmerGlow 7s ease-in-out infinite alternate;
         }
 
-        @keyframes pulseGlowWhite {
-
-            0%,
-            100% {
-                filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.0));
-            }
-
-            50% {
-                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.25));
-            }
-        }
-
-        @keyframes pulseGlowBordeaux {
-
-            0%,
-            100% {
-                filter: drop-shadow(0 0 15px rgba(155, 33, 49, 0.2));
-            }
-
-            50% {
-                filter: drop-shadow(0 0 45px rgba(255, 77, 109, 0.5));
-            }
+        section[id] {
+            scroll-margin-top: 1.5rem;
         }
 
         .glow-white {
-            animation: pulseGlowWhite 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.14));
         }
 
-        .glow-bordeaux {
-            animation: pulseGlowBordeaux 4s ease-in-out infinite;
+        .glow-bordeaux,
+        .glow-primary {
+            filter: drop-shadow(0 0 24px rgba(184, 45, 65, 0.34));
         }
 
         /* ambient-blob GPU hint merged into original definition above */
@@ -440,24 +372,31 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* Preloader failsafe: even if ALL JavaScript fails, the splash hides itself
-           and scroll is unlocked after 4s, so the user is never trapped. */
+        /* Preloader critical styling + pure-CSS 3.5s failsafe (never traps user) */
         html.is-loading,
         html.is-loading body {
             overflow: hidden;
-            animation: olyUnlockScroll 0s linear 4s forwards;
+            animation: olyUnlockScroll 0s linear 3.5s forwards;
         }
         @keyframes olyUnlockScroll {
             to { overflow: visible; }
         }
         #preloader {
-            animation: olyPreloaderFailsafe 0.4s ease 4s forwards;
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background-color: #020202;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: olyPreloaderFailsafe 0.35s ease 3.5s forwards;
         }
         #preloader.is-hidden {
             opacity: 0 !important;
             visibility: hidden;
             pointer-events: none;
-            transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+            transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.35s;
         }
         @keyframes olyPreloaderFailsafe {
             to { opacity: 0; visibility: hidden; pointer-events: none; }
@@ -671,7 +610,7 @@
                 margin-bottom: 0.25rem !important;
             }
 
-            #services .grid .glass-panel p.text-sm {
+            #services .grid .glass-panel p {
                 font-size: 10px !important;
                 margin-bottom: 0.5rem !important;
                 line-height: 1.3 !important;
@@ -927,7 +866,7 @@
                 height: 6rem !important;
                 gap: 0.25rem !important;
             }
-            #colaborador form .h-32 span.iconify {
+            #colaborador form .h-32 .iconify {
                 width: 24px !important;
                 height: 24px !important;
             }
@@ -1045,48 +984,57 @@
                 max-width: 50rem !important;
             }
         }
-        /* Service card - dedicated isolated GPU layer & smooth hover without flicker */
+        /* Service card - hover decoupled from outer .reveal wrapper (zero flicker, zero conflict) */
         .service-card {
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            isolation: isolate;
-            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-                        box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-                        border-color 0.3s ease,
-                        background-color 0.3s ease;
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                        box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                        border-color 0.3s ease;
         }
 
-        .service-card:hover {
-            transform: translateY(-8px) translateZ(0) !important;
-            border-color: rgba(255, 255, 255, 0.25) !important;
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(155, 33, 49, 0.2) !important;
+        @media (hover: hover) and (pointer: fine) {
+            .service-card:hover {
+                transform: translate3d(0, -6px, 0);
+                border-color: rgba(255, 255, 255, 0.28);
+                box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.8), 0 0 26px rgba(155, 33, 49, 0.22);
+            }
+
+            #experiencias .testimonial-card:hover {
+                transform: translate3d(0, -6px, 0);
+                border-color: rgba(255, 255, 255, 0.2);
+                box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.8), 0 0 22px rgba(155, 33, 49, 0.16);
+            }
         }
 
         .service-card-tag {
-            background: rgba(0, 0, 0, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(8, 8, 10, 0.84);
+            border: 1px solid rgba(255, 255, 255, 0.16);
         }
 
-        /* Testimonial card hover */
-        #experiencias .glass-panel {
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+        #experiencias .testimonial-card {
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
                         border-color 0.3s ease,
                         box-shadow 0.3s ease;
         }
 
-        #experiencias .glass-panel:hover {
-            transform: translateY(-8px) translateZ(0) !important;
-            border-color: rgba(255, 255, 255, 0.2) !important;
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7), 0 0 20px rgba(155, 33, 49, 0.15) !important;
+        /* Modals: completely removed from compositor tree (visibility:hidden) while closed */
+        .modal-overlay {
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                        visibility 0s linear 0.35s;
+        }
+        .modal-overlay.is-open {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+            transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                        visibility 0s linear 0s;
         }
 
         /* Diagnostico image card hover */
-        #diagnostico .group:hover .glass-panel {
-            border-color: rgba(255, 255, 255, 0.18);
+        #diagnostico .group:hover .glass-blur-badge {
+            border-color: rgba(255, 255, 255, 0.22);
         }
 
     </style>
@@ -1115,16 +1063,52 @@
         </div>
     </div>
 
+    <!-- Inline SVG Sprite (zero runtime icon requests) -->
+    <svg id="oly-svg-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+        <symbol id="icon-lucide-menu" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h16M4 12h16M4 19h16"/></symbol>
+        <symbol id="icon-lucide-arrow-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7l7 7l-7 7"/></symbol>
+        <symbol id="icon-lucide-chevron-down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"/></symbol>
+        <symbol id="icon-lucide-settings-2" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M14 17H5M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></g></symbol>
+        <symbol id="icon-lucide-briefcase" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></g></symbol>
+        <symbol id="icon-lucide-target" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></g></symbol>
+        <symbol id="icon-lucide-shield-check" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12l2 2l4-4"/></g></symbol>
+        <symbol id="icon-lucide-hard-hat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5m0-4a6 6 0 0 1 6 6v3M4 15v-3a6 6 0 0 1 6-6"/><rect width="20" height="4" x="2" y="15" rx="1"/></g></symbol>
+        <symbol id="icon-lucide-users-2" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M18 21a8 8 0 0 0-16 0"/><circle cx="10" cy="8" r="5"/><path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"/></g></symbol>
+        <symbol id="icon-lucide-scale" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 3v18m7-13l3 8a5 5 0 0 1-6 0zV7"/><path d="M3 7h1a17 17 0 0 0 8-2a17 17 0 0 0 8 2h1M5 8l3 8a5 5 0 0 1-6 0zV7m2 14h10"/></g></symbol>
+        <symbol id="icon-lucide-smartphone" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></g></symbol>
+        <symbol id="icon-lucide-camera" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"/><circle cx="12" cy="13" r="3"/></g></symbol>
+        <symbol id="icon-lucide-plane" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8L4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1l3 2l2 3l1-1v-3l3-2l3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2"/></symbol>
+        <symbol id="icon-lucide-apple" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 6.528V3a1 1 0 0 1 1-1"/><path d="M18.237 21A15 15 0 0 0 22 11a6 6 0 0 0-10-4.472A6 6 0 0 0 2 11a15.1 15.1 0 0 0 3.763 10a3 3 0 0 0 3.648.648a5.5 5.5 0 0 1 5.178 0A3 3 0 0 0 18.237 21"/></g></symbol>
+        <symbol id="icon-lucide-microscope" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18h8M3 22h18m-7 0a7 7 0 1 0 0-14h-1m-4 6h2m-2-2a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Zm3-6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/></symbol>
+        <symbol id="icon-lucide-check-square" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344"/><path d="m9 11l3 3L22 4"/></g></symbol>
+        <symbol id="icon-lucide-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20a14.5 14.5 0 0 0 0-20M2 12h20"/></g></symbol>
+        <symbol id="icon-lucide-laptop" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2zm2.054 10.987H3.946"/></symbol>
+        <symbol id="icon-lucide-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></g></symbol>
+        <symbol id="icon-lucide-phone" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233a14 14 0 0 0 6.392 6.384"/></symbol>
+        <symbol id="icon-lucide-arrow-left" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 19l-7-7l7-7m7 7H5"/></symbol>
+        <symbol id="icon-lucide-send" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11zm7.318-19.539l-10.94 10.939"/></symbol>
+        <symbol id="icon-lucide-trending-up" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 7h6v6"/><path d="m22 7l-8.5 8.5l-5-5L2 17"/></g></symbol>
+        <symbol id="icon-lucide-upload-cloud" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 13v8m-8-6.101A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="m8 17l4-4l4 4"/></g></symbol>
+        <symbol id="icon-lucide-star" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.12 2.12 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.12 2.12 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.12 2.12 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.12 2.12 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.12 2.12 0 0 0 1.597-1.16z"/></symbol>
+        <symbol id="icon-lucide-instagram" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8A4 4 0 0 1 16 11.37m1.5-4.87h.01"/></g></symbol>
+        <symbol id="icon-lucide-arrow-up-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10M7 17L17 7"/></symbol>
+        <symbol id="icon-lucide-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"/></symbol>
+        <symbol id="icon-lucide-zap" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.914 4a1.5 1.5 0 0 0-2.474-1.561l-9 9A1.5 1.5 0 0 0 5.5 14h4.002a.5.5 0 0 1 .471.666L8.086 20a1.5 1.5 0 0 0 2.475 1.56l9-9A1.5 1.5 0 0 0 18.5 10h-3.997a.5.5 0 0 1-.472-.667z"/></symbol>
+        <symbol id="icon-lucide-loader-2" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 1 1-6.219-8.56"/></symbol>
+        <symbol id="icon-lucide-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"/></symbol>
+    </svg>
+
     <div class="noise-overlay"></div>
     <script>
-        // --- STANDALONE PRELOADER BOOTSTRAP ---
-        // Runs immediately, independent from the main script. Uses only setTimeout
-        // (never requestAnimationFrame, which pauses in background tabs/previews).
+        // --- STANDALONE PRELOADER & ENTRANCE CHOREOGRAPHY ---
+        // Waits briefly for DOM + Hero image + Webfonts (capped so user is NEVER stuck),
+        // then lifts the curtain and fires Hero entrance animations in exact sync.
         (function () {
             var pre = document.getElementById('preloader');
             var bar = document.getElementById('preloader-progress');
             var pct = document.getElementById('preloader-percent');
-            var shown = 0, target = 0, done = false, ticker;
+            var shown = 0, target = 15, done = false;
+            var callbacks = [];
 
             function paint(v) {
                 shown = v;
@@ -1132,14 +1116,17 @@
                 if (pct) pct.textContent = Math.round(v) + '%';
             }
 
-            // Smooth progress: eases towards target, and slowly creeps forward on its own
-            ticker = setInterval(function () {
-                if (!done && target < 90) target += 1.5;
-                var next = shown + Math.max((target - shown) * 0.25, 0.5);
+            var ticker = setInterval(function () {
+                if (!done && target < 90) target += 2;
+                var next = shown + Math.max((target - shown) * 0.28, 0.8);
                 paint(Math.min(next, target));
-            }, 50);
+            }, 45);
 
             window.__olySetProgress = function (v) { if (v > target) target = Math.min(v, 100); };
+            window.__olyOnReady = function (fn) {
+                if (done) fn();
+                else callbacks.push(fn);
+            };
 
             window.__olyHidePreloader = function () {
                 if (done) return;
@@ -1150,26 +1137,43 @@
                 setTimeout(function () {
                     if (pre) pre.classList.add('is-hidden');
                     document.documentElement.classList.remove('is-loading');
-                    setTimeout(function () { if (pre) pre.style.display = 'none'; }, 400);
-                }, 120);
+                    for (var i = 0; i < callbacks.length; i++) {
+                        try { callbacks[i](); } catch (e) {}
+                    }
+                    callbacks = [];
+                    setTimeout(function () { if (pre) pre.style.display = 'none'; }, 380);
+                }, 80);
             };
 
-            // Hide as soon as the page is usable (DOM parsed + hero image ready), with hard cap
-            var minTime = new Promise(function (r) { setTimeout(r, 350); });
+            var minTime = new Promise(function (r) { setTimeout(r, 280); });
             var domReady = new Promise(function (r) {
                 if (document.readyState !== 'loading') r();
                 else document.addEventListener('DOMContentLoaded', r, { once: true });
             });
-            var hero = new Promise(function (r) {
+            var heroReady = new Promise(function (r) {
                 var img = new Image();
-                img.onload = img.onerror = function () { window.__olySetProgress(70); r(); };
+                var finish = function () { window.__olySetProgress(75); r(); };
+                img.onload = function () {
+                    if (img.decode) img.decode().then(finish, finish);
+                    else finish();
+                };
+                img.onerror = finish;
                 img.src = 'images/hero_expanded.webp';
-                if (img.complete) r();
+                if (img.complete && img.naturalWidth > 0) finish();
             });
+            var fontsReady = new Promise(function (r) {
+                var cap = setTimeout(r, 900);
+                if (document.fonts && document.fonts.ready) {
+                    document.fonts.ready.then(function () { clearTimeout(cap); window.__olySetProgress(90); r(); }, r);
+                } else {
+                    clearTimeout(cap);
+                    r();
+                }
+            });
+
             domReady.then(function () { window.__olySetProgress(50); });
-            Promise.all([minTime, domReady, hero]).then(window.__olyHidePreloader);
-            window.addEventListener('load', window.__olyHidePreloader, { once: true });
-            setTimeout(window.__olyHidePreloader, 2500); // hard cap: never block more than 2.5s
+            Promise.all([minTime, domReady, heroReady, fontsReady]).then(window.__olyHidePreloader);
+            setTimeout(window.__olyHidePreloader, 1800); // hard cap: never hold user past 1.8s
         })();
     </script>
 
@@ -1202,18 +1206,18 @@
                 <div class="hidden lg:flex items-center gap-3 border-l border-white/10 pl-4 ml-2">
                     <button id="lang-pt"
                         class="w-5 h-[15px] rounded-[3px] overflow-hidden border border-white/30 opacity-100 transition-opacity hover:opacity-100 shadow-[0_0_10px_rgba(255,255,255,0.2)] flex items-center justify-center">
-                        <span class="iconify w-full h-full object-cover" data-icon="flag:br-4x3"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" class="iconify w-full h-full object-cover" aria-hidden="true" focusable="false"><g stroke-width="1pt"><path fill="#229e45" fill-rule="evenodd" d="M0 0h640v480H0z"/><path fill="#f8e509" fill-rule="evenodd" d="m321.4 436l301.5-195.7L319.6 44L17.1 240.7z"/><path fill="#2b49a3" fill-rule="evenodd" d="M452.8 240c0 70.3-57.1 127.3-127.6 127.3A127.4 127.4 0 1 1 452.8 240"/><path fill="#ffffef" fill-rule="evenodd" d="m283.3 316.3l-4-2.3l-4 2l.9-4.5l-3.2-3.4l4.5-.5l2.2-4l1.9 4.2l4.4.8l-3.3 3m86 26.3l-3.9-2.3l-4 2l.8-4.5l-3.1-3.3l4.5-.5l2.1-4.1l2 4.2l4.4.8l-3.4 3.1m-36.2-30l-3.4-2l-3.5 1.8l.8-3.9l-2.8-2.9l4-.4l1.8-3.6l1.6 3.7l3.9.7l-3 2.7m87-8.5l-3.4-2l-3.5 1.8l.8-3.9l-2.7-2.8l3.9-.4l1.8-3.5l1.6 3.6l3.8.7l-2.9 2.6m-87.3-22l-4-2.2l-4 2l.8-4.6l-3.1-3.3l4.5-.5l2.1-4.1l2 4.2l4.4.8l-3.4 3.2m-104.6-35l-4-2.2l-4 2l1-4.6l-3.3-3.3l4.6-.5l2-4.1l2 4.2l4.4.8l-3.3 3.1m13.3 57.2l-4-2.3l-4 2l.9-4.5l-3.2-3.3l4.5-.6l2.1-4l2 4.2l4.4.8l-3.3 3.1m132-67.3l-3.6-2l-3.6 1.8l.8-4l-2.8-3l4-.5l1.9-3.6l1.7 3.8l4 .7l-3 2.7m-6.7 38.3l-2.7-1.6l-2.9 1.4l.6-3.2l-2.2-2.3l3.2-.4l1.5-2.8l1.3 3l3 .5l-2.2 2.2m-142.2 50.4l-2.7-1.5l-2.7 1.3l.6-3l-2.1-2.2l3-.4l1.4-2.7l1.3 2.8l3 .6l-2.3 2M419 299.8l-2.2-1.1l-2.2 1l.5-2.3l-1.7-1.6l2.4-.3l1.2-2l1 2l2.5.5l-1.9 1.5"/><path fill="#ffffef" fill-rule="evenodd" d="m219.3 287.6l-2.7-1.5l-2.7 1.3l.6-3l-2.1-2.2l3-.4l1.4-2.7l1.3 2.8l3 .6l-2.3 2"/><path fill="#ffffef" fill-rule="evenodd" d="m219.3 287.6l-2.7-1.5l-2.7 1.3l.6-3l-2.1-2.2l3-.4l1.4-2.7l1.3 2.8l3 .6l-2.3 2m42.3 3l-2.6-1.4l-2.7 1.3l.6-3l-2.1-2.2l3-.4l1.4-2.7l1.3 2.8l3 .5l-2.3 2.1m-4.8 17l-2.6-1.5l-2.7 1.4l.6-3l-2.1-2.3l3-.4l1.4-2.7l1.3 2.8l3 .6l-2.3 2m87.4-22.2l-2.6-1.6l-2.8 1.4l.6-3l-2-2.3l3-.3l1.4-2.7l1.2 2.8l3 .5l-2.2 2.1m-25.1 3l-2.7-1.5l-2.7 1.4l.6-3l-2-2.3l3-.3l1.4-2.8l1.2 2.9l3 .5l-2.2 2.1m-68.8-5.8l-1.7-1l-1.7.8l.4-1.9l-1.3-1.4l1.9-.2l.8-1.7l.8 1.8l1.9.3l-1.4 1.3m167.8 45.4l-2.6-1.5l-2.7 1.4l.6-3l-2.1-2.3l3-.4l1.4-2.7l1.3 2.8l3 .6l-2.3 2m-20.8 6l-2.2-1.4l-2.3 1.2l.5-2.6l-1.7-1.8l2.5-.3l1.2-2.3l1 2.4l2.5.4l-1.9 1.8m10.4 2.3l-2-1.2l-2.1 1l.4-2.3l-1.6-1.7l2.3-.3l1.1-2l1 2l2.3.5l-1.7 1.6m29.1-22.8l-2-1l-2 1l.5-2.3l-1.6-1.7l2.3-.3l1-2l1 2.1l2.1.4l-1.6 1.6m-38.8 41.8l-2.5-1.4l-2.7 1.2l.6-2.8l-2-2l3-.3l1.3-2.5l1.2 2.6l3 .5l-2.3 1.9m.6 14.2l-2.4-1.4l-2.4 1.3l.6-2.8l-1.9-2l2.7-.4l1.2-2.5l1.1 2.6l2.7.5l-2 2m-19-23.1l-1.9-1.2l-2 1l.4-2.2l-1.5-1.7l2.2-.2l1-2l1 2l2.2.4l-1.6 1.6m-17.8 2.3l-2-1.2l-2 1l.5-2.2l-1.6-1.7l2.3-.2l1-2l1 2l2.1.4l-1.6 1.6m-30.4-24.6l-2-1.1l-2 1l.5-2.3l-1.6-1.6l2.2-.3l1-2l1 2l2.2.5l-1.6 1.5m3.7 57l-1.6-.9l-1.8.9l.4-2l-1.3-1.4l1.9-.2l.9-1.7l.8 1.8l1.9.3l-1.4 1.3m-46.2-86.6l-4-2.3l-4 2l.9-4.5l-3.2-3.3l4.5-.6l2.2-4l1.9 4.2l4.4.8l-3.3 3.1"/><path fill="#fff" fill-rule="evenodd" d="M444.4 285.8a125 125 0 0 0 5.8-19.8c-67.8-59.5-143.3-90-238.7-83.7a125 125 0 0 0-8.5 20.9c113-10.8 196 39.2 241.4 82.6"/><path fill="#309e3a" d="m414 252.4l2.3 1.3a3 3 0 0 0-.3 2.2a3 3 0 0 0 1.4 1.7q1 .8 2 .7q.9 0 1.3-.7l.2-.9l-.5-1l-1.5-1.8a8 8 0 0 1-1.8-3a4 4 0 0 1 2-4.4a4 4 0 0 1 2.3-.2a7 7 0 0 1 2.6 1.2q2.1 1.5 2.6 3.2a4 4 0 0 1-.6 3.3l-2.4-1.5q.5-1 .2-1.7q-.2-.8-1.2-1.4a3 3 0 0 0-1.8-.7a1 1 0 0 0-.9.5q-.3.4-.1 1q.2.8 1.6 2.2t2 2.5a4 4 0 0 1-.3 4.2a4 4 0 0 1-1.9 1.5a4 4 0 0 1-2.4.3q-1.3-.3-2.8-1.3q-2.2-1.5-2.7-3.3a5 5 0 0 1 .6-4zm-11.6-7.6l2.5 1.3a3 3 0 0 0-.2 2.2a3 3 0 0 0 1.4 1.6q1.1.8 2 .6q.9 0 1.3-.8l.2-.8q0-.5-.5-1l-1.6-1.8q-1.7-1.6-2-2.8a4 4 0 0 1 .4-3.1a4 4 0 0 1 1.6-1.4a4 4 0 0 1 2.2-.3a7 7 0 0 1 2.6 1q2.3 1.5 2.7 3.1a4 4 0 0 1-.4 3.4l-2.5-1.4q.5-1 .2-1.7q-.4-1-1.3-1.4a3 3 0 0 0-1.9-.6a1 1 0 0 0-.8.5q-.3.4-.1 1q.3.8 1.7 2.2q1.5 1.5 2 2.4a4 4 0 0 1 0 4.2a4 4 0 0 1-1.8 1.6a4 4 0 0 1-2.4.3a8 8 0 0 1-2.9-1.1a6 6 0 0 1-2.8-3.2a5 5 0 0 1 .4-4m-14.2-3.8l7.3-12l8.8 5.5l-1.2 2l-6.4-4l-1.6 2.7l6 3.7l-1.3 2l-6-3.7l-2 3.3l6.7 4l-1.2 2zm-20.7-17l1.1-2l5.4 2.7l-2.5 5q-1.2.3-3 .2a9 9 0 0 1-3.3-1a8 8 0 0 1-3-2.6a6 6 0 0 1-1-3.5a9 9 0 0 1 1-3.7a8 8 0 0 1 2.6-3a6 6 0 0 1 3.6-1.1q1.4 0 3.2 1q2.4 1.1 3.1 2.8a5 5 0 0 1 .3 3.5l-2.7-.8a3 3 0 0 0-.2-2q-.4-.9-1.6-1.4a4 4 0 0 0-3.1-.3q-1.5.5-2.6 2.6t-.7 3.8a4 4 0 0 0 2 2.4q.8.5 1.7.5h1.8l.8-1.6zm-90.2-22.3l2-14l4.2.7l1.1 9.8l3.9-9l4.2.6l-2 13.8l-2.7-.4l1.7-10.9l-4.4 10.5l-2.7-.4l-1.1-11.3l-1.6 11zm-14.1-1.7l1.3-14l10.3 1l-.2 2.4l-7.5-.7l-.3 3l7 .7l-.3 2.4l-7-.7l-.3 3.8l7.8.7l-.2 2.4z"/><g stroke-opacity=".5"><path fill="#309e3a" d="M216.5 191.3q0-2.2.7-3.6a7 7 0 0 1 1.4-1.9a5 5 0 0 1 1.8-1.2q1.5-.5 3-.5q3.1.1 5 2a7 7 0 0 1 1.6 5.5q0 3.3-2 5.3a7 7 0 0 1-5 1.7a7 7 0 0 1-4.8-2a7 7 0 0 1-1.7-5.3"/><path fill="#f7ffff" d="M219.4 191.3q0 2.3 1 3.6t2.8 1.3a4 4 0 0 0 2.8-1.1q1-1.2 1.1-3.7q.1-2.4-1-3.6a4 4 0 0 0-2.7-1.3a4 4 0 0 0-2.8 1.2q-1.1 1.2-1.2 3.6"/></g><g stroke-opacity=".5"><path fill="#309e3a" d="m233 198.5l.2-14h6q2.2 0 3.2.5q1 .3 1.6 1.3c.6 1 .6 1.4.6 2.3a4 4 0 0 1-1 2.6a5 5 0 0 1-2.7 1.2l1.5 1.2q.6.6 1.5 2.3l1.7 2.8h-3.4l-2-3.2l-1.4-2l-.9-.6l-1.4-.2h-.6v5.8z"/><path fill="#fff" d="M236 190.5h2q2.1 0 2.6-.2q.5-.1.8-.5q.4-.6.3-1q0-.9-.4-1.2q-.3-.4-1-.6h-2l-2.3-.1z"/></g><g stroke-opacity=".5"><path fill="#309e3a" d="m249 185.2l5.2.3q1.7 0 2.6.3a5 5 0 0 1 2 1.4a6 6 0 0 1 1.2 2.4q.4 1.4.3 3.3a9 9 0 0 1-.5 3q-.6 1.5-1.7 2.4a5 5 0 0 1-2 1q-1 .3-2.5.2l-5.3-.3z"/><path fill="#fff" d="m251.7 187.7l-.5 9.3h3.8q.8 0 1.2-.5q.5-.4.8-1.3t.4-2.6l-.1-2.5a3 3 0 0 0-.8-1.4l-1.2-.7l-2.3-.3z"/></g><g stroke-opacity=".5"><path fill="#309e3a" d="m317.6 210.2l3.3-13.6l4.4 1l3.2 1q1.1.6 1.6 1.9t.2 2.8q-.3 1.2-1 2a4 4 0 0 1-3 1.4q-1 0-3-.5l-1.7-.5l-1.2 5.2z"/><path fill="#fff" d="m323 199.6l-.8 3.8l1.5.4q1.6.4 2.2.3a2 2 0 0 0 1.6-1.5q0-.7-.2-1.3a2 2 0 0 0-1-.9l-1.9-.5l-1.3-.3z"/></g><g stroke-opacity=".5"><path fill="#309e3a" d="m330.6 214.1l4.7-13.2l5.5 2q2.2.8 3 1.4q.8.7 1 1.8c.2 1.1.2 1.5 0 2.3q-.6 1.5-1.8 2.2q-1.2.6-3 .3q.6.7 1 1.6l.8 2.7l.6 3.1l-3.1-1.1l-1-3.6l-.7-2.4l-.6-.8q-.3-.4-1.3-.7l-.5-.2l-2 5.6z"/><path fill="#fff" d="m336 207.4l1.9.7q2 .7 2.5.7t.9-.3q.5-.3.6-.9q.3-.6 0-1.2l-.8-.9l-2-.7l-2-.7l-1.2 3.3z"/></g><g stroke-opacity=".5"><path fill="#309e3a" d="M347 213.6a9 9 0 0 1 1.7-3.2l1.8-1.5l2-.7q1.5-.1 3.1.4a7 7 0 0 1 4.2 3.3q1.2 2.4.2 5.7a7 7 0 0 1-3.4 4.5q-2.3 1.3-5.2.4a7 7 0 0 1-4.2-3.3a7 7 0 0 1-.2-5.6"/><path fill="#fff" d="M349.8 214.4q-.7 2.3 0 3.8c.7 1.5 1.2 1.6 2.3 2q1.5.5 3-.4q1.4-.8 2.1-3.2q.8-2.2 0-3.7a4 4 0 0 0-2.2-2a4 4 0 0 0-3 .3q-1.5.8-2.2 3.2"/></g><g stroke-opacity=".5"><path fill="#309e3a" d="m374.3 233.1l6.4-12.4l5.3 2.7a10 10 0 0 1 2.7 1.9q.8.7.8 1.9c0 1.2 0 1.5-.4 2.2a4 4 0 0 1-2 2q-1.5.4-3.1-.2q.6 1 .8 1.7q.3.9.4 2.8l.2 3.2l-3-1.5l-.4-3.7l-.3-2.5l-.5-1l-1.2-.7l-.5-.3l-2.7 5.2z"/><path fill="#fff" d="m380.5 227.2l1.9 1q1.8 1 2.3 1t1-.2q.4-.2.7-.8t.2-1.2l-.7-1l-1.8-1l-2-1z"/></g><g stroke-opacity=".5"><path fill="#309e3a" d="M426.1 258.7a9 9 0 0 1 2.5-2.6a7 7 0 0 1 2.2-.9a6 6 0 0 1 2.2 0q1.5.3 2.8 1.2a7 7 0 0 1 3 4.4q.4 2.6-1.4 5.5a7 7 0 0 1-4.5 3.3a7 7 0 0 1-5.2-1.1a7 7 0 0 1-3-4.4q-.4-2.7 1.4-5.4"/><path fill="#fff" d="M428.6 260.3q-1.4 2-1.1 3.6a4 4 0 0 0 1.6 2.5q1.5 1 3 .6t2.9-2.4q1.4-2.1 1.1-3.6t-1.6-2.6c-1.4-1.1-2-.8-3-.5q-1.5.3-3 2.4z"/></g><path fill="#309e3a" d="m301.8 204.5l2.3-9.8l7.2 1.7l-.3 1.6l-5.3-1.2l-.5 2.2l4.9 1.1l-.4 1.7l-4.9-1.2l-.6 2.7l5.5 1.3l-.4 1.6z"/></g></svg>
                     </button>
                     <div class="w-[1px] h-3 bg-white/20"></div>
                     <button id="lang-en"
                         class="w-5 h-[15px] rounded-[3px] overflow-hidden border border-white/10 opacity-60 hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <span class="iconify w-full h-full object-cover" data-icon="flag:us-4x3"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" class="iconify w-full h-full object-cover" aria-hidden="true" focusable="false"><path fill="#bd3d44" d="M0 0h640v480H0"/><path stroke="#fff" stroke-width="37" d="M0 55.3h640M0 129h640M0 203h640M0 277h640M0 351h640M0 425h640"/><path fill="#192f5d" d="M0 0h364.8v258.5H0"/><marker id="SVGEq3dreKJ" markerHeight="30" markerWidth="30"><path fill="#fff" d="m14 0l9 27L0 10h28L5 27z"/></marker><path fill="none" marker-mid="url(#SVGEq3dreKJ)" d="m0 0l16 11h61h61h61h61h60L47 37h61h61h60h61L16 63h61h61h61h61h60L47 89h61h61h60h61L16 115h61h61h61h61h60L47 141h61h61h60h61L16 166h61h61h61h61h60L47 192h61h61h60h61L16 218h61h61h61h61h60z"/></svg>
                     </button>
                 </div>
 
                 <!-- Hamburger (Unused but kept for structure) -->
                 <button class="hidden text-white ml-2">
-                    <span class="iconify" data-icon="lucide:menu" data-width="24"></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="iconify" aria-hidden="true" focusable="false"><use href="#icon-lucide-menu"></use></svg>
                 </button>
 
                 <!-- MOBILE ONLY NAVBAR BUTTONS -->
@@ -1229,29 +1233,24 @@
     <header id="hero"
         class="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden bg-[#020202] z-0">
         <!-- Core Background Glows & Mesh -->
-        <div class="absolute inset-0 z-0 overflow-hidden">
+        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
             <div
                 class="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,_rgba(var(--color-primary-rgb),0.15),_transparent_50%)]">
             </div>
-            <div
-                class="ambient-blob bg-primary-700/20 w-[800px] h-[800px] -top-[300px] -left-[200px] animate-blob blur-[120px]">
-            </div>
-            <div class="ambient-blob bg-primary-950/40 w-[1000px] h-[1000px] bottom-[-400px] right-[-300px] animate-blob blur-[150px]"
+            <div class="ambient-blob ambient-orb-primary w-[900px] h-[900px] -top-[320px] -left-[220px] animate-blob"></div>
+            <div class="ambient-blob ambient-orb-deep w-[1100px] h-[1100px] bottom-[-450px] right-[-320px] animate-blob"
                 style="animation-delay: -5s; animation-duration: 20s;"></div>
-            <div
-                class="ambient-blob bg-white/5 w-[600px] h-[600px] top-[20%] left-[50%] animate-pulse-slow blur-[100px]">
-            </div>
+            <div class="ambient-blob ambient-orb-light w-[700px] h-[700px] top-[18%] left-[48%]"></div>
 
             <div class="absolute inset-0 opacity-[0.03]"
                 style="background-image: linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);">
             </div>
         </div>
 
-        <!-- Right Side: Cinematic Background Video -->
+        <!-- Right Side: Cinematic Background Image -->
         <div class="absolute inset-0 z-0 flex justify-end pointer-events-none" id="hero-video-wrapper">
-            <div
-                class="w-full md:w-3/4 h-full relative reveal-fade opacity-0 delay-200 overflow-hidden bg-[#020202]">
-                <img id="hero-video" src="images/hero_expanded.webp" alt="Olympia Consultoria Hero Image" fetchpriority="high" decoding="async"
+            <div class="w-full md:w-3/4 h-full relative reveal-fade overflow-hidden bg-[#020202]" style="--reveal-delay: 0ms;">
+                <img id="hero-video" src="images/hero_expanded.webp" alt="Olympia Consultoria Hero Image" fetchpriority="high" decoding="sync"
                     class="absolute inset-0 w-full h-full object-cover"
                     style="object-position: -20% 30%;">
             </div>
@@ -1268,10 +1267,9 @@
         <div class="relative z-20 px-6 w-full max-w-7xl mx-auto flex items-center" id="hero-content">
             <div class="flex flex-col items-start text-left max-w-2xl w-full pt-10">
                 <div id="parallax-h1">
-                    <h1 class="font-heading text-3xl md:text-4xl lg:text-[3.5rem] font-light leading-tight tracking-tight drop-shadow-2xl flex flex-col items-start"
-                        style="perspective: 1000px;">
+                    <h1 class="font-heading text-3xl md:text-4xl lg:text-[3.5rem] font-light leading-tight tracking-tight flex flex-col items-start">
                         <!-- OLYMPIA -->
-                        <span class="reveal-premium w-full" style="animation-delay: 0.1s">
+                        <span class="reveal-premium w-full" style="--reveal-delay: 50ms">
                             <span class="block glow-white">
                                 <span
                                     class="block bg-clip-text text-transparent bg-[linear-gradient(110deg,#fff,45%,#fff,50%,#9ca3af,55%,#fff)] bg-[length:250%_100%] text-shimmer py-2">
@@ -1279,19 +1277,18 @@
                                 </span>
                             </span>
                         </span>
-                        <span class="flex flex-wrap gap-x-3 md:gap-x-5 font-medium relative w-full"
-                            style="perspective: 1000px;">
-                            <!-- DESIGN -->
-                            <span class="reveal-premium" style="animation-delay: 0.3s">
+                        <span class="flex flex-wrap gap-x-3 md:gap-x-5 font-medium relative w-full">
+                            <!-- CONSULTORIA -->
+                            <span class="reveal-premium" style="--reveal-delay: 170ms">
                                 <span class="block glow-primary">
                                     <span
                                         class="block bg-clip-text text-transparent bg-[linear-gradient(110deg,var(--color-primary-gradient-1),45%,var(--color-primary-gradient-1),50%,#ff8fa3,55%,var(--color-primary-gradient-1))] bg-[length:250%_100%] text-shimmer pr-2 py-2"
                                         data-i18n="hero_h1_1">CONSULTORIA&nbsp;</span>
                                 </span>
                             </span>
-                            <!-- SYSTEM -->
-                            <span class="reveal-premium" style="animation-delay: 0.5s">
-                                <span class="block glow-white" style="animation-delay: 1s">
+                            <!-- EMPRESARIAL -->
+                            <span class="reveal-premium" style="--reveal-delay: 290ms">
+                                <span class="block glow-white">
                                     <span
                                         class="block bg-clip-text text-transparent bg-[linear-gradient(110deg,#d1d5db,45%,#d1d5db,50%,#ffffff,55%,#d1d5db)] bg-[length:250%_100%] text-shimmer pr-2 py-2"
                                         data-i18n="hero_h1_2">EMPRESARIAL&nbsp;</span>
@@ -1302,7 +1299,7 @@
                 </div>
 
                 <div id="parallax-p">
-                    <p class="mt-8 text-base md:text-xl text-white/50 font-light max-w-xl leading-relaxed reveal opacity-0 delay-200"
+                    <p class="mt-8 text-base md:text-xl text-white/50 font-light max-w-xl leading-relaxed reveal" style="--reveal-delay: 350ms"
                         data-i18n="hero_p1">
                         Impulsionamos negócios através de <span class="text-white font-medium">consultoria
                             estratégica</span>, <span class="text-white font-medium">desenvolvimento de equipes</span> e
@@ -1313,7 +1310,7 @@
                 </div>
 
                 <div id="parallax-btn">
-                    <div class="mt-14 flex flex-col sm:flex-row gap-5 sm:items-center reveal opacity-0 delay-300">
+                    <div class="mt-14 flex flex-col sm:flex-row gap-5 sm:items-center reveal" style="--reveal-delay: 450ms">
                         <a id="btn-whatsapp"
                             href="https://wa.me/5537998414859?text=Ol%C3%A1!%20Conheci%20o%20site%20da%20empresa%20e%20gostaria%20de%20saber%20um%20pouco%20mais%20sobre%20as%20consultorias%20e%20assessorias%20fornecidas."
                             target="_blank"
@@ -1321,8 +1318,7 @@
                             <div
                                 class="relative px-8 rounded-full text-[13px] font-bold uppercase tracking-widest flex items-center justify-center gap-3 text-white transition-all duration-500 w-full h-full">
                                 <span data-i18n="btn_primary">Entre em Contato</span>
-                                <span class="iconify transform group-hover:translate-x-1 transition-transform"
-                                    data-icon="lucide:arrow-right" data-width="16"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" class="iconify transform group-hover:translate-x-1 transition-transform" aria-hidden="true" focusable="false"><use href="#icon-lucide-arrow-right"></use></svg>
                             </div>
                         </a>
                         <button id="open-modal"
@@ -1334,7 +1330,7 @@
                                 </div>
                             </div>
                             <!-- Background Mask -->
-                            <div class="absolute inset-[1px] rounded-full backdrop-blur-xl z-0 bg-[#020202]/95"></div>
+                            <div class="absolute inset-[1px] rounded-full z-0 bg-[#050505]"></div>
                             <!-- Content Container -->
                             <div
                                 class="z-10 flex gap-3 sm:w-auto overflow-hidden text-[13px] font-semibold uppercase tracking-widest text-white w-full h-full rounded-full pl-8 pr-6 relative items-center justify-center">
@@ -1345,8 +1341,7 @@
                                     Conheça a Olympia
                                 </span>
                                 <!-- Arrow Icon -->
-                                <span class="iconify transform group-hover:translate-x-1 transition-transform"
-                                    data-icon="lucide:arrow-right" data-width="16"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" class="iconify transform group-hover:translate-x-1 transition-transform" aria-hidden="true" focusable="false"><use href="#icon-lucide-arrow-right"></use></svg>
                             </div>
                         </button>
                     </div>
@@ -1356,11 +1351,11 @@
 
         <!-- Scroll Indicator (Premium) -->
         <div
-            class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20 reveal opacity-0 delay-500">
+            class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20 reveal" style="--reveal-delay: 560ms">
             <span class="text-[9px] uppercase tracking-[0.3em] text-white/30 font-medium"
                 data-i18n="scroll_text">Descubra</span>
             <div class="animate-bounce text-white/40 mt-1">
-                <span class="iconify" data-icon="lucide:chevron-down" data-width="24"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="iconify" aria-hidden="true" focusable="false"><use href="#icon-lucide-chevron-down"></use></svg>
             </div>
         </div>
     </header>
@@ -1376,19 +1371,11 @@
                 class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_20%,transparent_100%)] -webkit-mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_20%,transparent_100%);">
             </div>
 
-            <!-- Animated Blobs Services (Top Area) -->
-            <div
-                class="absolute top-[10%] right-[-10%] w-[600px] h-[600px] bg-primary-900/15 rounded-full blur-[150px] animate-blob">
-            </div>
-            <div class="absolute top-[30%] left-[-10%] w-[500px] h-[500px] bg-primary-700/10 rounded-full blur-[120px] animate-blob"
-                style="animation-delay: 2s; animation-duration: 15s;"></div>
-
-            <!-- Animated Blobs Experiencias (Bottom Area) -->
-            <div
-                class="absolute bottom-[20%] left-[10%] w-[800px] h-[800px] bg-primary-950/20 rounded-full blur-[150px] animate-pulse-slow">
-            </div>
-            <div class="absolute bottom-[5%] right-[10%] w-[600px] h-[600px] bg-primary-900/15 rounded-full blur-[120px] animate-pulse-slow"
-                style="animation-delay: 3s"></div>
+            <!-- Ambient Radial Orbs (Zero Gaussian blur cost) -->
+            <div class="ambient-blob ambient-orb-primary top-[8%] right-[-12%] w-[750px] h-[750px] opacity-60"></div>
+            <div class="ambient-blob ambient-orb-deep top-[28%] left-[-12%] w-[650px] h-[650px] opacity-70"></div>
+            <div class="ambient-blob ambient-orb-deep bottom-[18%] left-[8%] w-[900px] h-[900px] opacity-70"></div>
+            <div class="ambient-blob ambient-orb-primary bottom-[4%] right-[8%] w-[700px] h-[700px] opacity-55"></div>
         </div>
 
         <!-- SECTION 2: Grade de Produtos (Assessorias) -->
@@ -1420,6 +1407,7 @@
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-6xl mx-auto w-full relative z-10 pb-20">
                     <!-- Services will be injected here by JS -->
                 </div>
+            </div>
         </section>
 
         <!-- SECTION ESPECIALIZAÇÕES -->
@@ -1442,110 +1430,110 @@
                 </div>
 
                 <!-- Specialties Single Card -->
-                <div class="glass-panel border border-white/10 bg-[#101010]/60 backdrop-blur-xl rounded-3xl p-8 lg:p-12 reveal shadow-[0_0_30px_rgba(0,0,0,0.5)] max-w-7xl mx-auto w-full relative z-10">
+                <div class="glass-panel border border-white/10 rounded-3xl p-8 lg:p-12 reveal shadow-[0_0_30px_rgba(0,0,0,0.5)] max-w-7xl mx-auto w-full relative z-10" style="--reveal-delay: 80ms">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 lg:gap-x-12">
                         
                         <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
                             <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
-                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:settings-2"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-primary-500 text-lg" aria-hidden="true" focusable="false"><use href="#icon-lucide-settings-2"></use></svg>
                             </div>
                             <span class="text-[15px] leading-tight">Engenharia de Produção</span>
                         </div>
 
                         <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
                             <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
-                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:briefcase"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-primary-500 text-lg" aria-hidden="true" focusable="false"><use href="#icon-lucide-briefcase"></use></svg>
                             </div>
                             <span class="text-[15px] leading-tight">MBA em Gestão de Processos e Pessoas</span>
                         </div>
 
                         <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
                             <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
-                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:target"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-primary-500 text-lg" aria-hidden="true" focusable="false"><use href="#icon-lucide-target"></use></svg>
                             </div>
                             <span class="text-[15px] leading-tight">Gestão de Liderança de Alta Performance</span>
                         </div>
 
                         <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
                             <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
-                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:shield-check"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-primary-500 text-lg" aria-hidden="true" focusable="false"><use href="#icon-lucide-shield-check"></use></svg>
                             </div>
                             <span class="text-[15px] leading-tight">Engenharia Ambiental e Seg. do Trabalho</span>
                         </div>
 
                         <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
                             <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
-                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:hard-hat"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-primary-500 text-lg" aria-hidden="true" focusable="false"><use href="#icon-lucide-hard-hat"></use></svg>
                             </div>
                             <span class="text-[15px] leading-tight">Técnico de Segurança do Trabalho</span>
                         </div>
 
                         <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
                             <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
-                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:users-2"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-primary-500 text-lg" aria-hidden="true" focusable="false"><use href="#icon-lucide-users-2"></use></svg>
                             </div>
                             <span class="text-[15px] leading-tight">Psicologia Organizacional</span>
                         </div>
 
                         <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
                             <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
-                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:scale"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-primary-500 text-lg" aria-hidden="true" focusable="false"><use href="#icon-lucide-scale"></use></svg>
                             </div>
                             <span class="text-[15px] leading-tight">Conciliação Extrajudicial</span>
                         </div>
 
                         <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
                             <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
-                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:smartphone"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-primary-500 text-lg" aria-hidden="true" focusable="false"><use href="#icon-lucide-smartphone"></use></svg>
                             </div>
                             <span class="text-[15px] leading-tight">Comunicação Visual e Social Media</span>
                         </div>
 
                         <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
                             <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
-                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:camera"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-primary-500 text-lg" aria-hidden="true" focusable="false"><use href="#icon-lucide-camera"></use></svg>
                             </div>
                             <span class="text-[15px] leading-tight">Produção de Vídeos e Fotografia Profissional</span>
                         </div>
 
                         <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
                             <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
-                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:plane"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-primary-500 text-lg" aria-hidden="true" focusable="false"><use href="#icon-lucide-plane"></use></svg>
                             </div>
                             <span class="text-[15px] leading-tight">Captação de Imagens Aéreas (Drone)</span>
                         </div>
 
                         <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
                             <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
-                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:apple"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-primary-500 text-lg" aria-hidden="true" focusable="false"><use href="#icon-lucide-apple"></use></svg>
                             </div>
                             <span class="text-[15px] leading-tight">Engenharia e Tecnologia de Alimentos</span>
                         </div>
 
                         <div class="flex items-center gap-4 py-5 border-b border-white/5 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
                             <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
-                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:microscope"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-primary-500 text-lg" aria-hidden="true" focusable="false"><use href="#icon-lucide-microscope"></use></svg>
                             </div>
                             <span class="text-[15px] leading-tight">Pós em Controle de Qualidade</span>
                         </div>
 
                         <div class="flex items-center gap-4 py-5 border-b border-white/5 md:border-b-0 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
                             <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
-                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:check-square"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-primary-500 text-lg" aria-hidden="true" focusable="false"><use href="#icon-lucide-check-square"></use></svg>
                             </div>
                             <span class="text-[15px] leading-tight">Qualidade (5S, BPF e APPCC)</span>
                         </div>
 
                         <div class="flex items-center gap-4 py-5 lg:border-b-0 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
                             <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
-                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:globe"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-primary-500 text-lg" aria-hidden="true" focusable="false"><use href="#icon-lucide-globe"></use></svg>
                             </div>
                             <span class="text-[15px] leading-tight">Padrões ISO e Conformidade (ANVISA)</span>
                         </div>
 
                         <div class="flex items-center gap-4 py-5 lg:border-b-0 text-white/70 font-light group hover:bg-white/[0.02] transition-colors rounded-xl px-3">
                             <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 group-hover:border-primary-500/30 transition-all">
-                                <span class="iconify text-primary-500 text-lg" data-icon="lucide:laptop"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-primary-500 text-lg" aria-hidden="true" focusable="false"><use href="#icon-lucide-laptop"></use></svg>
                             </div>
                             <span class="text-[15px] leading-tight">Tecnologia, Websites e Tráfego Pago</span>
                         </div>
@@ -1583,7 +1571,7 @@
                     <!-- Left Side: Form Content -->
                     <div class="w-full lg:w-3/5 reveal relative z-20 flex">
                         <!-- Multi-step Form -->
-                        <form id="diagnostico-form" class="w-full glass-panel border border-white/10 bg-[#0a0a0a]/90 backdrop-blur-2xl rounded-3xl p-8 sm:p-10 relative z-10 shadow-[0_0_40px_rgba(0,0,0,0.8)] flex flex-col justify-center">
+                        <form id="diagnostico-form" class="w-full glass-panel border border-white/10 rounded-3xl p-8 sm:p-10 relative z-10 shadow-[0_0_40px_rgba(0,0,0,0.8)] flex flex-col justify-center">
                             
                             <!-- Progress Bar -->
                             <div class="w-full h-1.5 bg-white/5 rounded-full mb-10 overflow-hidden relative shadow-inner">
@@ -1598,7 +1586,7 @@
                                         <div class="relative">
                                             <input type="text" id="diag_nome" name="Nome Completo" class="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-primary-500 focus:bg-white/5 transition-all duration-300 placeholder:text-white/20 shadow-inner" placeholder="Como devemos chamá-lo?" data-i18n="diag_form_name_ph" required>
                                             <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-white/20 group-focus-within:text-primary-500 transition-colors">
-                                                <span class="iconify" data-icon="lucide:user" data-width="18"></span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" class="iconify" aria-hidden="true" focusable="false"><use href="#icon-lucide-user"></use></svg>
                                             </div>
                                         </div>
                                     </div>
@@ -1607,7 +1595,7 @@
                                         <div class="relative">
                                             <input type="tel" id="diag_numero" name="Número de Contato" class="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-primary-500 focus:bg-white/5 transition-all duration-300 placeholder:text-white/20 shadow-inner" placeholder="(00) 00000-0000" data-i18n="diag_form_phone_ph" required>
                                             <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-white/20 group-focus-within:text-primary-500 transition-colors">
-                                                <span class="iconify" data-icon="lucide:phone" data-width="18"></span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" class="iconify" aria-hidden="true" focusable="false"><use href="#icon-lucide-phone"></use></svg>
                                             </div>
                                         </div>
                                     </div>
@@ -1618,7 +1606,7 @@
                                         <span class="absolute inset-0 w-0 bg-primary-500/10 transition-all duration-500 ease-out group-hover/btn:w-full"></span>
                                         <span class="relative z-10 text-xs font-bold uppercase tracking-widest text-white flex items-center gap-3">
                                             <span data-i18n="diag_form_next_btn">Avançar para Etapa Final</span>
-                                            <span class="iconify group-hover/btn:translate-x-2 transition-transform duration-300 text-primary-400" data-icon="lucide:arrow-right" data-width="16"></span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" class="iconify group-hover/btn:translate-x-2 transition-transform duration-300 text-primary-400" aria-hidden="true" focusable="false"><use href="#icon-lucide-arrow-right"></use></svg>
                                         </span>
                                     </button>
                                 </div>
@@ -1661,7 +1649,7 @@
                                                 <option value="Acima de 100" class="bg-[#101010] text-white" data-i18n="diag_form_emp_opt5">Acima de 100</option>
                                             </select>
                                             <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-white/20 group-focus-within:text-primary-500 transition-colors">
-                                                <span class="iconify" data-icon="lucide:chevron-down" data-width="14"></span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" class="iconify" aria-hidden="true" focusable="false"><use href="#icon-lucide-chevron-down"></use></svg>
                                             </div>
                                         </div>
                                     </div>
@@ -1675,7 +1663,7 @@
                                                 <option value="Acima de R$ 8.000" class="bg-[#101010] text-white" data-i18n="diag_form_inv_opt4">Acima de R$ 8.000</option>
                                             </select>
                                             <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-white/20 group-focus-within:text-primary-500 transition-colors">
-                                                <span class="iconify" data-icon="lucide:chevron-down" data-width="14"></span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" class="iconify" aria-hidden="true" focusable="false"><use href="#icon-lucide-chevron-down"></use></svg>
                                             </div>
                                         </div>
                                     </div>
@@ -1688,12 +1676,12 @@
                                 
                                 <div class="flex gap-3 mt-2">
                                     <button type="button" id="btn-prev-step" class="w-[60px] relative group overflow-hidden rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 h-12 flex items-center justify-center shrink-0">
-                                        <span class="iconify text-white/50 group-hover:text-white group-hover:-translate-x-1 transition-all" data-icon="lucide:arrow-left" data-width="18"></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" class="iconify text-white/50 group-hover:text-white group-hover:-translate-x-1 transition-all" aria-hidden="true" focusable="false"><use href="#icon-lucide-arrow-left"></use></svg>
                                     </button>
                                     <button type="submit" class="flex-1 relative group overflow-hidden rounded-xl shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.3)] hover:shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.5)] transition-all duration-300 bg-gradient-to-r from-primary-800 via-primary-700 to-primary-900 h-12 flex items-center justify-center">
                                         <span class="relative z-10 text-xs font-bold uppercase tracking-widest text-white flex items-center gap-2">
                                             <span data-i18n="diag_form_submit_btn">Solicitar Contato</span>
-                                            <span class="iconify group-hover:translate-x-1 transition-transform" data-icon="lucide:send" data-width="14"></span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" class="iconify group-hover:translate-x-1 transition-transform" aria-hidden="true" focusable="false"><use href="#icon-lucide-send"></use></svg>
                                         </span>
                                     </button>
                                 </div>
@@ -1702,7 +1690,7 @@
                     </div>
 
                     <!-- Right Side: Image -->
-                    <div class="hidden lg:flex w-full lg:w-2/5 reveal flex-col justify-center relative z-10">
+                    <div class="hidden lg:flex w-full lg:w-2/5 reveal flex-col justify-center relative z-10" style="--reveal-delay: 120ms">
                         <div class="relative w-full h-[90%] min-h-[400px] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(var(--color-primary-rgb),0.15)] group">
                             <img src="images/imagem_clientes.webp" alt="Diagnóstico Empresarial" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 filter brightness-75 contrast-125" onerror="this.src='images/services/financeiro.webp'" decoding="async">
                             <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-90"></div>
@@ -1710,10 +1698,10 @@
                             
                             <!-- Overlay Content on Image -->
                             <div class="absolute bottom-8 left-8 right-8 z-20 transition-transform duration-500 group-hover:-translate-y-2">
-                                <div class="glass-panel bg-black/40 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-2xl">
+                                <div class="glass-blur-badge p-6 rounded-2xl shadow-2xl transition-colors duration-300">
                                     <div class="flex items-center gap-4 mb-3">
                                         <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-600 to-primary-900 flex items-center justify-center border border-white/20 shadow-inner">
-                                            <span class="iconify text-white" data-icon="lucide:trending-up" data-width="20"></span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="iconify text-white" aria-hidden="true" focusable="false"><use href="#icon-lucide-trending-up"></use></svg>
                                         </div>
                                         <div>
                                             <h4 class="text-white font-medium text-sm tracking-wide" data-i18n="diag_card_title">Escalabilidade Real</h4>
@@ -1752,7 +1740,7 @@
                     </div>
 
                     <!-- Right Side: Content and Form -->
-                    <div class="w-full lg:w-1/2 reveal">
+                    <div class="w-full lg:w-1/2 reveal" style="--reveal-delay: 120ms">
                         <div class="flex items-center space-x-3 mb-6">
                             <div class="w-1.5 h-1.5 bg-primary-500 rounded-full animate-pulse shadow-[0_0_12px_var(--color-primary-gradient-1)]"></div>
                             <p class="text-[11px] uppercase tracking-[0.25em] text-white/60 font-semibold font-outfit" data-i18n="colab_subtitle">Área do Colaborador</p>
@@ -1769,7 +1757,7 @@
                         </p>
 
                         <!-- Form -->
-                        <form action="https://formsubmit.co/olympiaempresarial@gmail.com" method="POST" enctype="multipart/form-data" class="glass-panel border border-white/10 bg-[#101010]/80 backdrop-blur-2xl rounded-3xl p-8 relative z-10 shadow-xl flex flex-col gap-6">
+                        <form action="https://formsubmit.co/olympiaempresarial@gmail.com" method="POST" enctype="multipart/form-data" class="glass-panel border border-white/10 rounded-3xl p-8 relative z-10 shadow-xl flex flex-col gap-6">
                             <input type="hidden" name="_subject" value="NOVO CURRÍCULO">
                             <input type="hidden" name="_template" value="box">
 
@@ -1788,7 +1776,7 @@
                                 <label class="text-xs uppercase tracking-widest text-white/40 font-medium" data-i18n="colab_form_file">Anexar Currículo (PDF, DOCX)</label>
                                 <div class="relative w-full h-32 border-2 border-dashed border-white/20 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary-500/50 hover:bg-white/5 transition-all cursor-pointer group overflow-hidden">
                                     <input type="file" name="attachment" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".pdf,.doc,.docx" required onchange="if(this.files[0]) { this.nextElementSibling.nextElementSibling.textContent = this.files[0].name; this.nextElementSibling.nextElementSibling.classList.remove('text-white/50'); this.nextElementSibling.nextElementSibling.classList.add('text-primary-400'); this.nextElementSibling.nextElementSibling.removeAttribute('data-i18n'); } else { this.nextElementSibling.nextElementSibling.setAttribute('data-i18n', 'colab_form_file_text'); this.nextElementSibling.nextElementSibling.textContent = translations[currentLanguage].colab_form_file_text; this.nextElementSibling.nextElementSibling.classList.add('text-white/50'); this.nextElementSibling.nextElementSibling.classList.remove('text-primary-400'); }">
-                                    <span class="iconify text-white/40 group-hover:text-primary-400 transition-colors" data-icon="lucide:upload-cloud" data-width="32"></span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="iconify text-white/40 group-hover:text-primary-400 transition-colors" aria-hidden="true" focusable="false"><use href="#icon-lucide-upload-cloud"></use></svg>
                                     <span class="text-sm text-white/50 group-hover:text-white/80 transition-colors font-light text-center px-4 w-full leading-tight" data-i18n="colab_form_file_text">Arraste seu arquivo ou clique para selecionar</span>
                                 </div>
                             </div>
@@ -1796,7 +1784,7 @@
                             <button type="submit" class="mt-4 w-full relative group overflow-hidden rounded-xl shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.3)] hover:shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.5)] transition-all duration-300 bg-gradient-to-r from-primary-800 via-primary-700 to-primary-900 h-12 flex items-center justify-center">
                                 <span class="relative z-10 text-xs font-bold uppercase tracking-widest text-white flex items-center gap-2">
                                     <span data-i18n="colab_form_btn">Enviar Candidatura</span>
-                                    <span class="iconify group-hover:translate-x-1 transition-transform" data-icon="lucide:send" data-width="14"></span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" class="iconify group-hover:translate-x-1 transition-transform" aria-hidden="true" focusable="false"><use href="#icon-lucide-send"></use></svg>
                                 </span>
                             </button>
                         </form>
@@ -1830,10 +1818,10 @@
                 </div>
 
                 <!-- Testimonials Grid -->
-                <div class="relative w-full overflow-hidden flex items-center group/carousel py-4 -my-4 mask-edges-x" style="mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);">
-                    <div class="flex gap-6 w-max animate-scroll-x hover:[animation-play-state:paused] pr-6 will-change-transform">
+                <div class="relative w-full overflow-hidden flex items-center group/carousel py-10 -my-6 mask-edges-x reveal" style="--reveal-delay: 100ms; mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);">
+                    <div id="testimonials-track" class="flex gap-6 w-max animate-scroll-x hover:[animation-play-state:paused] pr-6">
                         <!-- Card 1 -->
-                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                        <div class="testimonial-card glass-panel border border-white/10 rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
                                     <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
@@ -1841,11 +1829,11 @@
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_1">Cliente Olympia</h4>
                                     <div class="flex items-center gap-1 mt-1 text-primary-500">
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
                                     </div>
                                 </div>
                             </div>
@@ -1854,7 +1842,7 @@
                             </p>
                         </div>
                         <!-- Card 2 -->
-                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                        <div class="testimonial-card glass-panel border border-white/10 rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
                                     <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
@@ -1862,11 +1850,11 @@
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_2">Cliente Olympia</h4>
                                     <div class="flex items-center gap-1 mt-1 text-primary-500">
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
                                     </div>
                                 </div>
                             </div>
@@ -1875,7 +1863,7 @@
                             </p>
                         </div>
                         <!-- Card 3 -->
-                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                        <div class="testimonial-card glass-panel border border-white/10 rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
                                     <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
@@ -1883,11 +1871,11 @@
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_3">Cliente Olympia</h4>
                                     <div class="flex items-center gap-1 mt-1 text-primary-500">
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
                                     </div>
                                 </div>
                             </div>
@@ -1896,7 +1884,7 @@
                             </p>
                         </div>
                         <!-- Card 4 -->
-                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                        <div class="testimonial-card glass-panel border border-white/10 rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
                                     <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
@@ -1904,11 +1892,11 @@
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_4">Cliente Olympia</h4>
                                     <div class="flex items-center gap-1 mt-1 text-primary-500">
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
                                     </div>
                                 </div>
                             </div>
@@ -1917,7 +1905,7 @@
                             </p>
                         </div>
                         <!-- Card 5 -->
-                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                        <div class="testimonial-card glass-panel border border-white/10 rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
                                     <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
@@ -1925,11 +1913,11 @@
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_5">Cliente Olympia</h4>
                                     <div class="flex items-center gap-1 mt-1 text-primary-500">
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
                                     </div>
                                 </div>
                             </div>
@@ -1938,7 +1926,7 @@
                             </p>
                         </div>
                         <!-- Card 6 -->
-                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                        <div class="testimonial-card glass-panel border border-white/10 rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
                                     <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
@@ -1946,11 +1934,11 @@
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_6">Cliente Olympia</h4>
                                     <div class="flex items-center gap-1 mt-1 text-primary-500">
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
                                     </div>
                                 </div>
                             </div>
@@ -1961,7 +1949,7 @@
                         
                         <!-- Duplicate Cards for infinite effect -->
                         <!-- Card 1 -->
-                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                        <div class="testimonial-card glass-panel border border-white/10 rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
                                     <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
@@ -1969,11 +1957,11 @@
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_1">Cliente Olympia</h4>
                                     <div class="flex items-center gap-1 mt-1 text-primary-500">
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
                                     </div>
                                 </div>
                             </div>
@@ -1982,7 +1970,7 @@
                             </p>
                         </div>
                         <!-- Card 2 -->
-                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                        <div class="testimonial-card glass-panel border border-white/10 rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
                                     <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
@@ -1990,11 +1978,11 @@
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_2">Cliente Olympia</h4>
                                     <div class="flex items-center gap-1 mt-1 text-primary-500">
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
                                     </div>
                                 </div>
                             </div>
@@ -2003,7 +1991,7 @@
                             </p>
                         </div>
                         <!-- Card 3 -->
-                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                        <div class="testimonial-card glass-panel border border-white/10 rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
                                     <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
@@ -2011,11 +1999,11 @@
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_3">Cliente Olympia</h4>
                                     <div class="flex items-center gap-1 mt-1 text-primary-500">
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
                                     </div>
                                 </div>
                             </div>
@@ -2024,7 +2012,7 @@
                             </p>
                         </div>
                         <!-- Card 4 -->
-                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                        <div class="testimonial-card glass-panel border border-white/10 rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
                                     <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
@@ -2032,11 +2020,11 @@
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_4">Cliente Olympia</h4>
                                     <div class="flex items-center gap-1 mt-1 text-primary-500">
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
                                     </div>
                                 </div>
                             </div>
@@ -2045,7 +2033,7 @@
                             </p>
                         </div>
                         <!-- Card 5 -->
-                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                        <div class="testimonial-card glass-panel border border-white/10 rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
                                     <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
@@ -2053,11 +2041,11 @@
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_5">Cliente Olympia</h4>
                                     <div class="flex items-center gap-1 mt-1 text-primary-500">
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
                                     </div>
                                 </div>
                             </div>
@@ -2066,7 +2054,7 @@
                             </p>
                         </div>
                         <!-- Card 6 -->
-                        <div class="glass-panel border border-white/5 bg-[#101010]/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
+                        <div class="testimonial-card glass-panel border border-white/10 rounded-3xl p-8 lg:p-10 flex flex-col relative z-10 shadow-xl w-[350px] shrink-0">
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="w-14 h-14 rounded-full flex items-center justify-center border border-white/10 overflow-hidden shadow-inner shrink-0">
                                     <img src="images/logos/logo.webp" alt="Cliente Olympia" class="w-full h-full object-cover" decoding="async">
@@ -2074,11 +2062,11 @@
                                 <div>
                                     <h4 class="text-white font-medium text-lg leading-tight" data-i18n="testi_name_6">Cliente Olympia</h4>
                                     <div class="flex items-center gap-1 mt-1 text-primary-500">
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
-                                        <span class="iconify text-[10px]" data-icon="lucide:star"></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-star"></use></svg>
                                     </div>
                                 </div>
                             </div>
@@ -2090,6 +2078,7 @@
                 </div>
 
             </div>
+        </section>
     </div> <!-- End Integrated Wrapper -->
 
     <footer class="relative w-full py-8 px-6 bg-[#000000] z-20 border-t border-white/5">
@@ -2107,7 +2096,7 @@
 
                 <a href="https://instagram.com/olympiaempresarial" target="_blank"
                     class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-primary-400 hover:border-primary-400 hover:bg-primary-950/30 transition-all duration-300 group relative">
-                    <span class="iconify" data-icon="lucide:instagram" data-width="18"></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" class="iconify" aria-hidden="true" focusable="false"><use href="#icon-lucide-instagram"></use></svg>
                 </a>
             </div>
 
@@ -2131,20 +2120,20 @@
                 target="_blank"
                 class="font-medium text-white/50 hover:text-white transition-colors py-1.5 px-4 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 flex items-center gap-2">
                 KAIQUEGAZONI
-                <span class="iconify text-[10px]" data-icon="lucide:arrow-up-right"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="iconify text-[10px]" aria-hidden="true" focusable="false"><use href="#icon-lucide-arrow-up-right"></use></svg>
             </a>
         </p>
     </div>
 
     <!-- Modal Conheça a Olympia -->
     <div id="modal-olympia"
-        class="fixed inset-0 z-[99999] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 backdrop-blur-lg bg-black/80 p-4">
+        class="modal-overlay fixed inset-0 z-[99999] flex items-center justify-center backdrop-blur-lg bg-black/80 p-4">
         <div class="glass-panel border-gradient !bg-[#020202]/90 relative p-8 md:p-12 max-w-2xl w-full rounded-3xl transform scale-95 transition-transform duration-500"
             id="modal-olympia-content">
             <!-- Close Button -->
             <button id="close-modal"
                 class="absolute top-6 right-6 text-white/50 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full p-2 backdrop-blur-sm border border-white/10">
-                <span class="iconify" data-icon="lucide:x" data-width="20"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="iconify" aria-hidden="true" focusable="false"><use href="#icon-lucide-x"></use></svg>
             </button>
 
             <h2 class="font-heading text-3xl font-semibold tracking-tight text-white mb-6" data-i18n="modal_title">Nossa
@@ -2166,8 +2155,7 @@
                     Conheça nosso Instagram</p>
                 <a href="https://instagram.com/olympiaempresarial" target="_blank"
                     class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary-500/50 transition-all duration-300 text-white font-medium group">
-                    <span class="iconify text-primary-400 group-hover:text-primary-300 transition-colors"
-                        data-icon="lucide:instagram" data-width="20"></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="iconify text-primary-400 group-hover:text-primary-300 transition-colors" aria-hidden="true" focusable="false"><use href="#icon-lucide-instagram"></use></svg>
                     @olympiaempresarial
                 </a>
             </div>
@@ -2176,14 +2164,14 @@
 
     <!-- Product Details Modal -->
     <div id="modal-product"
-        class="fixed inset-0 z-[99999] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 backdrop-blur-xl bg-[#020202]/90 p-4">
+        class="modal-overlay fixed inset-0 z-[99999] flex items-center justify-center backdrop-blur-xl bg-[#020202]/90 p-4">
         <div class="glass-panel border-gradient !bg-[#050505]/95 relative max-w-4xl w-full rounded-[2rem] transform scale-95 transition-transform duration-500 overflow-hidden flex flex-col md:flex-row shadow-[0_0_100px_rgba(var(--color-primary-rgb),0.15)]"
             id="modal-product-content">
 
             <!-- Close Button -->
             <button id="close-modal-product"
                 class="absolute top-6 right-6 z-50 text-white/50 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full p-2 backdrop-blur-md border border-white/10">
-                <span class="iconify" data-icon="lucide:x" data-width="20"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="iconify" aria-hidden="true" focusable="false"><use href="#icon-lucide-x"></use></svg>
             </button>
 
             <!-- Image Side -->
@@ -2194,7 +2182,7 @@
                     class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#050505] via-transparent to-transparent">
                 </div>
                 <!-- Small tag overlay -->
-                <div class="absolute top-6 left-6 glass-panel bg-black/40 backdrop-blur-md px-4 py-2 rounded border border-white/10 text-[10px] font-bold text-white tracking-widest uppercase"
+                <div class="absolute top-6 left-6 glass-blur-badge px-4 py-2 rounded text-[10px] font-bold text-white tracking-widest uppercase"
                     id="modal-product-tag">Categoria</div>
             </div>
 
@@ -2213,7 +2201,7 @@
                     <div>
                         <h4
                             class="text-xs uppercase tracking-widest text-primary-400 font-semibold mb-3 flex items-center gap-2">
-                            <span class="iconify" data-icon="lucide:target" data-width="14"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" class="iconify" aria-hidden="true" focusable="false"><use href="#icon-lucide-target"></use></svg>
                             <span data-i18n="modal_prod_what">O que é</span>
                         </h4>
                         <p id="modal-product-what" class="text-sm md:text-base"></p>
@@ -2221,7 +2209,7 @@
                     <div>
                         <h4
                             class="text-xs uppercase tracking-widest text-primary-400 font-semibold mb-3 flex items-center gap-2">
-                            <span class="iconify" data-icon="lucide:zap" data-width="14"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" class="iconify" aria-hidden="true" focusable="false"><use href="#icon-lucide-zap"></use></svg>
                             <span data-i18n="modal_prod_importance">A Importância</span>
                         </h4>
                         <p id="modal-product-importance" class="text-sm md:text-base"></p>
@@ -2232,8 +2220,7 @@
                     <a id="modal-product-whatsapp" href="javascript:void(0)" onclick="closeProductModal(); document.getElementById('diagnostico').scrollIntoView({behavior: 'smooth'})"
                         class="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary-500/50 transition-all duration-300 text-white text-sm font-semibold uppercase tracking-widest group">
                         <span data-i18n="modal_prod_btn">Solicitar Consultoria</span>
-                        <span class="iconify transform group-hover:translate-x-1 transition-transform"
-                            data-icon="lucide:arrow-right" data-width="16"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" class="iconify transform group-hover:translate-x-1 transition-transform" aria-hidden="true" focusable="false"><use href="#icon-lucide-arrow-right"></use></svg>
                     </a>
                 </div>
             </div>
@@ -2249,16 +2236,9 @@
         }
         window.scrollTo(0, 0);
         
-        window.addEventListener('load', function() {
-            if (window.location.hash) {
-                window.history.replaceState(null, null, window.location.pathname);
-            }
-            setTimeout(function() {
-                window.scrollTo(0, 0);
-                document.body.scrollTop = 0;
-                document.documentElement.scrollTop = 0;
-            }, 10);
-        });
+        if (window.location.hash) {
+            window.history.replaceState(null, null, window.location.pathname);
+        }
 
         let currentLanguage = 'pt';
 
@@ -2302,7 +2282,7 @@
                 diag_card_text: "\"Não vendemos conselhos. Construímos estruturas robustas que fazem sua empresa crescer independente de você.\"",
                 hero_h1_1: "CONSULTORIA&nbsp;",
                 hero_h1_2: "EMPRESARIAL&nbsp;",
-                hero_p1: "Impulsionamos negócios através de <span class=\"text-white font-medium\">consultoria estratégica</span>, <span class=\"text-white font-medium\">desenvolvimento de equipes</span> e soluções de <span class=\"text-bordeaux-700 font-medium drop-shadow-[0_0_10px_rgba(155,33,49,0.8)]\">alto padrão</span> para transformar resultados.",
+                hero_p1: "Impulsionamos negócios através de <span class=\"text-white font-medium\">consultoria estratégica</span>, <span class=\"text-white font-medium\">desenvolvimento de equipes</span> e soluções de <span class=\"text-primary-700 font-medium drop-shadow-[0_0_10px_rgba(155,33,49,0.8)]\">alto padrão</span> para transformar resultados.",
                 btn_primary: "Entre em Contato",
                 btn_secondary: "Conheça a Olympia",
                 scroll_text: "Descubra",
@@ -2349,24 +2329,24 @@
                 exp_subtitle: "A Transformação na Prática",
                 exp_title_1: "Experiência dos Nossos",
                 exp_title_2: "Clientes",
-                testi_name_1: "Vônofre Food's",
+                testi_name_1: "Cliente Olympia",
                 testi_role_1: "Cliente Olympia",
                 testi_text_1: "\"A assessoria da Olympia transformou nossa visão estratégica. O nível de profissionalismo é incomparável no mercado atual.\"",
-                testi_name_2: "Tennessee Burger",
+                testi_name_2: "Cliente Olympia",
                 testi_role_2: "Cliente Olympia",
                 testi_text_2: "\"A reestruturação de processos proposta pela Olympia nos economizou meses de problemas operacionais. Um trabalho de maestria e execução impecável.\"",
-                testi_name_3: "Roberto Almeida",
-                testi_role_3: "Sócio-Fundador, Almeida Associados",
-                testi_text_3: "\"Nosso posicionamento e segurança jurídica foram elevados a outro patamar. A Olympia entrega uma inteligência de mercado muito além da consultoria tradicional.\"",
-                testi_name_4: "TechSolutions",
+                testi_name_3: "Cliente Olympia",
+                testi_role_3: "Cliente Olympia",
+                testi_text_3: "\"A Eduarda juntamente com os engenheiros que trabalham na equipe nos ajudou a organizar melhor nossos processos operacionais e a gestão do estoque, trazendo mais controle, padronização e clareza para a rotina da equipe. Conseguimos identificar falhas, melhorar a organização e ter uma visão mais eficiente da operação. Hoje, entendemos como processos bem estruturados são essenciais para reduzir desperdícios e fortalecer os resultados da empresa.\"",
+                testi_name_4: "Cliente Olympia",
                 testi_role_4: "Cliente Olympia",
-                testi_text_4: "\"Com o suporte estratégico da Olympia, otimizamos toda a nossa infraestrutura. Os resultados superaram nossas expectativas.\"",
-                testi_name_5: "Clínica Bem-Estar",
+                testi_text_4: "\"Minha empresa precisava ser mais valorizada pela nossa marca e apresentar nossos produtos de maneira profissional. O trabalho desenvolvido pela Olympia trouxe mais identidade para nossa comunicação e melhorou a forma como mostramos nosso negócio ao público. Hoje, entendemos que a imagem da empresa também faz parte da estratégia de vendas.\"",
+                testi_name_5: "Cliente Olympia",
                 testi_role_5: "Cliente Olympia",
-                testi_text_5: "\"Nossa gestão de pessoas evoluiu significativamente. Hoje, temos um time muito mais engajado e alinhado aos propósitos da empresa.\"",
-                testi_name_6: "Construtora Horizonte",
+                testi_text_5: "\"A Olympia foi fundamental para o desenvolvimento das nossas lideranças e o fortalecimento da equipe operacional. Com o acompanhamento, conseguimos melhorar a comunicação, fortalecer o senso de responsabilidade e desenvolver uma liderança mais preparada para tomar decisões e conduzir pessoas.\"",
+                testi_name_6: "Cliente Olympia",
                 testi_role_6: "Cliente Olympia",
-                testi_text_6: "\"A estruturação de novos processos internos nos deu clareza para crescer de forma escalável e segura. Foi um verdadeiro divisor de águas.\"",
+                testi_text_6: "\"Procuramos a empresa para compreender melhor a realidade financeira da nossa empresa, trazendo mais organização, controle e clareza sobre receitas, despesas e resultados. Com processos financeiros mais estruturados, passamos a tomar decisões com mais segurança e a enxergar oportunidades de melhoria que antes passavam despercebidas. Hoje, temos uma visão mais estratégica das nossas finanças e mais preparo para crescer de forma sustentável.\"",
                 footer_rights: "© 2026 Olympia Consultoria Empresarial.<br class=\"md:hidden\"> Todos os direitos reservados.",
                 nav_colaborador: "Área do Colaborador",
                 colab_subtitle: "Área do Colaborador",
@@ -2375,6 +2355,8 @@
                 colab_desc: "As empresas parceiras da Olympia estão sempre em busca de profissionais excepcionais. Envie seu currículo e conecte-se com as melhores oportunidades do mercado.",
                 colab_form_name: "Nome Completo",
                 colab_form_name_ph: "Seu nome",
+                colab_form_phone: "Telefone",
+                colab_form_phone_ph: "(00) 00000-0000",
                 colab_form_email: "E-mail",
                 colab_form_email_ph: "seu@email.com",
                 colab_form_area: "Área de Interesse",
@@ -2424,7 +2406,7 @@
                 diag_card_text: "\"We don't sell advice. We build robust structures that make your company grow independently of you.\"",
                 hero_h1_1: "CORPORATE&nbsp;",
                 hero_h1_2: "CONSULTING&nbsp;",
-                hero_p1: "We boost businesses through <span class=\"text-white font-medium\">strategic consulting</span>, <span class=\"text-white font-medium\">team development</span>, and <span class=\"text-bordeaux-700 font-medium drop-shadow-[0_0_10px_rgba(155,33,49,0.8)]\">high-standard</span> solutions to transform results.",
+                hero_p1: "We boost businesses through <span class=\"text-white font-medium\">strategic consulting</span>, <span class=\"text-white font-medium\">team development</span>, and <span class=\"text-primary-700 font-medium drop-shadow-[0_0_10px_rgba(155,33,49,0.8)]\">high-standard</span> solutions to transform results.",
                 btn_primary: "Get in Touch",
                 btn_secondary: "About Olympia",
                 scroll_text: "Discover",
@@ -2471,24 +2453,24 @@
                 exp_subtitle: "Transformation in Practice",
                 exp_title_1: "Experience of Our",
                 exp_title_2: "Clients",
-                testi_name_1: "Vônofre Food's",
+                testi_name_1: "Olympia Client",
                 testi_role_1: "Olympia Client",
                 testi_text_1: "\"Olympia's advisory transformed our strategic vision. The level of professionalism is incomparable in the current market.\"",
-                testi_name_2: "Tennessee Burger",
+                testi_name_2: "Olympia Client",
                 testi_role_2: "Olympia Client",
                 testi_text_2: "\"Olympia's process restructuring saved us months of operational issues. A masterpiece of work and execution.\"",
-                testi_name_3: "Roberto Almeida",
-                testi_role_3: "Founding Partner, Almeida Associates",
-                testi_text_3: "\"Our positioning and legal security were raised to another level. Olympia delivers market intelligence far beyond traditional consulting.\"",
-                testi_name_4: "TechSolutions",
+                testi_name_3: "Olympia Client",
+                testi_role_3: "Olympia Client",
+                testi_text_3: "\"Eduarda along with the team's engineers helped us better organize our operational processes and inventory management, bringing more control, standardization, and clarity to our daily routine. Today, we see how well-structured processes are essential to reduce waste and strengthen company results.\"",
+                testi_name_4: "Olympia Client",
                 testi_role_4: "Olympia Client",
-                testi_text_4: "\"With Olympia's strategic support, we optimized our entire infrastructure. The results exceeded our expectations.\"",
-                testi_name_5: "Bem-Estar Clinic",
+                testi_text_4: "\"My company needed stronger brand valuation and a professional presentation of our products. Olympia's work brought stronger identity to our communication and elevated how we present our business to the public. Today, we see that company image is an integral part of sales strategy.\"",
+                testi_name_5: "Olympia Client",
                 testi_role_5: "Olympia Client",
-                testi_text_5: "\"Our people management has evolved significantly. Today, we have a much more engaged team aligned with our goals.\"",
-                testi_name_6: "Horizonte Construction",
+                testi_text_5: "\"Olympia was instrumental in developing our leadership and strengthening our operational team. With their guidance, we improved communication, strengthened accountability, and prepared leaders to make decisions and guide people effectively.\"",
+                testi_name_6: "Olympia Client",
                 testi_role_6: "Olympia Client",
-                testi_text_6: "\"Structuring new internal processes gave us the clarity to grow in a scalable and secure way. It was a game changer.\"",
+                testi_text_6: "\"We turned to Olympia to better understand our financial reality, bringing organization, control, and clarity over revenues, expenses, and results. With structured financial processes, we now make decisions with confidence and are prepared to grow sustainably.\"",
                 footer_rights: "© 2026 Olympia Business Consulting.<br class=\"md:hidden\"> All rights reserved.",
                 nav_colaborador: "Collaborator Area",
                 colab_subtitle: "Collaborator Area",
@@ -2497,6 +2479,8 @@
                 colab_desc: "Olympia's partner companies are always looking for exceptional professionals. Send your resume and connect with the best opportunities in the market.",
                 colab_form_name: "Full Name",
                 colab_form_name_ph: "Your name",
+                colab_form_phone: "Phone",
+                colab_form_phone_ph: "(00) 00000-0000",
                 colab_form_email: "E-mail",
                 colab_form_email_ph: "your@email.com",
                 colab_form_area: "Area of Interest",
@@ -2667,7 +2651,9 @@
 
             // Also update any open product modal to reflect the new language
             const modalProd = document.getElementById('modal-product');
-            if (modalProd && !modalProd.classList.contains('pointer-events-none')) {
+            const btnWa = document.getElementById('btn-whatsapp');
+            if (btnWa && translations[lang].whatsapp_link) btnWa.href = translations[lang].whatsapp_link;
+            if (modalProd && modalProd.classList.contains('is-open')) {
                 const currentServiceId = modalProd.getAttribute('data-current-service');
                 if (currentServiceId) {
                     populateProductModal(currentServiceId);
@@ -2701,7 +2687,7 @@
             if (!servicesGrid || servicesGrid.children.length > 0) return;
             const serviceKeys = ['rh', 'financeiro', 'blindagem', 'treinamentos', 'seguranca', 'alimentar', 'sites', 'foto', 'vendas'];
 
-            serviceKeys.forEach((key) => {
+            serviceKeys.forEach((key, index) => {
                 const shortKey = {
                     'rh': 'rh', 'financeiro': 'fin', 'blindagem': 'bli',
                     'treinamentos': 'tre', 'seguranca': 'seg', 'alimentar': 'ali',
@@ -2715,21 +2701,24 @@
                     objectPosition = '30% 20%';
                 }
 
+                const colStagger = (index % 3) * 80;
                 const cardHtml = `
-                <div class="service-card cursor-pointer glass-panel border border-white/20 bg-[#0a0a0a]/80 backdrop-blur-xl rounded-[1.5rem] overflow-hidden group reveal flex flex-col h-full shadow-[0_4px_20px_rgba(0,0,0,0.5)]" data-service="${key}">
-                    <div class="relative h-[220px] w-full overflow-hidden bg-black/50 shrink-0">
-                        <img src="${productDetails.pt[key].image}" alt="" class="w-full h-full object-cover opacity-100 transition-transform duration-500 ease-out group-hover:scale-105" decoding="async" style="object-position: ${objectPosition};">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/90 via-black/20 to-transparent"></div>
-                        <div class="absolute top-4 left-4 service-card-tag px-3 py-1.5 rounded text-[9px] font-bold text-white tracking-widest uppercase" data-i18n="${shortKey}_tag">${translations.pt[shortKey + '_tag']}</div>
-                    </div>
-                    <div class="p-6 flex flex-col flex-1 relative z-10 -mt-6 bg-gradient-to-b from-transparent to-[#0a0a0a]">
-                        <h3 class="text-xl font-medium text-white mb-3 font-heading tracking-wide leading-tight min-h-[50px]" data-i18n="${shortKey}_title">${translations.pt[shortKey + '_title']}</h3>
-                        <p class="text-xs text-white/50 leading-relaxed mb-6 flex-1 line-clamp-4" data-i18n="${shortKey}_desc">${translations.pt[shortKey + '_desc']}</p>
-                        <div class="flex items-center justify-between pt-5 border-t border-white/5 mt-auto">
-                            <button class="flex items-center gap-2 text-[10px] font-semibold text-white/50 group-hover:text-primary-500 transition-colors uppercase tracking-[0.2em]">
-                                <span data-i18n="btn_saber_mais">Saber mais</span>
-                                <span class="iconify group-hover:translate-x-1 transition-transform" data-icon="lucide:arrow-right" data-width="14"></span>
-                            </button>
+                <div class="reveal h-full" style="--reveal-delay: ${colStagger}ms">
+                    <div class="service-card cursor-pointer glass-panel border border-white/15 rounded-[1.5rem] overflow-hidden group flex flex-col h-full shadow-[0_4px_20px_rgba(0,0,0,0.5)]" data-service="${key}">
+                        <div class="relative h-[220px] w-full overflow-hidden bg-black/50 shrink-0">
+                            <img src="${productDetails.pt[key].image}" alt="" class="w-full h-full object-cover opacity-100 transition-transform duration-500 ease-out group-hover:scale-105" loading="eager" decoding="async" style="object-position: ${objectPosition};">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#0b0b0d] via-black/20 to-transparent"></div>
+                            <div class="absolute top-4 left-4 service-card-tag px-3 py-1.5 rounded text-[9px] font-bold text-white tracking-widest uppercase" data-i18n="${shortKey}_tag">${translations.pt[shortKey + '_tag']}</div>
+                        </div>
+                        <div class="p-6 flex flex-col flex-1 relative z-10 -mt-6 bg-gradient-to-b from-transparent to-[#0b0b0d]">
+                            <h3 class="text-xl font-medium text-white mb-3 font-heading tracking-wide leading-tight min-h-[50px]" data-i18n="${shortKey}_title">${translations.pt[shortKey + '_title']}</h3>
+                            <p class="text-xs text-white/55 leading-relaxed mb-6 flex-1 line-clamp-4" data-i18n="${shortKey}_desc">${translations.pt[shortKey + '_desc']}</p>
+                            <div class="flex items-center justify-between pt-5 border-t border-white/5 mt-auto">
+                                <button type="button" class="flex items-center gap-2 text-[10px] font-semibold text-white/55 group-hover:text-primary-500 transition-colors uppercase tracking-[0.2em]">
+                                    <span data-i18n="btn_saber_mais">Saber mais</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" class="iconify group-hover:translate-x-1 transition-transform" aria-hidden="true" focusable="false"><use href="#icon-lucide-arrow-right"></use></svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2737,7 +2726,6 @@
                 servicesGrid.insertAdjacentHTML('beforeend', cardHtml);
             });
 
-            // Card click handlers for modal
             servicesGrid.querySelectorAll('.service-card').forEach(card => {
                 card.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -2748,156 +2736,165 @@
         }
         renderServicesGrid();
 
-        // --- 2. INTERSECTION OBSERVER (300px Eager Pre-reveal: zero waiting on scroll) ---
-        const revealOptions = {
-            threshold: 0,
-            rootMargin: "300px 0px 300px 0px"
-        };
-
-        const revealOnScroll = new IntersectionObserver(function (entries, observer) {
+        // --- 2. CHOREOGRAPHED REVEALS & CAROUSEL VISIBILITY ---
+        // Hero reveals fire right as the preloader lifts; below-the-fold sections reveal smoothly on entry.
+        const revealObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add("active");
+                    entry.target.classList.add('active');
                     observer.unobserve(entry.target);
                 }
             });
-        }, revealOptions);
-
-        document.querySelectorAll(".reveal, .reveal-fade, .reveal-premium").forEach(reveal => {
-            revealOnScroll.observe(reveal);
+        }, {
+            threshold: 0.06,
+            rootMargin: '0px 0px -6% 0px'
         });
 
-        // --- 3. NON-BLOCKING PRELOADER HANDOFF & BACKGROUND IMAGE WARM-UP ---
-        // The splash itself is controlled by the standalone bootstrap right after #preloader.
-        // Here we only activate above-the-fold content and warm up the remaining images
-        // in the background, so nothing ever blocks the user on the loading screen.
+        document.querySelectorAll('.reveal, .reveal-fade, .reveal-premium').forEach(el => {
+            if (!el.closest('#hero')) {
+                revealObserver.observe(el);
+            }
+        });
+
+        // Pause infinite testimonial marquee when offscreen so it costs 0% GPU elsewhere
+        const testiTrack = document.getElementById('testimonials-track');
+        const expSection = document.getElementById('experiencias');
+        if (testiTrack && expSection) {
+            testiTrack.classList.add('carousel-paused');
+            const carouselObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    testiTrack.classList.toggle('carousel-paused', !entry.isIntersecting);
+                });
+            }, { rootMargin: '200px 0px 200px 0px' });
+            carouselObserver.observe(expSection);
+        }
+
+        // --- 3. HERO ENTRANCE HANDOFF & ASYNC IMAGE PRE-DECODE ---
         (function () {
-            // Activate Hero and Services reveals immediately so there is no pop-in on scroll
-            document.querySelectorAll('#hero .reveal, #hero .reveal-fade, #hero .reveal-premium, #services .reveal')
-                .forEach(el => el.classList.add('active'));
+            const triggerHeroEntrance = () => {
+                document.querySelectorAll('#hero .reveal, #hero .reveal-fade, #hero .reveal-premium')
+                    .forEach(el => el.classList.add('active'));
+            };
 
-            if (window.__olySetProgress) window.__olySetProgress(85);
+            if (window.__olyOnReady) {
+                window.__olyOnReady(triggerHeroEntrance);
+            } else {
+                triggerHeroEntrance();
+            }
 
-            const BACKGROUND_IMAGES = [
-                'images/imagem_clientes.webp',
-                'images/imagem_colaborador.webp',
+            // Pre-decode all remaining WebP assets (~780KB total) asynchronously so every image is
+            // already in bitmap cache long before the user scrolls to it.
+            const WARMUP_IMAGES = [
                 'images/services/rh.webp',
                 'images/services/financeiro.webp',
                 'images/services/juridico.webp',
-                'images/services/foto.webp',
                 'images/services/operacional_imagem.webp',
+                'images/services/seguranca.webp',
                 'images/services/Consultoria-de-alimentos-estabelecimentos-de-alimentos.webp',
                 'images/services/sites.webp',
-                'images/services/seguranca.webp',
-                'images/services/vendas.webp'
+                'images/services/foto.webp',
+                'images/services/vendas.webp',
+                'images/imagem_clientes.webp',
+                'images/imagem_colaborador.webp'
             ];
 
             const warmUp = () => {
-                BACKGROUND_IMAGES.forEach(src => {
+                WARMUP_IMAGES.forEach(src => {
                     const img = new Image();
                     img.decoding = 'async';
                     img.src = src;
+                    if (img.decode) img.decode().catch(() => {});
                 });
             };
 
-            // Start right after the splash is gone, without competing with the hero image
-            const schedule = window.requestIdleCallback
-                ? (fn) => requestIdleCallback(fn, { timeout: 1200 })
-                : (fn) => setTimeout(fn, 300);
-            schedule(warmUp);
+            if (window.requestIdleCallback) {
+                requestIdleCallback(warmUp, { timeout: 600 });
+            } else {
+                setTimeout(warmUp, 150);
+            }
         })();
 
-        // --- 4. HERO PARALLAX, SCROLLSPY & MODALS ---
-        // Hero Scroll Parallax & Fade out Effect (Apple/Vercel style transition) - RAF throttled
-        let heroScrollTicking = false;
-        window.addEventListener('scroll', () => {
-            if (heroScrollTicking) return;
-            heroScrollTicking = true;
-            requestAnimationFrame(() => {
-                heroScrollTicking = false;
-                const scrollY = window.scrollY;
-                const heroHeight = window.innerHeight;
+        // --- 4. UNIFIED RAF SCROLL ENGINE (HERO PARALLAX + CULLING + CACHED SCROLLSPY) ---
+        const heroEl = document.getElementById('hero');
+        const heroContentEl = document.getElementById('hero-content');
+        const parallaxH1 = document.getElementById('parallax-h1');
+        const parallaxP = document.getElementById('parallax-p');
+        const parallaxBtn = document.getElementById('parallax-btn');
+        const navItems = document.querySelectorAll('nav .nav-item');
+        const spySections = ['services', 'diagnostico', 'colaborador', 'experiencias']
+            .map(id => ({ id, el: document.getElementById(id) }))
+            .filter(s => s.el);
 
-                if (scrollY <= heroHeight) {
-                    const progress = scrollY / heroHeight;
-                    const content = document.getElementById('hero-content');
-                    if (content) {
-                        content.style.opacity = Math.max(1 - (progress * 1.5), 0);
-                        const h1 = document.getElementById('parallax-h1');
-                        const p = document.getElementById('parallax-p');
-                        const buttons = document.getElementById('parallax-btn');
+        let scrollTicking = false;
+        let lastActiveSection = 'hero';
+        let heroWasCovered = false;
 
-                        if (h1) h1.style.transform = `translate3d(0, -${scrollY * 0.8}px, 0)`;
-                        if (p) p.style.transform = `translate3d(0, -${scrollY * 0.5}px, 0)`;
-                        if (buttons) buttons.style.transform = `translate3d(0, -${scrollY * 0.2}px, 0)`;
-                    }
+        function updateOnScroll() {
+            scrollTicking = false;
+            const scrollY = window.scrollY;
+            const vh = window.innerHeight;
+
+            // A) Sticky Hero parallax & automatic visibility culling when covered (past 64px top border-radius)
+            const isCovered = scrollY >= vh + 64;
+            if (isCovered !== heroWasCovered) {
+                heroWasCovered = isCovered;
+                if (heroEl) heroEl.classList.toggle('hero-covered', isCovered);
+            }
+
+            if (!isCovered && heroContentEl) {
+                const progress = Math.min(Math.max(scrollY / vh, 0), 1);
+                heroContentEl.style.opacity = Math.max(1 - (progress * 1.45), 0);
+                if (parallaxH1) parallaxH1.style.transform = `translate3d(0, -${scrollY * 0.55}px, 0)`;
+                if (parallaxP) parallaxP.style.transform = `translate3d(0, -${scrollY * 0.35}px, 0)`;
+                if (parallaxBtn) parallaxBtn.style.transform = `translate3d(0, -${scrollY * 0.18}px, 0)`;
+            }
+
+            // B) ScrollSpy - mutates DOM ONLY when active section actually changes
+            const offset = vh * 0.45;
+            let currentId = 'hero';
+            for (let i = 0; i < spySections.length; i++) {
+                if (spySections[i].el.getBoundingClientRect().top <= offset) {
+                    currentId = spySections[i].id;
                 }
-            });
+            }
+
+            if (currentId !== lastActiveSection) {
+                lastActiveSection = currentId;
+                navItems.forEach(item => {
+                    if (item.getAttribute('href') === `#${currentId}`) {
+                        item.classList.remove('text-white/50', 'hover:text-white', 'text-primary-400', 'hover:text-primary-300');
+                        item.classList.add('text-primary-500', 'hover:text-primary-400');
+                    } else {
+                        item.classList.remove('text-primary-500', 'hover:text-primary-400', 'text-primary-400', 'hover:text-primary-300');
+                        item.classList.add('text-white/50', 'hover:text-white');
+                    }
+                });
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!scrollTicking) {
+                scrollTicking = true;
+                requestAnimationFrame(updateOnScroll);
+            }
         }, { passive: true });
 
-        // --- SCROLLSPY E NAVEGAÇÃO SUAVE ---
-        const sections = document.querySelectorAll('section[id], header[id]');
-        const navItems = document.querySelectorAll('nav .nav-item');
-
-        // Navegação suave ao clicar
-        navItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                const href = item.getAttribute('href');
-                if (href && href.startsWith('#')) {
+        // Smooth navigation on nav item & footer logo clicks
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (!href || href === '#') return;
+                const target = document.querySelector(href);
+                if (target) {
                     e.preventDefault();
-                    const target = document.querySelector(href);
-                    if (target) {
-                        // Se for hero, forçamos o scrollY 0 para evitar bugs com sticky
-                        if (href === '#hero') {
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                        } else {
-                            target.scrollIntoView({ behavior: 'smooth' });
-                        }
+                    if (href === '#hero') {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else {
+                        target.scrollIntoView({ behavior: 'smooth' });
                     }
                 }
             });
         });
-
-        // ScrollSpy Manual (Mais confiável para seções sticky)
-        let scrollSpyTicking = false;
-        window.addEventListener('scroll', () => {
-            if (scrollSpyTicking) return;
-            scrollSpyTicking = true;
-            requestAnimationFrame(() => {
-            scrollSpyTicking = false;
-            const offset = window.innerHeight / 2;
-
-            let currentId = 'hero';
-
-            const services = document.getElementById('services');
-            const diagnostico = document.getElementById('diagnostico');
-            const colaborador = document.getElementById('colaborador');
-            const experiencias = document.getElementById('experiencias');
-
-            if (services && services.getBoundingClientRect().top <= offset) {
-                currentId = 'services';
-            }
-            if (diagnostico && diagnostico.getBoundingClientRect().top <= offset) {
-                currentId = 'diagnostico';
-            }
-            if (colaborador && colaborador.getBoundingClientRect().top <= offset) {
-                currentId = 'colaborador';
-            }
-            if (experiencias && experiencias.getBoundingClientRect().top <= offset) {
-                currentId = 'experiencias';
-            }
-
-            navItems.forEach(item => {
-                if (item.getAttribute('href') === `#${currentId}`) {
-                    item.classList.remove('text-white/50', 'hover:text-white', 'text-bordeaux-400', 'hover:text-bordeaux-300', 'text-primary-400', 'hover:text-primary-300');
-                    item.classList.add('text-primary-500', 'hover:text-primary-400');
-                } else {
-                    item.classList.remove('text-primary-500', 'hover:text-primary-400', 'text-bordeaux-400', 'hover:text-bordeaux-300', 'text-primary-400', 'hover:text-primary-300');
-                    item.classList.add('text-white/50', 'hover:text-white');
-                }
-            });
-            });
-        }, { passive: true });
 
         // --- MODALS (OLYMPIA & PRODUCTS) ---
         const modalOlympia = document.getElementById('modal-olympia');
@@ -2905,12 +2902,10 @@
         const openModalBtn = document.getElementById('open-modal');
         const closeModalBtn = document.getElementById('close-modal');
 
-        // Product Modal elements
         const modalProduct = document.getElementById('modal-product');
         const modalProductContent = document.getElementById('modal-product-content');
         const closeModalProductBtn = document.getElementById('close-modal-product');
 
-        // Product Modal content targets
         const modProdTitle = document.getElementById('modal-product-title').querySelector('span');
         const modProdTag = document.getElementById('modal-product-tag');
         const modProdWhat = document.getElementById('modal-product-what');
@@ -2919,19 +2914,17 @@
         const modProdWhatsapp = document.getElementById('modal-product-whatsapp');
 
         function openOlympiaModal() {
-            modalOlympia.classList.remove('opacity-0', 'pointer-events-none');
-            setTimeout(() => {
+            modalOlympia.classList.add('is-open');
+            requestAnimationFrame(() => {
                 modalOlympiaContent.classList.remove('scale-95');
                 modalOlympiaContent.classList.add('scale-100');
-            }, 50);
+            });
         }
 
         function closeOlympiaModal() {
             modalOlympiaContent.classList.remove('scale-100');
             modalOlympiaContent.classList.add('scale-95');
-            setTimeout(() => {
-                modalOlympia.classList.add('opacity-0', 'pointer-events-none');
-            }, 300);
+            modalOlympia.classList.remove('is-open');
         }
 
         function populateProductModal(serviceId) {
@@ -2943,7 +2936,7 @@
             modProdWhat.innerText = data.what;
             modProdImportance.innerText = data.importance;
             modProdImg.src = data.image;
-            
+
             const btnSpan = modProdWhatsapp.querySelector('span[data-i18n]');
             if (data.title.toLowerCase().includes('consultoria')) {
                 btnSpan.setAttribute('data-i18n', 'modal_prod_btn');
@@ -2952,81 +2945,48 @@
                 btnSpan.setAttribute('data-i18n', 'modal_prod_btn_alt');
                 btnSpan.innerText = translations[currentLanguage].modal_prod_btn_alt;
             }
-            
-            // Adjust image framing for specific photos
+
             if (serviceId === 'seguranca') {
-                modProdImg.style.objectPosition = '30% 20%'; // Shift left to center the woman in the vertical frame
+                modProdImg.style.objectPosition = '30% 20%';
             } else if (serviceId === 'alimentar') {
-                modProdImg.style.objectPosition = 'center top'; // Evita cortar o rosto na imagem da bromatológica
+                modProdImg.style.objectPosition = 'center top';
             } else {
-                modProdImg.style.objectPosition = 'center center'; // Default center
+                modProdImg.style.objectPosition = 'center center';
             }
 
-            // Link is now static to #diagnostico
-            // modProdWhatsapp.href = translations[currentLanguage].whatsapp_link;
-
-            // Store current service in case language is switched while open
             modalProduct.setAttribute('data-current-service', serviceId);
         }
 
         function openProductModal(serviceId) {
             populateProductModal(serviceId);
-            modalProduct.classList.remove('opacity-0', 'pointer-events-none');
-            setTimeout(() => {
+            modalProduct.classList.add('is-open');
+            requestAnimationFrame(() => {
                 modalProductContent.classList.remove('scale-95');
                 modalProductContent.classList.add('scale-100');
-            }, 50);
+            });
         }
 
         function closeProductModal() {
             modalProductContent.classList.remove('scale-100');
             modalProductContent.classList.add('scale-95');
-            setTimeout(() => {
-                modalProduct.classList.add('opacity-0', 'pointer-events-none');
-            }, 300);
+            modalProduct.classList.remove('is-open');
         }
 
-        // Event Listeners for Olympia Modal
-        if (openModalBtn) {
-            openModalBtn.addEventListener('click', openOlympiaModal);
-        }
-        if (closeModalBtn) {
-            closeModalBtn.addEventListener('click', closeOlympiaModal);
-        }
+        if (openModalBtn) openModalBtn.addEventListener('click', openOlympiaModal);
+        if (closeModalBtn) closeModalBtn.addEventListener('click', closeOlympiaModal);
         modalOlympia.addEventListener('click', (e) => {
             if (e.target === modalOlympia) closeOlympiaModal();
         });
 
-        // Event Listeners for Product Modal
-        const btnSaberMais = document.querySelectorAll('.btn-saber-mais');
-        btnSaberMais.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const serviceId = btn.getAttribute('data-service');
-                if (serviceId) openProductModal(serviceId);
-            });
-        });
-
-        if (closeModalProductBtn) {
-            closeModalProductBtn.addEventListener('click', closeProductModal);
-        }
-        modalProduct.addEventListener('click', (e) => {
-            if (e.target === modalProduct) closeProductModal();
-        });
-        if (closeModalProductBtn) {
-            closeModalProductBtn.addEventListener('click', closeProductModal);
-        }
+        if (closeModalProductBtn) closeModalProductBtn.addEventListener('click', closeProductModal);
         modalProduct.addEventListener('click', (e) => {
             if (e.target === modalProduct) closeProductModal();
         });
 
-        // Close on escape key
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !modalOlympia.classList.contains('pointer-events-none')) {
-                closeOlympiaModal();
-            }
-            if (e.key === 'Escape' && !modalProduct.classList.contains('pointer-events-none')) {
-                closeProductModal();
+            if (e.key === 'Escape') {
+                if (modalOlympia.classList.contains('is-open')) closeOlympiaModal();
+                if (modalProduct.classList.contains('is-open')) closeProductModal();
             }
         });
 
@@ -3108,7 +3068,7 @@
                 const originalText = submitBtn.innerHTML;
                 
                 // Show loading state
-                submitBtn.innerHTML = '<span class="iconify animate-spin text-white" data-icon="lucide:loader-2" data-width="18"></span> <span class="relative z-10 text-xs font-bold uppercase tracking-widest text-white ml-2">Enviando...</span>';
+                submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" class="iconify animate-spin text-white" aria-hidden="true" focusable="false"><use href="#icon-lucide-loader-2"></use></svg> <span class="relative z-10 text-xs font-bold uppercase tracking-widest text-white ml-2">Enviando...</span>';
                 submitBtn.disabled = true;
 
                 const formData = new FormData(diagForm);
@@ -3132,7 +3092,7 @@
                         diagForm.innerHTML = `
                             <div class="flex flex-col items-center justify-center text-center h-[300px] gap-4 reveal active">
                                 <div class="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center mb-4 shadow-[0_0_40px_rgba(34,197,94,0.15)]">
-                                    <span class="iconify text-green-400" data-icon="lucide:check" data-width="40"></span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" class="iconify text-green-400" aria-hidden="true" focusable="false"><use href="#icon-lucide-check"></use></svg>
                                 </div>
                                 <h3 class="font-heading text-3xl text-white font-medium">Diagnóstico Solicitado!</h3>
                                 <p class="text-white/60 font-light max-w-sm mt-2 leading-relaxed">Recebemos as informações da sua empresa com sucesso. Um de nossos consultores entrará em contato em breve.</p>
